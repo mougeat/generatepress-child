@@ -279,3 +279,27 @@
 .ispag-item-danger {
     color: #d63638;
 }
+
+
+/* Animation de rotation pour les Dashicons */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.dashicons.spin {
+    animation: spin 1s linear infinite;
+    display: inline-block; /* Nécessaire pour que la rotation s'applique */
+}
+
+/* Optionnel : style du bouton quand il est désactivé */
+.ispag-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.ispag-btn-loading {
+    background-color: #f1f1f1 !important;
+    color: #666 !important;
+    border-color: #ccc !important;
+}
