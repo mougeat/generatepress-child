@@ -1,0 +1,201 @@
+/* Fichier: assets/css/ispag-kanban-styles.css */
+
+/** * CONTENEUR PRINCIPAL DU TABLEAU KANBAN 
+ */
+.ispag-kanban-board {
+    display: flex;
+    /*gap: 15px; /* Espace entre les colonnes */
+    overflow-x: auto; /* Permet de scroller horizontalement */
+    /* padding: 10px 0; */
+    padding-bottom: 10px;
+    /*align-items: flex-start; /* Aligner les colonnes en haut */
+}
+
+/** * COLONNE (ÉTAPE)
+ */
+.kanban-column {
+    /* flex: 0 0 320px; 
+    background: #f4f6f8;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    min-height: 200px;
+    transition: background-color 0.2s; */
+    flex-shrink: 0; 
+    width: 300px; /* Ajustez selon vos besoins */
+    margin-right: 20px;
+    background-color: #f4f5f7; /* Couleur de fond de la colonne */
+    border-radius: 4px;
+    display: flex; /* Nécessaire pour forcer le footer en bas */
+    flex-direction: column;
+}
+.kanban-column-body {
+    /* La hauteur maximale est cruciale pour activer le défilement */
+    max-height: 50vh; /* '60vh' est un exemple, ajustez à une valeur en pixels (ex: 500px) ou en vh */
+    overflow-y: auto; /* Active le défilement vertical si le contenu dépasse la max-height */
+    padding: 10px;
+    flex-grow: 1; /* Assure que le corps prend l'espace restant */
+}
+
+.kanban-column-header {
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.kanban-column-header h4 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+}
+
+/** * PIED DE COLONNE (TOTALS)
+ */
+.kanban-column-footer {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #ddd;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.kanban-column-footer .total-amount,
+.kanban-column-footer .weighted-amount {
+    margin: 3px 0;
+}
+
+/** * CORPS DE LA COLONNE (ZONE DE DROP)
+ */
+.kanban-column-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 50px; /* Assure que la zone de drop est cliquable */
+    padding-bottom: 5px;
+}
+
+.no-deals-message {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 15px 0;
+}
+
+/** * CARTE DU DEAL
+ */
+.kanban-deal-card {
+    background: #ffffff;
+    border-radius: 4px;
+    padding: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    cursor: grab; /* Indique qu'elle est déplaçable */
+    border-left: 5px solid #ccc; /* La couleur de l'étape est définie ici par PHP */
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.kanban-deal-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+}
+
+.deal-title a {
+    font-weight: 700;
+    color: #0073aa; /* Couleur de lien WordPress standard */
+    text-decoration: none;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.deal-info {
+    font-size: 0.9em;
+    color: #666;
+    margin: 2px 0;
+}
+
+.deal-owner {
+    font-size: 0.85em;
+    color: #34495e;
+    margin: 2px 0;
+    margin-top: 8px;
+    padding-top: 5px;
+    border-top: 1px dotted #eee;
+}
+.deal-relation {
+    font-size: 0.85em;
+    color: #34495e;   
+    margin: 2px 0; 
+}
+
+/* Styles pour le Drag & Drop (si vous utilisez une bibliothèque) */
+.dragging {
+    opacity: 0.5;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    transform: rotate(1deg);
+}
+.ispag-deals-dropzone.drag-over {
+    background-color: #e8f5e9; /* Couleur claire pour indiquer la zone active */
+}
+
+/* =======================================================
+   A. Styles de Base pour les Filtres Select du Kanban ISPAG
+   ======================================================= */
+.ispag-kanban-filters select {
+    /* Cache les flèches par défaut du navigateur */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    /* Style de la bordure et du fond */
+    background-color: #ffffff;
+    border: 1px solid #c3c4c7; /* Bordure WP standard */
+    border-radius: 4px; /* Coins légèrement arrondis */
+    
+    /* Espacement et taille */
+    padding: 6px 30px 6px 10px; /* Espace pour le texte et l'icône de flèche */
+    min-width: 120px;
+    height: 36px;
+    
+    /* Typographie */
+    font-size: 13px;
+    line-height: 1.5;
+    color: #1e1e1e;
+    cursor: pointer;
+    
+    /* Transition pour l'effet de survol/focus */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* Effet au survol et au focus */
+.ispag-kanban-filters select:hover {
+    border-color: #7a7a7a;
+}
+.ispag-kanban-filters select:focus {
+    border-color: #007cba; /* Couleur primaire WP */
+    box-shadow: 0 0 0 1px #007cba;
+    outline: none;
+}
+
+/* =======================================================
+   B. Ajout d'une Icône de Flèche Personnalisée (pour remplacer celle cachée)
+   ======================================================= */
+.ispag-kanban-filter-wrapper {
+    /* Permet de positionner l'icône à l'intérieur du conteneur */
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px; /* Espacement entre les filtres */
+}
+
+/* L'icône de flèche (down arrow) est ajoutée via un pseudo-élément */
+.ispag-kanban-filter-wrapper::after {
+    content: '\f140'; /* Code unicode du dashicon 'arrow-down' */
+    font-family: 'dashicons';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none; /* Assure que le clic passe au select */
+    color: #646970;
+    font-size: 14px;
+}

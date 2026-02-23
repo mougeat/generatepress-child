@@ -1,0 +1,29 @@
+:root {
+  --ispag-red: #990000;
+  --ispag-dark: #333;
+  --ispag-grey: #f2f2f2;
+  --ispag-btn-grey: #a19a9a;
+  --ispag-white: #fff;
+  --ispag-green: #6ab04c;
+  --ispag-blue: #45c0e6;
+  --ispag-blue-light: #99d5df;
+  --ispag-orange: #ffc107;
+  --ispag-light-grey: #fafafa;
+  --ispag-color-primary: #990000; 
+  --ispag-color-text-dark: #333;
+  --ispag-color-text-medium: #555;
+  --ispag-color-text-light: #777;
+  --ispag-color-border-light: #e0e0e0;
+  --ispag-color-border-lighter: #f0f0f0;
+  --ispag-color-background: #fff;
+  --ispag-color-profile-pic: #e0e0e0;
+  --ispag-color-profile-text: #666;
+  /* --ispag-red: #d90400;  */
+  /* --ispag-btn-grey: #ccc; */
+  /* --ispag-blue: #0073aa;  */
+  /* --ispag-orange: #ff9900; */
+
+  
+  --ispag-success-color: #28a745;
+  --ispag-danger-color: #dc3545;
+}

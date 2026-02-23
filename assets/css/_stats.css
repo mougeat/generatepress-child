@@ -1,0 +1,37 @@
+.ispag-revenue-perspective {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.ispag-stat-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.ispag-stat-card.highlight {
+    border-left: 4px solid #2ecc71; /* Vert pour le pipeline gagné */
+}
+
+.ispag-stat-card.highlight-blue {
+    border-left: 4px solid #3498db; /* Bleu pour les factures */
+}
+
+.ispag-stat-label {
+    display: block;
+    font-size: 12px;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.ispag-stat-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1e293b;
+}

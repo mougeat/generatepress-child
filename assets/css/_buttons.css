@@ -1,0 +1,281 @@
+.button {
+  background-color: var(--ispag-red);
+  color: white;
+  padding: 6px 12px;
+  margin-right: 3px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: none;
+}
+
+.ispag-btn:hover { background-color: #7a0000; color:#fff; }
+.ispag-btn:active { background-color: #5c0000; color:#fff; }
+
+/* .ispag-btn-grey { background-color: var(--ispag-btn-grey); color: #000; } */
+.ispag-btn-red-outlined { border: 1px solid var(--ispag-red); background-color: transparent; color: var(--ispag-red);}
+.ispag-btn-grey-outlined { border: 1px solid var(--ispag-btn-grey); background-color: transparent; color: var(--ispag-btn-grey);}
+.ispag-btn-secondary-outlined { border: 1px solid var(--ispag-blue); background-color: transparent; color: var(--ispag-blue);}
+.ispag-btn-warning-outlined { border: 1px solid var(--ispag-orange); background-color: transparent; color: var(--ispag-orange);}
+.ispag-btn-danger-outlined { border: 1px solid var(--ispag-red); background-color: transparent; color: var(--ispag-red);}
+
+.button-primary { border: 1px solid var(--ispag-btn-grey); background-color: var(--ispag-btn-grey); color: white;}
+.ispag-btn-grey { border: 1px solid var(--ispag-btn-grey); background-color: var(--ispag-btn-grey); color: white;}
+.ispag-btn-secondary { border: 1px solid var(--ispag-blue); background-color: var(--ispag-blue); color: white;}
+.ispag-btn-warning { border: 1px solid var(--ispag-orange); background-color: var(--ispag-orange); color: white;}
+.ispag-btn-danger { border: 1px solid var(--ispag-red); background-color: var(--ispag-red); color: white;}
+
+/* BOUTON DE SUIVI */
+.suivi-button {
+  background-color: var(--ispag-red);
+  color: var(--ispag-white);
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9em;
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+}
+
+.suivi-button:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.drawing-button-wrapper {
+    margin-top: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+.doc-badge {
+    display: inline-block;
+    background-color: gold;
+    color: black;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    margin-right: 6px;
+    text-transform: uppercase;
+}
+
+/* .ispag-state-badge {
+  padding: 2px 6px;
+  font-size: 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+} */
+.ispag-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(65%, -60%);
+    z-index: 2;
+    padding: 2px 6px;
+    font-size: 9px;
+    border-radius: 8px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-warning {
+    color: #000;
+}
+.badge-success {
+    color: #fff;
+}
+
+
+
+/* Conteneur de la barre d'actions */
+.ispag-actions-bar {
+    display: flex;
+    gap: 2px; /* Espace entre les boutons */
+    padding: 5px 0;
+    /*border-bottom: 1px solid #eee; /* Séparateur visuel */
+    margin-bottom: 15px; 
+    width: 150px;
+}
+
+.ispag-action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    cursor: pointer;
+    font-size: 11px; /* Légèrement plus petit pour faciliter l'affichage */
+    line-height: 1.2;
+    color: #444;
+    transition: all 0.2s;
+    
+    /* FIXER LA LARGEUR */
+    width: 45px;       /* Ta largeur souhaitée */
+    min-width: 45px;   /* Sécurité pour éviter le rétrécissement */
+    max-width: 45px;
+    
+    /* TRONQUER LE TEXTE */
+    white-space: nowrap;      /* Empêche le retour à la ligne */
+    overflow: hidden;         /* Cache ce qui dépasse */
+    text-overflow: ellipsis;  /* Ajoute les "..." */
+    
+    padding: 5px 2px;         /* Un peu de padding interne */
+}
+
+/* Si ton texte est dans un span (conseillé), applique l'ellipsis dessus */
+.ispag-action-btn span {
+    width: 100%;
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Style de l'icône (utilise les Dashicons de WordPress) */
+.ispag-action-btn .dashicons, .ispag-action-btn .ispag-icon-svg {
+    font-size: 14px;
+    color: var(--ispag-color-profile-pic); /* Orange ISPAG */
+    
+    /* Création du cercle */
+    border: 2px solid #e0e0e0; /* Gris clair */
+    border-radius: 50%; /* Rend le contour parfaitement rond */
+    
+    /* Taille du cercle (à ajuster selon tes besoins) */
+    width: 32px;
+    height: 32px;
+    
+    /* Centrage de l'icône à l'intérieur du cercle */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Espacement */
+    margin-bottom: 5px;
+    transition: all 0.2s ease; /* Pour un effet fluide au survol */
+}
+
+
+
+/* Optionnel : Effet au survol du bouton pour que le cercle réagisse */
+.ispag-action-btn:hover .dashicons {
+    border-color: var(--ispag-color-profile-pic); /* Le cercle devient orange au survol */
+    /* background-color: #f9f9f9; */
+}
+
+/* .ispag-action-btn:hover {
+    background-color: #f0f0f0;
+    border-color: var(--ispag-color-profile-pic);
+} */
+
+
+/* Check box de tâches*/
+/* Conteneur principal */
+.task-checkbox {
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* On cache la checkbox native de Windows/Mac */
+.task-input {
+    display: none;
+}
+
+/* Le cercle par défaut (gris, vide) */
+.task-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #ccc; /* Couleur grise de ton image */
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* La coche (cachée par défaut) */
+.checkmark {
+    color: white;
+    font-size: 14px;
+    display: none;
+}
+
+/* --- ÉTAT QUAND C'EST COCHÉ --- */
+
+/* Le cercle devient vert */
+.task-input:checked + .task-circle {
+    background-color: #007a3d; /* Le vert de ton image */
+    border-color: #007a3d;
+}
+
+/* On affiche la coche blanche */
+.task-input:checked + .task-circle .checkmark {
+    display: block;
+}
+
+/* Optionnel : effet au survol */
+.task-circle:hover {
+    border-color: #007a3d;
+}
+
+/* Conteneur principal */
+.ispag-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Menu caché par défaut */
+.ispag-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    bottom: 100%; /* S'ouvre vers le haut si la barre est en bas, sinon mettez top: 100% */
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 99;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+}
+
+/* Classe pour afficher le menu */
+.ispag-dropdown-menu.show {
+    display: block;
+}
+
+/* Éléments de la liste */
+.ispag-dropdown-item {
+    width: 100%;
+    padding: 10px 15px;
+    text-align: left;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #333;
+    font-size: 13px;
+}
+
+.ispag-dropdown-item:hover {
+    background-color: #f1f1f1;
+}
+
+.ispag-dropdown-item .dashicons {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.ispag-dropdown-divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 5px 0;
+}
+
+.ispag-item-danger {
+    color: #d63638;
+}

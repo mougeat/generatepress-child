@@ -1,0 +1,15 @@
+
+/* -------------------------------------------------------------------------- */
+/* --- 5. BADGES (Statut, Phase) --- */
+/* -------------------------------------------------------------------------- */
+
+.ispag-status-badge { 
+    display: inline-block; 
+    padding: 3px 8px; 
+    border-radius: 12px; 
+    font-size: 0.8em; 
+    font-weight: bold; 
+    text-transform: capitalize; 
+    line-height: 1.2; /* Assure un bon alignement vertical dans <dd> */
+    white-space: nowrap; /* Empêche la coupure du texte */
+}

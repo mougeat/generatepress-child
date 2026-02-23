@@ -1,0 +1,266 @@
+/* ==========================================================================
+   ISPAG QR Product Data Sheet - Refined Industrial Style
+   ========================================================================== */
+
+/* Container & Layout */
+.ispag-qr-container {
+    max-width: 850px;
+    margin: 0 auto;
+    background: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+}
+
+/* 1. Header Identity Section */
+.section-identity {
+    background: #1a252f; /* Dark ISPAG Blue */
+    color: white;
+    padding: 60px 40px;
+    text-align: center;
+}
+
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.badge-status.active { background: #27ae60; }
+.badge-status.expired { background: #e67e22; }
+
+.badge-status .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.section-identity h1 {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.serial-main {
+    font-size: 1.2em;
+    opacity: 0.7;
+    margin-top: 10px;
+}
+
+/* 2. Divider & Sections */
+hr.section-divider {
+    border: 0;
+    height: 1px;
+    background: #eaedef;
+    margin: 0;
+}
+
+.info-section {
+    padding: 50px 40px;
+}
+
+.section-title {
+    font-size: 1.1em;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+}
+
+/* 3. Project Information Grid */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.info-block label {
+    display: block;
+    font-size: 0.75em;
+    color: #95a5a6;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.info-block span {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 1.1em;
+}
+
+/* 4. Technical Specifications & Description */
+.product-description {
+    display: flex;
+    gap: 15px;
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #e2e8f0;
+}
+
+.product-description .dashicons {
+    color: #3498db;
+    font-size: 20px;
+}
+
+.product-description div p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.spec-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.spec-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 18px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.spec-list li:last-child { border-bottom: none; }
+
+.spec-list .label { color: #7f8c8d; font-weight: 500; }
+.spec-list .value { font-weight: 700; }
+
+/* 5. Documentation List (Aligned) */
+.clean-doc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.clean-doc-list li {
+    margin-bottom: 12px;
+}
+
+.doc-link {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    text-decoration: none !important;
+    color: #2c3e50;
+    transition: all 0.2s ease;
+}
+
+.doc-link:hover {
+    border-color: #3498db;
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.icon-main {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    margin-right: 20px;
+    color: #3498db;
+}
+
+.doc-info {
+    flex-grow: 1;
+}
+
+.doc-info strong {
+    display: block;
+    font-size: 1.1em;
+    margin-bottom: 2px;
+}
+
+.doc-info small {
+    color: #95a5a6;
+    font-size: 0.85em;
+}
+
+.icon-external {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #cbd5e0;
+    margin-left: 10px;
+}
+
+/* 6. Support & Action Buttons */
+.support-content p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #576574;
+}
+
+.contact-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-main, .btn-sub {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 6px;
+    text-decoration: none !important;
+    font-weight: 700;
+    font-size: 1em;
+    transition: 0.2s;
+}
+
+.btn-main {
+    background: #c0392b; /* ISPAG Red */
+    color: white !important;
+}
+
+.btn-main:hover { background: #a93226; }
+
+.btn-sub {
+    background: #ecf0f1;
+    color: #2c3e50 !important;
+}
+
+.btn-sub:hover { background: #bdc3c7; }
+
+/* 7. Error States */
+.error-msg {
+    padding: 100px 40px;
+    text-align: center;
+}
+
+.error-msg .dashicons {
+    font-size: 50px;
+    width: 50px;
+    height: 50px;
+    color: #e74c3c;
+    margin-bottom: 20px;
+}
+
+/* 8. Responsive Adjustments */
+@media (max-width: 768px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .section-identity { padding: 40px 20px; }
+    .info-section { padding: 30px 20px; }
+
+    .contact-buttons { flex-direction: column; }
+    
+    .section-identity h1 { font-size: 1.8em; }
+}

@@ -1,0 +1,215 @@
+/* ==========================================================================
+   1. STRUCTURE GÉNÉRIQUE DES SIDEBARS (Overlay & Content)
+   ========================================================================== */
+
+/* Conteneur principal (L'Overlay) */
+.ispag-sidebar-overlay, 
+#ispag-task-sidebar-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0; 
+    z-index: 999999;
+    display: none; 
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Le Panneau de Contenu (La Sidebar) */
+.ispag-sidebar-content,
+#ispag-task-modal-content {
+    background-color: #fff;
+    width: 100%; 
+    max-width: 650px; /* Largeur par défaut */
+    height: 100%;
+    position: fixed; /* Changé de absolute à fixed pour l'overlay */
+    top: 0;
+    right: -650px; /* Caché à droite */
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.15); 
+    overflow-y: auto;
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+/* État actif géré par la classe .active ou via JS */
+.ispag-sidebar-overlay.active,
+#ispag-task-sidebar-modal.active {
+    display: block;
+}
+
+.ispag-sidebar-overlay.active .ispag-sidebar-content,
+#ispag-task-sidebar-modal.active #ispag-task-modal-content {
+    right: 0;
+}
+
+/* Bloquer le scroll du body */
+body.sidebar-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
+/* ==========================================================================
+   2. MISE EN PAGE INTERNE (Header, Body, Footer)
+   ========================================================================== */
+
+.ispag-modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+}
+
+.ispag-modal-header h3 { margin: 0; font-size: 1.2em; }
+
+.ispag-modal-close {
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: bold;
+    color: #999;
+}
+
+.ispag-modal-body, .ispag-task-modal-body {
+    padding: 20px 25px;
+    flex-grow: 1;
+}
+
+.ispag-modal-footer, .ispag-task-modal-footer {
+    padding: 15px 25px;
+    border-top: 1px solid #eee;
+    text-align: right;
+    background-color: #f9f9f9;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+}
+
+/* Formulaires internes */
+.ispag-task-modal-body label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.ispag-task-modal-body input[type="text"],
+.ispag-task-modal-body input[type="date"],
+.ispag-task-modal-body select,
+.ispag-task-modal-body textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* ==========================================================================
+   3. PRÉSENTATION & CONTEXTE (Header gris / Meeting)
+   ========================================================================== */
+
+.ispag-task-presentation {
+    padding: 15px 25px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    gap: 30px; 
+}
+
+.ispag-info-section { flex: 1; }
+
+.ispag-info-section .section-title {
+    font-size: 0.85em;
+    color: #888;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-list, .meeting-info-list {
+    list-style: none; padding: 0; margin: 0;
+}
+
+/* Alignement des icônes et textes */
+.info-list li, .meeting-info-list li {
+    margin-bottom: 5px;
+    font-size: 0.95em;
+    display: flex;
+    align-items: flex-start;
+}
+
+.ispag-info-section .dashicons, .meeting-info-list .dashicons {
+    color: #0073aa;
+    margin-right: 8px;
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Spécificité Meeting (Label au dessus de la valeur) */
+.meeting-info-list { display: flex; gap: 20px; }
+
+.meeting-info-list li { flex-direction: row; }
+
+.meeting-info-list .text-container {
+    display: flex;
+    flex-direction: column; /* Force le titre au dessus de la valeur */
+}
+
+.meeting-label {
+    font-size: 0.85em;
+    color: #777;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   4. COMPOSANTS SPÉCIFIQUES (Participants / Popover)
+   ========================================================================== */
+
+.attendee-hover-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.attendee-count {
+    font-weight: 600;
+    color: #0073aa;
+    border-bottom: 1px dashed #0073aa;
+}
+
+.attendee-popover {
+    visibility: hidden; opacity: 0;
+    position: absolute;
+    top: 100%; left: 0;
+    z-index: 1000;
+    min-width: 200px;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    transition: opacity 0.2s ease;
+}
+
+.attendee-hover-container:hover .attendee-popover {
+    visibility: visible; opacity: 1;
+}
+
+.ispag-attendee-list li {
+    padding: 4px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+.ispag-attendee-list li:last-child { border: none; }
+
+/* Responsive */
+@media (max-width: 650px) {
+    .ispag-sidebar-content, #ispag-task-modal-content {
+        max-width: 90%;
+    }
+    .ispag-task-presentation, .meeting-info-list {
+        flex-direction: column;
+        gap: 15px;
+    }
+}

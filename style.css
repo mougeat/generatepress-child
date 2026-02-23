@@ -1,0 +1,34 @@
+/*
+
+ Theme Name:   APP ISPAG
+ Theme URI:    https://cyrilbarthel.com
+ Description:  App suivis projets ISPAG
+ Author:       Cyril Barthel
+ Author URI:   https://cyrilbarthel.com
+ Template:     generatepress
+ Version:      1.0.0
+ License:      GNU General Public License v2 or later
+ License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+ Tags:         two-columns, three-columns, one-column, right-sidebar, left-sidebar, footer-widgets, blog, e-commerce, flexible-header, full-width-template, buddypress, custom-header, custom-background, custom-menu, custom-colors, sticky-post, threaded-comments, translation-ready, rtl-language-support, featured-images, theme-options
+ Text Domain:  generatepress-child
+*/
+
+@import url('./assets/css/_variables.css');
+@import url('./assets/css/_buttons.css');
+@import url('./assets/css/_kanban.css');
+@import url('./assets/css/_tablenav.css');
+@import url('./assets/css/_table.css');
+
+/* @import url('./assets/css/_modal.css'); */
+@import url('./assets/css/_layout.css');
+@import url('./assets/css/_sidebar.css');
+@import url('./assets/css/_ai_loader.css');
+
+@import url('./assets/css/_badge.css');
+
+@import url('./assets/css/_stats.css');
+
+
+
+/* Style mobile */
+@import url('./assets/css/_mobile_task.css');

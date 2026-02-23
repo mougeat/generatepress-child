@@ -1,0 +1,126 @@
+
+/* --- Conteneur général de la barre inférieure (où se trouve le nombre total et la pagination) --- */
+.tablenav.bottom, .tablenav.top {
+    clear: both;
+    margin: 15px 0 0;
+    padding: 0;
+    overflow: hidden; /* Pour contenir les éléments flottants */
+    display: flex;
+    justify-content: space-between; /* Aligner le nombre à gauche et les liens à droite */
+    align-items: center;
+}
+
+/* Affichage du nombre total de contacts */
+.tablenav-pages .displaying-num {
+    font-size: 0.95em;
+    color: #555;
+    margin-right: 15px;
+}
+
+/* --- Style de la liste des liens de pagination (<ul>) --- */
+.tablenav-pages ul.page-numbers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Aligner les numéros horizontalement */
+    gap: 5px; /* Espace entre les boutons */
+}
+
+/* Style de chaque élément de liste (<li>) */
+.tablenav-pages ul.page-numbers li {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+/* Style de base de chaque lien/bouton (<a> ou <span>) */
+.tablenav-pages ul.page-numbers li > * {
+    display: block;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px; /* Coins légèrement arrondis */
+    text-decoration: none;
+    background-color: #f9f9f9;
+    color: #444;
+    font-size: 14px;
+    min-width: 40px; /* Assurer une largeur minimale pour le centrage */
+    text-align: center;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+/* État : Survol des liens (numéros et précédent/suivant) */
+.tablenav-pages ul.page-numbers li a:hover {
+    background-color: #ececec;
+    border-color: #c3c3c3;
+    color: #000;
+}
+
+/* Style du bouton/lien actif (page courante) */
+.tablenav-pages ul.page-numbers li .current {
+    background-color: #0073aa; /* Couleur primaire WordPress */
+    border-color: #0073aa;
+    color: #fff; /* Texte blanc */
+    font-weight: bold;
+    cursor: default; /* Indiquer qu'il n'est pas cliquable */
+}
+
+/* Style des liens Précédent et Suivant */
+.tablenav-pages ul.page-numbers li .prev,
+.tablenav-pages ul.page-numbers li .next {
+    min-width: 80px; /* Plus large pour le texte */
+}
+
+/* Désactiver le survol pour le lien courant et les liens désactivés */
+.tablenav-pages ul.page-numbers li .current:hover,
+.tablenav-pages ul.page-numbers li .dots {
+    background-color: #0073aa; /* Conserver la couleur active */
+    border-color: #0073aa;
+    color: #fff;
+}
+
+/* Style pour les points de suspension (dots) */
+.tablenav-pages ul.page-numbers li .dots {
+    background: none;
+    border-color: transparent;
+    color: #888;
+    padding: 6px 4px;
+    font-size: 16px;
+}
+
+
+
+
+
+/* --- Style de la liste des liens de pagination (<ul>) --- */
+.tablenav-pages ul.page-numbers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Aligner les numéros horizontalement */
+    gap: 5px; /* Espace entre les boutons */
+}
+
+/* Style de chaque élément de liste (<li>) */
+.tablenav-pages ul.page-numbers li {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+/* Style de base de chaque lien/bouton (<a> ou <span>) */
+/* La cible est maintenant l'enfant direct de <li> (soit le <a> ou le <span>) */
+.tablenav-pages ul.page-numbers li > a,
+.tablenav-pages ul.page-numbers li > span {
+    display: block;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px; /* Coins légèrement arrondis */
+    text-decoration: none;
+    background-color: #f9f9f9;
+    color: #444;
+    font-size: 14px;
+    min-width: 40px; /* Assurer une largeur minimale pour le centrage */
+    text-align: center;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+/* ... (le reste du CSS reste inchangé) ... */

@@ -1,0 +1,200 @@
+/* -------------------------------------------------------------------------- */
+/* --- 4. TABLEAU --- */
+/* -------------------------------------------------------------------------- */
+
+.ispag-contact-list-table, .ispag-company-list-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-bottom: 20px; 
+}
+
+.ispag-contact-list-table th, 
+.ispag-contact-list-table td,
+.ispag-company-list-table th, 
+.ispag-company-list-table td { 
+    border: 1px solid #e0e0e0; 
+    padding: 12px; 
+    text-align: left; 
+    vertical-align: middle; 
+}
+
+.ispag-contact-list-table th,
+.ispag-company-list-table th { 
+    background-color: #f7f7f7; 
+    font-weight: 600; 
+    color: #333; 
+    text-transform: uppercase; 
+    font-size: 0.9em; 
+}
+
+.ispag-contact-list-table tr:nth-child(even) ,
+.ispag-company-list-table tr:nth-child(even) { 
+    background-color: #fafafa; 
+}
+
+.ispag-contact-list-table tr:hover,
+.ispag-company-list-table tr:hover { 
+    background-color: #f1f8ff; 
+}
+
+/* Liens de tri (Entêtes de colonnes) */
+.ispag-sort-link {
+    display: inline-block;
+    color: #333;
+    text-decoration: none;
+    padding-right: 15px;
+    position: relative;
+}
+.ispag-sort-link:hover { color: var(--ispag-blue); }
+
+
+/* --- Styles de base pour imiter l'interface --- */
+.ispag-task-dashboard-container {
+    padding: 20px 0;
+}
+
+/* Header (barre de recherche et boutons) */
+.ispag-task-controls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.ispag-search-bar {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.ispag-search-input {
+    padding: 8px 12px;
+    border: none;
+    font-size: 14px;
+    width: 300px;
+    box-shadow: none;
+}
+
+.ispag-search-button {
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+/* Wrapper pour le défilement (si nécessaire) */
+.ispag-task-table-wrapper {
+    overflow-x: auto; /* Permet le défilement horizontal */
+}
+
+/* Tableau WordPress standard */
+.ispag-task-table {
+    min-width: 1000px; /* Force une largeur minimale pour un vrai dashboard */
+    border-collapse: collapse;
+}
+
+/* Colonne de date d'échéance (mise en évidence comme dans l'image) */
+.ispag-due-date-column {
+    background-color: #f8f0f8; /* Couleur de fond (comme la colonne "Due Date" de l'image) */
+    width: 150px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Style pour les dates dépassées */
+.ispag-overdue-date {
+    color: #c00; /* Rouge pour les dates dépassées */
+}
+
+/* Style pour les icônes à côté des noms */
+.ispag-icon {
+    vertical-align: middle;
+    margin-right: 5px;
+    border-radius: 50%; /* Pour les icônes de contact/entreprise rondes */
+}
+
+/* Ajustement pour l'affichage de la date (soulignement) */
+td.due-date {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+/* Assurez-vous que les colonnes de relation s'alignent bien */
+.column-contact, .column-company {
+    white-space: nowrap;
+}
+
+
+/**********************************/
+.ispag-crm-table td{position: relative; padding: 12px 15px;}
+.ispag-badge {
+    display: inline-flex;    /* Utilise flex pour aligner le texte au centre du badge */
+    align-items: center;
+    justify-content: center;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    
+    /* Sécurités cruciales */
+    position: static !important; /* Force le retour dans le flux normal */
+    float: none !important;      /* Empêche le badge de s'échapper à droite */
+    line-height: 1.4;
+    margin: 0;
+}
+.ispag-table-container { background: #fff; border: 1px solid #cbd6e2; border-radius: 8px; overflow: hidden; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.ispag-crm-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.ispag-crm-table th { background: #f5f8fa; text-align: left; padding: 12px 15px; border-bottom: 2px solid #cbd6e2; color: #33475b; font-weight: 600; }
+.ispag-crm-table td { padding: 12px 15px; border-bottom: 1px solid #eaf0f6; vertical-align: middle; }
+.ispag-crm-table tr:hover { background-color: #f9fbfd; }
+.amount-cell { font-family: 'Courier New', Courier, monospace; font-weight: bold; text-align: right; color: #2d3e50; }
+/* .ispag-badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; } */
+.small-text { font-size: 11px; color: #7c98b6; margin-top: 2px; }
+.company-name { font-weight: 500; color: #33475b; }
+.dashicons { vertical-align: middle; margin-right: 5px; font-size: 18px; }
+
+
+/* 1. On force le tableau à accepter le débordement */
+.ispag-crm-table {
+    border-collapse: separate !important; /* Important pour que le z-index fonctionne sur les lignes */
+    border-spacing: 0;
+}
+
+/* 2. On s'assure que chaque cellule est bien positionnée */
+.ispag-crm-table td {
+    position: relative;
+    overflow: visible !important; /* On autorise le débordement */
+}
+
+/* 3. L'ASTUCE : Quand on survole une ligne, elle passe au premier plan */
+.ispag-crm-table tr:hover {
+    z-index: 99;
+    position: relative;
+}
+
+/* 4. On s'assure que le conteneur du badge ne bloque rien */
+.ispag-badge-container {
+    position: relative;
+    display: inline-block;
+    z-index: 5;
+}
+
+/* 5. Le select doit être invisible mais présent */
+.ispag-individual-stage-updater {
+    appearance: none;
+    -webkit-appearance: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10; /* Toujours au-dessus du badge */
+}

@@ -1,0 +1,754 @@
+/*
+ * Styles pour les messages d'erreur et d'alerte dans l'interface ISPAG
+ */
+.ispag-error-message {
+    /* Mise en page */
+    padding: 15px 20px;
+    margin: 20px 0;
+    border: 1px solid #e0b4b4; /* Bordure rouge clair */
+    border-left: 5px solid #a94442; /* Bordure épaisse à gauche (style alerte) */
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); /* Légère ombre pour le faire ressortir */
+    
+    /* Couleurs */
+    background-color: #f2dede; /* Fond rouge très clair */
+    color: #a94442; /* Texte rouge foncé */
+    
+    /* Typographie */
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 600; /* Assez épais pour l'importance */
+}
+
+/* Optionnel : Ajouter une icône (via un pseudo-élément si vous utilisez Dashicons ou FontAwesome) */
+/* Si vous utilisez les Dashicons de WordPress: */
+.ispag-error-message::before {
+    font-family: 'Dashicons';
+    content: '\f534'; /* f534 est l'icône de 'warning' ou 'notice' */
+    margin-right: 10px;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+/* -------------------------------------------------------------------------- */
+/* --- 2. STRUCTURE ET MISE EN PAGE PRINCIPALE --- */
+/* -------------------------------------------------------------------------- */
+
+.ispag-detail-container {  
+    /* Utilisation de la flexbox pour un layout à colonnes */
+    display: flex; 
+    gap: 20px; /* Espace entre les colonnes */
+    /* max-width: 1200px;  */
+    margin: 20px auto; /* Centrage et marge extérieure */
+    font-family: Arial, sans-serif;
+}
+
+/* Définition des largeurs des colonnes */
+.ispag-left-panel { 
+    /* Colonne de gauche (Infos clés) : 280px fixe */
+    flex: 0 0 300px; 
+}
+.ispag-main-content { 
+    /* Colonne centrale (Résumé/Notes) : Prend l'espace restant */
+    flex: 1; 
+}
+.ispag-right-panel { 
+    /* Colonne de droite (Transactions/Tickets) : 300px fixe */
+    flex: 0 0 300px; 
+} 
+
+/* Styles de carte/bloc d'information */
+.ispag-card { 
+    background: var(--ispag-color-background); 
+    border: 1px solid var(--ispag-color-border-light); 
+    border-radius: 8px; 
+    padding: 15px; 
+    margin-bottom: 20px; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Légère ombre */
+}
+.ispag-card:hover{
+    border-color: #d1d9e2; /* Bordure légèrement plus foncée au survol */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style des titres de section à l'intérieur des cartes */
+.ispag-card h5 { 
+    border-bottom: 1px solid #eee; /* Ligne de séparation */
+    padding-bottom: 10px; 
+    font-weight: 600; 
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--ispag-color-text-dark);
+}
+
+/* Gestion du responsive pour les petits écrans */
+@media (max-width: 992px) {
+    .ispag-detail-container {
+        /* Passe en mode colonne sur les petits écrans */
+        flex-direction: column; 
+        gap: 0;
+    }
+    .ispag-left-panel, .ispag-right-panel {
+        /* Les colonnes prennent toute la largeur disponible */
+        flex: 1 1 100%;
+    }
+}
+
+
+
+/* -------------------------------------------------------------------------- */
+/* --- 3. EN-TÊTE ET AVATAR --- */
+/* -------------------------------------------------------------------------- */
+
+.ispag-header-card { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+/* Style de base pour les initiales (le conteneur par défaut) */
+.ispag-profile-pic { 
+    width: 60px; 
+    height: 60px; 
+    /* Ces propriétés sont actives par défaut pour afficher le rond orange et centrer les initiales */
+    border-radius: 50%; 
+    background: var(--ispag-color-profile-pic); 
+    color: var(--ispag-color-background); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 24px; 
+    font-weight: bold; 
+    flex-shrink: 0; 
+}
+
+/* ---------------------------------------------------------------- */
+/* STYLE SPÉCIFIQUE LORSQU'UN FAVICON EST PRÉSENT */
+/* ---------------------------------------------------------------- */
+
+/* 1. Rétablir le style du conteneur .ispag-profile-pic */
+.ispag-profile-pic.has-favicon {
+    /* Supprimer le fond et la bordure ronde pour afficher l'icône sur fond transparent/blanc */
+    background: none; /* Supprime le fond orange */
+    border-radius: 0; /* Supprime le bord rond si vous voulez des coins carrés */
+    /* On garde les dimensions (width: 60px; height: 60px;) du style de base */
+}
+
+/* 2. Styliser l'image elle-même pour qu'elle remplisse le conteneur */
+.ispag-profile-pic.has-favicon .favicon-img {
+    /* S'assurer que l'image ne dépasse pas la taille du conteneur (60x60) */
+    max-width: 100%; 
+    max-height: 100%; 
+    /* S'assurer que l'image elle-même n'a pas de bordure ronde si elle n'en a pas besoin */
+    border-radius: 0; 
+    /* Si vous voulez que l'image remplisse 60x60 même si elle est plus petite : */
+    /* width: 100%;
+    /* height: 100%; */ 
+}
+.ispag-header-info h4 { 
+    margin: 0; 
+    font-size: 18px; 
+    color: var(--ispag-color-text-dark); 
+}
+.ispag-header-info p { 
+    margin: 0; 
+    font-size: 13px; 
+    color: var(--ispag-color-text-light); 
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* --- 6. ÉDITION EN LIGNE (INLINE EDIT) --- */
+/* -------------------------------------------------------------------------- */
+
+.ispag-editable-field {
+    /* Pointeur pour indiquer que le champ est cliquable */
+    cursor: pointer; 
+    /* Souligne légèrement ou change l'arrière-plan au survol */
+    transition: background-color 0.2s;
+    border-radius: 3px;
+    /* Pour aligner l'icône d'édition à droite du texte */
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center;
+    gap: 5px; /* Espace entre le texte/select et l'icône */
+    min-height: 18px; /* Assure une hauteur minimale pour l'édition */
+    box-sizing: border-box;
+}
+
+.ispag-editable-field:hover {
+    background-color: #f8f8f8;
+}
+
+/* Style de l'icône de crayon */
+.ispag-editable-field .edit-icon {
+    font-size: 10px; /* Taille plus petite pour l'icône */
+    opacity: 0; /* Masqué par défaut */
+    color: var(--ispag-color-primary);
+    transition: opacity 0.2s;
+    flex-shrink: 0; /* Empêche le rétrécissement */
+}
+
+/* Afficher l'icône au survol du champ éditable */
+.ispag-editable-field:hover .edit-icon {
+    opacity: 1;
+}
+
+/* Styles pour les champs d'édition (Input/Select) */
+.ispag-edit-input, 
+.ispag-edit-select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 3px 6px;
+    border: 1px solid var(--ispag-color-primary); /* Bordure bleue en mode édition */
+    border-radius: 3px;
+    font-size: 14px; 
+    height: 28px; /* Hauteur cohérente */
+}
+
+/* Le mode édition masque la valeur affichée et l'icône */
+.ispag-editable-field.editing {
+    background-color: transparent;
+    cursor: default;
+    /* Cache l'icône pendant l'édition */
+}
+
+/* Le champ de l'en-tête nécessite une adaptation de taille */
+.ispag-header-info .ispag-editable-field {
+    font-size: 13px;
+    color: var(--ispag-color-text-light);
+    justify-content: flex-start;
+    padding: 0;
+}
+.ispag-header-info .ispag-editable-field:hover {
+    background-color: transparent;
+}
+.ispag-header-info .ispag-edit-input {
+    font-size: 13px;
+    padding: 1px 4px;
+    height: auto;
+}
+.ispag-header-info .edit-icon {
+    font-size: 8px; 
+    opacity: 0.5;
+}
+
+
+/* État de chargement */
+.ispag-editable-field.loading {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* -------------------------------------------------------------------------- */
+/* --- 4. LISTE D'INFORMATIONS CLÉS (Définition List) --- */
+/* -------------------------------------------------------------------------- */
+
+.ispag-key-info-list { 
+    list-style: none; 
+    padding: 0; 
+}
+.ispag-key-info-list dt, 
+.ispag-key-info-list dd { 
+    display: flex; /* Utilisé pour aligner les éléments sur la ligne */
+    justify-content: space-between; 
+    padding: 8px 0; 
+    border-bottom: 1px dotted var(--ispag-color-border-lighter); 
+    margin: 0; 
+    font-size: 14px; 
+}
+.ispag-key-info-list dt { 
+    font-weight: 500; 
+    color: var(--ispag-color-text-medium); 
+}
+.ispag-key-info-list dd { 
+    font-weight: 400; 
+    text-align: right; 
+    /* max-width: 60%; /* Pour éviter les dépassements si le contenu est trop long */
+    /* Permet le positionnement de l'icône d'édition dans le DD */
+    position: relative; 
+}
+
+/* -------------------------------------------------------------------------- */
+/* --- 7. CARTES DE DROITE (Company, Transactions, Tickets) --- */
+/* -------------------------------------------------------------------------- */
+
+/* Titres avec boutons d'action (+ Add) */
+.ispag-company-card h5,
+.ispag-transactions-card h5,
+.ispag-tickets-card h5 {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+}
+
+/* Style de l'action '+ Add' */
+.ispag-right-panel h5 span {
+    font-size: 12px; 
+    color: var(--ispag-color-primary); 
+    cursor: pointer;
+}
+
+/* Style de l'entreprise (Nom en bleu) */
+.ispag-company-card strong { 
+    color: var(--ispag-color-primary);
+}
+
+/* Boutons secondaires (Show related...) */
+.ispag-right-panel button, 
+.ispag-button-link {
+    background: none !important; 
+    color: var(--ispag-color-text-dark) !important; 
+    border: 1px solid #ccc !important; 
+    padding: 5px 10px !important; 
+    border-radius: 4px !important; 
+    font-size: 12px !important; 
+    cursor: pointer !important; 
+    text-decoration: none !important; 
+    text-align: center !important; 
+    transition: background-color 0.2s;
+    width: 100%; /* Remplir toute la largeur de la carte */
+    box-sizing: border-box; /* Inclure padding et border dans la largeur */
+}
+
+.ispag-right-panel button:hover, 
+.ispag-button-link:hover {
+    background-color: #f0f0f0 !important; 
+    color: #000 !important;
+}
+
+/* Liste des transactions */
+.ispag-transactions-list {
+    margin-bottom: 10px;
+}
+
+
+
+.ispag-transaction-item { 
+    padding: 10px 0; 
+    border-bottom: 1px solid var(--ispag-color-border-lighter); 
+}
+.ispag-full-transaction-item { 
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    
+    padding: 10px 0; 
+    border-bottom: 1px solid var(--ispag-color-border-lighter); 
+}
+.ispag-full-transaction-item:hover {
+    border-color: #d1d9e2; /* Bordure légèrement plus foncée au survol */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.ispag-transaction-item:last-child, .ispag-full-transaction-item:last-child { 
+    border-bottom: none; 
+}
+.ispag-transaction-item h6, .ispag-full-transaction-item h6 { 
+    margin: 0 0 5px 0; 
+    font-size: 14px; 
+    color: var(--ispag-color-primary); 
+    font-weight: 600; 
+    cursor: pointer; 
+}
+.ispag-transaction-item p, .ispag-full-transaction-item p { 
+    margin: 0; 
+    font-size: 12px; 
+    color: var(--ispag-color-text-medium); 
+    line-height: 1.5; 
+}
+.ispag-transaction-item h6 a, .ispag-full-transaction-item h6 a {
+    color: inherit;
+    text-decoration: none;
+}
+.ispag-transaction-item h6 a:hover, .ispag-full-transaction-item h6 a:hover {
+    text-decoration: underline;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* --- 8. Navigation par onglets (Corrigé pour masquage forcé) --- */
+/* -------------------------------------------------------------------------- */
+
+.ispag-tabs-navigation {
+    display: flex;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 15px;
+    padding: 0 10px;
+}
+
+.ispag-tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    margin-right: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+.ispag-tab-btn:hover {
+    color: #007bff;
+}
+
+.ispag-tab-btn.active {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    font-weight: 600;
+}
+
+.ispag-tabs-content ,.ispag-right-panel{
+    padding: 0 10px;
+    
+    /* 1. On définit une hauteur maximale */
+    /* 70vh signifie 70% de la hauteur de l'écran. 
+       Tu peux ajuster ce chiffre selon la place prise par tes headers/onglets */
+    min-height: 90vh;
+    max-height: 90vh; 
+    
+    /* 2. On active le scroll vertical uniquement */
+    overflow-y: auto;
+    
+    /* 3. Optionnel : un petit rail pour que le scroll soit visible */
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+/* Style pour Chrome/Safari/Edge */
+.ispag-tabs-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ispag-tabs-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.ispag-tabs-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+/* 🟥 RÈGLE DE MASQUAGE FORCÉ 🟥 */
+/* Cible TOUS les .ispag-tab-pane à l'intérieur de .ispag-tabs-content */
+/* Le !important garantit que le panneau est masqué, sauf s'il est actif. */
+.ispag-tabs-content .ispag-tab-pane {
+    display: none !important; 
+}
+
+/* 🟢 RÈGLE D'AFFICHAGE FORCÉ 🟢 */
+/* Cible le panneau ACTIF à l'intérieur de .ispag-tabs-content */
+/* Le !important annule la règle de masquage ci-dessus pour le panneau sélectionné. */
+.ispag-tabs-content .ispag-tab-pane.active {
+    display: block !important; 
+}
+
+
+/* Onglets */
+.ispag-modal-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+}
+
+.ispag-tab-modal {
+    flex-grow: 1;
+    text-align: center;
+    padding: 10px 0;
+    cursor: pointer;
+    background: #f8f8f8;
+    border: none;
+    border-right: 1px solid #eee;
+    color: #555;
+    font-weight: 500;
+}
+
+.ispag-tab-modal.active {
+    background: #fff;
+    border-bottom: 2px solid #007bff;
+    color: #007bff;
+}
+
+/* Corps et Liste de contacts */
+.ispag-modal-body {
+    padding: 20px;
+}
+
+.ispag-tab-modal-pane:not(.active) {
+    display: none;
+}
+
+#tab-add-existing {
+    /* Styles pour la barre de recherche et le bouton */
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* --- RESPONSIVE CONTACT DETAIL (Smartphone & Tablette) --- */
+@media screen and (max-width: 1024px) {
+    
+    /* 1. Force l'empilement des colonnes principales (Profil vs Transactions) */
+    .ispag-container-detail { 
+        display: flex;
+        flex-direction: column !important;
+        padding: 10px;
+    }
+
+    /* 2. Ajustement des largeurs */
+    .ispag-column-left, 
+    .ispag-column-right {
+        width: 100% !important;
+        margin-bottom: 20px;
+    }
+
+    /* 3. Optimisation du Header (Photo et Titre) */
+    .ispag-contact-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+
+    .ispag-contact-avatar {
+        margin-right: 0 !important;
+        margin-bottom: 15px;
+    }
+
+    .ispag-contact-info-top h1 {
+        font-size: 1.5rem;
+    }
+
+    /* 4. Transformation des lignes d'info en blocs scannables */
+    .ispag-info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .ispag-info-label {
+        font-weight: bold;
+        margin-bottom: 4px;
+        color: #666;
+    }
+
+    /* 5. Transformation du Tableau de Transactions en "Cards" */
+    .ispag-transactions-list .ispag-transaction-item {
+        display: block !important;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        padding: 15px;
+        background: #fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* On cache les headers du tableau s'il y en a */
+    .ispag-transactions-header {
+        display: none !important;
+    }
+
+    .ispag-transaction-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 2 colonnes sur tablette */
+        gap: 10px;
+    }
+
+    /* Sur petit smartphone, une seule colonne */
+    @media (max-width: 480px) {
+        .ispag-transaction-details {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+
+
+
+
+
+/****************************************************************************************/
+/* --- CONTAINER PRINCIPAL --- */
+.ispag-container-detail {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px; /* 3 colonnes : Profil | Activité | Sidebar */
+    gap: 20px;
+    padding: 20px;
+    background-color: #f5f7f9;
+    align-items: start;
+}
+
+/* --- CARDS STYLE HUBSPOT --- */
+.ispag-card {
+    background: #fff;
+    border: 1px solid #eaf0f6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* --- COLONNE GAUCHE : PROFIL --- */
+.ispag-contact-header {
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.ispag-contact-avatar {
+    width: 64px;
+    height: 64px;
+    background: #dfe3eb;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #33475b;
+}
+
+.ispag-contact-info-top h1 {
+    font-size: 18px;
+    margin: 0;
+    color: #33475b;
+}
+
+.ispag-info-section h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #7c98b6;
+    margin-bottom: 15px;
+}
+
+.ispag-info-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+.ispag-info-label {
+    font-size: 12px;
+    color: #7c98b6;
+}
+
+.ispag-info-value {
+    font-size: 14px;
+    color: #33475b;
+    font-weight: 500;
+}
+
+/* --- COLONNE CENTRALE : NAVIGATION ET ONGLETS --- */
+.ispag-quick-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.ispag-nav-tabs {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: 2px solid #cbd6e2;
+}
+
+.ispag-nav-tabs li {
+    margin-right: 20px;
+}
+
+.ispag-nav-tabs a {
+    display: block;
+    padding: 10px 5px;
+    text-decoration: none;
+    color: #33475b;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.ispag-nav-tabs li.active a {
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+/* .ispag-tabs-content {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #cbd6e2;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    min-height: 400px;
+} */
+
+.ispag-tab-pane {
+    display: none;
+}
+
+.ispag-tab-pane.active {
+    display: block;
+}
+
+/* --- SIDEBAR DROITE : WIDGETS --- */
+.ispag-sidebar-item, .ispag-transaction-item-mini {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f2f7;
+}
+
+.ispag-sidebar-item:last-child { border: none; }
+
+.ispag-status-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    color: #fff;
+    display: inline-block;
+}
+
+/* --- RESPONSIVE (Passage en 1 colonne) --- */
+@media (max-width: 1100px) {
+    .ispag-container-detail {
+        grid-template-columns: 1fr; /* Tout s'empile verticalement */
+    }
+    
+    .ispag-column-left, .ispag-column-right, .ispag-column-right-sidebar {
+        width: 100%;
+    }
+}
+
+/* Animation chargement */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
+.ispag-key-info dt {
+    font-weight: bold;
+}
+
+.ispag-company-icon-container {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--ispag-grey); /* Ton fond gris */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.ispag-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ispag-initials {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--ispag-dark);
+    display: flex;
+}
