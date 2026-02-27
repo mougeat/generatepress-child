@@ -56,11 +56,14 @@ function theme_enqueue_styles() {
 //     return 'ISPAG'; 
 // }
 
-function allow_msg_upload_mimes( $mimes ) {
-    $mimes['msg'] = 'application/vnd.ms-outlook';
+function allow_custom_upload_mimes( $mimes ) {
+    $mimes['msg']  = 'application/vnd.ms-outlook';
+    $mimes['eml']  = 'message/rfc822'; // Type MIME standard pour .eml
+    $mimes['xlsx'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    $mimes['xls']  = 'application/vnd.ms-excel';
     return $mimes;
 }
-add_filter( 'upload_mimes', 'allow_msg_upload_mimes' );
+add_filter( 'upload_mimes', 'allow_custom_upload_mimes' );
 
 /**
  * Charge un template ISPAG en cherchant d'abord dans le thème, puis dans le plugin.
