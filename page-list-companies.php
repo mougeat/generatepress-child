@@ -127,10 +127,10 @@ $selected_owner = isset($_GET['owner_id']) ? absint($_GET['owner_id']) : 0;
                     <?php endforeach; ?>
                 </select>
 
-                <button type="submit" class="button button-primary"><?php _e( 'Filtrer', 'ispag-crm' ); ?></button>
+                <button type="submit" class="ispag-btn button-primary"><?php _e( 'Filtrer', 'ispag-crm' ); ?></button>
                 
                 <?php if ( ! empty( $search ) || ! empty( $priority ) || ! empty( $city ) ) : ?>
-                    <a href="<?php echo esc_url( get_permalink() ); ?>" class="button button-secondary"><?php _e( 'Réinitialiser', 'ispag-crm' ); ?></a>
+                    <a href="<?php echo esc_url( get_permalink() ); ?>" class="ispag-btn button-secondary"><?php _e( 'Réinitialiser', 'ispag-crm' ); ?></a>
                 <?php endif; ?>
             </form>
         </div>

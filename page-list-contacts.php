@@ -13,7 +13,7 @@ if ( ! class_exists( 'ISPAG_Crm_Contacts_Repository' ) || ! class_exists( 'ISPAG
     echo '</main></div>';
     get_footer();
     return;
-}
+} 
 
 $contacts_repo = new ISPAG_Crm_Contacts_Repository();
 global $wpdb; 
@@ -65,28 +65,30 @@ $total_pages = ceil( $total_users / $limit );
 
         <h1><?php the_title(); ?> (<?php echo $total_users; ?>)</h1>
 
-        <form method="get" class="ispag-contact-filter-form" action="<?php echo esc_url( $current_url ); ?>">
-            <div class="filter-group">
-                <input type="search" name="search" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e('Name or Email', 'ispag-crm'); ?>" />
+        <div class="ispag-toolbar" style="background: #f6f7f7; padding: 15px; border: 1px solid #ccd0d4; margin-bottom: 20px;">
+            <form method="get" class="ispag-contact-filter-form" action="<?php echo esc_url( $current_url ); ?>">
+                <div class="filter-group">
+                    <input type="search" name="search" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e('Name or Email', 'ispag-crm'); ?>" />
+                    
+                    <select name="filter_owner">
+                        <option value="0"><?php esc_html_e( 'All Owners', 'ispag-crm' ); ?></option>
+                        <?php 
+                        $owners_options = $contacts_repo->get_ispag_owners_options();
+                        foreach ( $owners_options as $id => $name ) : 
+                            if ($id === '') continue;
+                            echo "<option value='".esc_attr($id)."' ".selected($filter_owner_id, $id, false).">".esc_html($name)."</option>";
+                        endforeach;
+                        ?>
+                    </select>
                 
-                <select name="filter_owner">
-                    <option value="0"><?php esc_html_e( 'All Owners', 'ispag-crm' ); ?></option>
-                    <?php 
-                    $owners_options = $contacts_repo->get_ispag_owners_options();
-                    foreach ( $owners_options as $id => $name ) : 
-                        if ($id === '') continue;
-                        echo "<option value='".esc_attr($id)."' ".selected($filter_owner_id, $id, false).">".esc_html($name)."</option>";
-                    endforeach;
-                    ?>
-                </select>
-            
-                <button type="submit" class="button button-secondary"><?php esc_html_e( 'Filter / Search', 'ispag-crm' ); ?></button>
+                    <button type="submit" class="ispag-btn button-secondary"><?php esc_html_e( 'Filter / Search', 'ispag-crm' ); ?></button>
 
-                <?php if ( ! empty( $search ) || $filter_owner_id > 0 ) : ?>
-                    <a href="<?php echo esc_url( remove_query_arg( array( 'orderby', 'order', 'search', 'filter_owner', 'paged' ) ) ); ?>" class="button ispag-btn-grey"><?php esc_html_e( 'Reset filters', 'ispag-crm' ); ?></a>
-                <?php endif; ?>
-            </div>
-        </form>
+                    <?php if ( ! empty( $search ) || $filter_owner_id > 0 ) : ?>
+                        <a href="<?php echo esc_url( remove_query_arg( array( 'orderby', 'order', 'search', 'filter_owner', 'paged' ) ) ); ?>" class="ispag-btn ispag-btn-grey"><?php esc_html_e( 'Reset filters', 'ispag-crm' ); ?></a>
+                    <?php endif; ?>
+                </div>
+            </form>
+        </div>
 
         <?php if ( empty( $contacts ) ) : ?>
             <p class="ispag-no-results"><?php esc_html_e( 'No contacts found.', 'ispag-crm' ); ?></p>

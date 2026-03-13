@@ -99,7 +99,7 @@ if ( class_exists( 'ISPAG_Crm_Deals_Repository' ) ) {
                     ?>
                     
                     
-                    <a href="<?php echo home_url('/deals/'); ?>" class="button ispag-btn-secondary-outlined">
+                    <a href="<?php echo home_url('/deals/'); ?>" class="ispag-btn ispag-btn-secondary-outlined">
                         <span class="dashicons dashicons-columns"></span> <?php _e('Kanban view', 'ispag-crm'); ?>
                     </a>
                 </div>
@@ -117,37 +117,6 @@ if ( class_exists( 'ISPAG_Crm_Deals_Repository' ) ) {
         </article>
     </main>
 </div>
-<!-- 
-<style>
-.ispag-crm-table td{position: relative; padding: 12px 15px;}
-.ispag-badge {
-    display: inline-flex;    /* Utilise flex pour aligner le texte au centre du badge */
-    align-items: center;
-    justify-content: center;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    white-space: nowrap;
-    
-    /* Sécurités cruciales */
-    position: static !important; /* Force le retour dans le flux normal */
-    float: none !important;      /* Empêche le badge de s'échapper à droite */
-    line-height: 1.4;
-    margin: 0;
-}
-.ispag-table-container { background: #fff; border: 1px solid #cbd6e2; border-radius: 8px; overflow: hidden; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-.ispag-crm-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.ispag-crm-table th { background: #f5f8fa; text-align: left; padding: 12px 15px; border-bottom: 2px solid #cbd6e2; color: #33475b; font-weight: 600; }
-.ispag-crm-table td { padding: 12px 15px; border-bottom: 1px solid #eaf0f6; vertical-align: middle; }
-.ispag-crm-table tr:hover { background-color: #f9fbfd; }
-.amount-cell { font-family: 'Courier New', Courier, monospace; font-weight: bold; text-align: right; color: #2d3e50; }
-/* .ispag-badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; } */
-.small-text { font-size: 11px; color: #7c98b6; margin-top: 2px; }
-.company-name { font-weight: 500; color: #33475b; }
-.dashicons { vertical-align: middle; margin-right: 5px; font-size: 18px; }
-</style> -->
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

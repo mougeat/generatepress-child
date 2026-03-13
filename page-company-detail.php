@@ -67,7 +67,7 @@ if ( empty( $company_viag_id ) ) {
 // 4. Chargement des données de l'entreprise via le Repository
 $company = $repository->get_company_by_viag_id( $company_viag_id );
 
-
+ 
 // 5. Vérification des données et affichage de l'erreur
 if ( empty( $company ) ) {
     ?>

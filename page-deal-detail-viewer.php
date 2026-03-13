@@ -425,7 +425,7 @@ if ( $deal_id > 0 && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exists( 'IS
                 
                 <div class="ispag-card ispag-contacts-card">
                     <h5>
-                        <?php _e( 'Contacts', 'ispag-crm'); ?> (<?php echo $contacts_count; ?>) 
+                        <?php _e( 'Contacts', 'ispag-crm'); ?> (<span class="ispag-contact-count"><?php echo $contacts_count; ?></span>) 
                         <span id="open-add-contact-modal" 
                             style="font-size: 12px; color: #007bff; cursor: pointer;" 
                             data-company-id="<?php echo $company_id; ?>"
@@ -451,6 +451,7 @@ if ( $deal_id > 0 && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exists( 'IS
                                         class="ispag-remove-association" 
                                         data-contact-id="<?php echo absint($contact->ID); ?>"
                                         data-deal-id="<?php echo absint($deal->id); ?>"
+                                        data-action="remove-contact-from-deal"
                                         title="<?php esc_attr_e( 'Remove association', 'ispag-crm' ); ?>"
                                         style="color: #e74c3c; cursor: pointer;"
                                     >

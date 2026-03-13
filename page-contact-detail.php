@@ -86,7 +86,7 @@ $date_format = get_option( 'date_format' );
 // 6. Préparation des variables (Extraction des propriétés de l'objet $company)
 // ----------------------------------------------------
 
-// error_log(print_r($contact, true));
+
 
 $contact_id              = absint( $contact->ID );
 $contact_name            = esc_html( $contact->display_name ?? '' );
@@ -117,13 +117,18 @@ $link_contact_list       = home_url( '/contact-list/' ); // URL de la page de li
 $link_new_contact        = home_url( '/add-contact/' ); // URL du formulaire d'ajout de contact
 $link_new_project        = home_url( '/add-project/' ); // URL du formulaire d'ajout de projet
 $transactions_list_full  = []; // Liste complète des transactions (devrait être chargée ici)
-$single_company_id       =  $contact->ispag_company_id ;
+// Extraction de tous les IDs d'entreprises associés
+if ( ! empty( $contact->companies ) && is_array( $contact->companies ) ) {
+    // wp_list_pluck extrait uniquement la colonne 'Id' de votre tableau d'objets
+    $associated_companies_list_full = wp_list_pluck( $contact->companies, 'viag_id' );
 
-if ( $single_company_id > 0 ) {
-    $associated_companies_list_full = [ $single_company_id ];
 } else {
+    // Sécurité : si aucune entreprise n'est trouvée
     $associated_companies_list_full = [];
 }
+
+// Pour vos besoins d'affichage spécifique (ex: le premier ID pour un lien principal)
+$single_company_id = ! empty( $associated_companies_list_full ) ? $associated_companies_list_full[0] : 0;
 
 // ⚠️ Assurez-vous que la classe Deals Repository existe.
 if ( class_exists( 'ISPAG_Crm_Deals_Repository' ) ) {
@@ -144,7 +149,7 @@ $associated_contacts_list_full = []; // Remplacer par l'appel au Repository de C
         $note_repository = new ISPAG_Note_Repository();
         $note_renderer = new ISPAG_Note_Renderer();
         $activity_detail = $note_repository->get_activities_for_entity('contact', $user_id);
-        // error_log('-> activity_detail ', printf($activity_detail, true));
+        
 
         // On charge la liste et on l'affecte à la variable destinée au template
         $notes_list_full = $note_renderer->render_activities_list( $activity_detail);
@@ -651,6 +656,8 @@ extract( $template_args );
                     <?php 
                     if (class_exists( 'ISPAG_Crm_Company_Repository' ) ){
                         $company_repo = new ISPAG_Crm_Company_Repository();
+
+                        
                         
                         foreach ($associated_companies_list_full as $company_id) {
                             
