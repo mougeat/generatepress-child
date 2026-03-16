@@ -1,8 +1,8 @@
 /* CSS pour bloquer le scroll du BODY */
 body.modal-open {
     overflow: hidden; /* Empêche le défilement vertical */
-    position: fixed; /* Fixe le body pour éviter les sauts de page au défilement */
-    width: 100%; /* Important pour maintenir la largeur */
+    /*position: fixed; /* Fixe le body pour éviter les sauts de page au défilement */
+    /*width: 100%; /* Important pour maintenir la largeur */
 }
 /* Cache l'arrière-plan de la modale par défaut */
 .ispag-modal-overlay {
