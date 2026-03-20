@@ -55,6 +55,7 @@ $repo_args = array(
 );
 
 $results = $contacts_repo->get_contacts_list_optimized( $repo_args );
+error_log(print_r($results, true));
 $contacts    = $results['contacts'];
 $total_users = $results['total'];
 $total_pages = ceil( $total_users / $limit );
