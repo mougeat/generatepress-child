@@ -372,7 +372,7 @@ extract( $template_args );
                         </div>
 
                         <div class="ispag-info-row">
-                            <span class="ispag-info-label"><?php _e( 'Phone', 'ispag-crm' ); ?></span>
+                            <span class="ispag-info-label"><?php _e( 'Phone number', 'ispag-crm' ); ?></span>
                             <span class="ispag-info-value ispag-editable-field" data-type="text" data-name="<?php echo ISPAG_Crm_Contact_Constants::META_LEAD_PHONE; ?>" data-value="<?php echo esc_attr( $contact_phone ); ?>">
                                 <?php echo $contact_phone; ?> <span class="edit-icon">✏️</span>
                             </span>

@@ -12,7 +12,7 @@ get_header(); // Charge l'en-tête du thème
 // Valeurs par défaut
 $kanban_filters = [
     'owner'  => get_current_user_id(), // Filtre par défaut: utilisateur courant (si non écrasé)
-    'status' => 'open',                  // Filtre par défaut: seulement les deals ouverts
+    // 'status' => 'open',                  // Filtre par défaut: seulement les deals ouverts
     'closing_date' => 'all', 
     'create_date'  => 'all',
     'search'       => isset($_GET['search']) ? sanitize_text_field($_GET['search']) : '',
@@ -20,7 +20,8 @@ $kanban_filters = [
 
 $company_id_filter = null;
 $contact_id_filter = null;
-$current_owner_filter = absint( $kanban_filters['owner'] ); // Utilisateur courant par défaut
+// $current_owner_filter = absint( $kanban_filters['owner'] ); // Utilisateur courant par défaut
+$current_owner_filter = 'all'; // Utilisateur courant par défaut
 $search_term = '';
 
 // 1. GESTION DES FILTRES BASÉS SUR L'URL (URL_DU_SITE/deals/...)
@@ -185,7 +186,14 @@ if ( $deal_repo && $stage_repo ) {
                                                      draggable="true"
                                                 >
                                                     <p class="deal-title">
-                                                        <strong><a href="<?php echo $deal->get_deal_detail_link(); ?>"><?php echo esc_html( $deal->project_name ); ?></a></strong> 
+                                                        <strong>
+                                                            <a href="<?php echo $deal->get_deal_detail_link(); ?>" class="ispag-deal-title-link">
+                                                                <?php echo esc_html( $deal->project_name ); ?>
+                                                                <?php if (isset($deal->is_copie) && $deal->is_copie == 1) : ?>
+                                                                    <span class="dashicons dashicons-admin-page ispag-copy-icon"></span>
+                                                                <?php endif; ?>
+                                                            </a>
+                                                        </strong>
                                                     </p>
                                                     <p class="deal-info amount">
                                                         <?php _e('Total amount', 'ispag-crm'); ?>: <?php echo number_format( (float) $deal->total_excl_vat, 0, '.', '\'' ); ?> CHF

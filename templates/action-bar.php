@@ -3,52 +3,68 @@
  * Template pour l'affichage du contenu de l'action bar
  * Variables attendues : $actions (array)
  */
+
+// Valeurs par défaut pour éviter les warnings sur les clés manquantes
+$company_ids    = $actions['company_ids']    ?? '';
+$company_names  = $actions['company_names']  ?? '';
+$contact_ids    = $actions['contact_ids']    ?? '';
+$contact_names  = $actions['contact_names']  ?? '';
+$contact_emails = $actions['contact_emails'] ?? '';
+$contact_phone  = $actions['contact_phone']  ?? '';
+$deal_ids       = $actions['deal_ids']       ?? '';
+$deal_names     = $actions['deal_names']     ?? '';
+$offer_num      = $actions['offer_num']      ?? '';
+$project_num    = $actions['project_num']    ?? '';
+$closing_date   = $actions['closing_date']   ?? '';
+$total_excl_vat = $actions['total_excl_vat'] ?? 0;
+$user_id        = $actions['user_id']        ?? 0;
+
+$deal_date = $closing_date ? date_i18n( 'd.m.Y', strtotime( $closing_date ) ) : '';
+$deal_total = number_format( (float) $total_excl_vat, 2, '.', '\'' ) . ' CHF';
 ?>
 <button class="ispag-action-btn"
         data-action="note"
-        data-company-ids="<?php echo ($actions['company_ids']); ?>"
-        data-company-names="<?php echo ($actions['company_names']); ?>"
-        data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-        data-contact-names="<?php echo ($actions['contact_names']); ?>"
-        data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-        data-deal-names="<?php echo ($actions['deal_names']); ?>"
-    title="<?php esc_attr_e( 'Add Note', 'ispag-crm' ); ?>"
+        data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+        data-company-names="<?php echo esc_attr( $company_names ); ?>"
+        data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+        data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+        data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+        data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
+        title="<?php esc_attr_e( 'Add Note', 'ispag-crm' ); ?>"
 >
     <span class="dashicons dashicons-text-page"></span>
     <?php esc_html_e( 'Note', 'ispag-crm' ); ?>
 </button>
 
-<?php if ( ! empty( $actions['contact_phone'] ) ) : ?>
-    <a 
-        href="tel:<?php echo esc_attr( $actions['contact_phone'] ); ?>" 
+<?php if ( ! empty( $contact_phone ) ) : ?>
+    <a
+        href="tel:<?php echo esc_attr( $contact_phone ); ?>"
         title="<?php esc_attr_e( 'Call this number', 'ispag-crm' ); ?>"
     >
     <button class="ispag-action-btn"
         data-action="call"
-        data-company-ids="<?php echo ($actions['company_ids']); ?>"
-        data-company-names="<?php echo ($actions['company_names']); ?>"
-        data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-        data-contact-names="<?php echo ($actions['contact_names']); ?>"
-        data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-        data-deal-names="<?php echo ($actions['deal_names']); ?>"
+        data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+        data-company-names="<?php echo esc_attr( $company_names ); ?>"
+        data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+        data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+        data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+        data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
         title="<?php esc_attr_e( 'Make a phone call', 'ispag-crm' ); ?>"
     >
         <span class="dashicons dashicons-phone"></span>
         <?php esc_html_e( 'Call', 'ispag-crm' ); ?>
     </button>
     </a>
-<?php 
-else:
-?>
+<?php else : ?>
     <button class="ispag-action-btn"
         data-action="call"
-        data-company-ids="<?php echo ($actions['company_ids']); ?>"
-        data-company-names="<?php echo ($actions['company_names']); ?>"
-        data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-        data-contact-names="<?php echo ($actions['contact_names']); ?>"
-        data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-        data-deal-names="<?php echo ($actions['deal_names']); ?>"
-        title="<?php esc_attr_e( 'Log a Call', 'ispag-crm' ); ?>"
+        data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+        data-company-names="<?php echo esc_attr( $company_names ); ?>"
+        data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+        data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+        data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+        data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
+        title="<?php esc_attr_e( 'Log a call', 'ispag-crm' ); ?>"
     >
         <span class="dashicons dashicons-phone"></span>
         <?php esc_html_e( 'Call', 'ispag-crm' ); ?>
@@ -57,18 +73,17 @@ else:
 
 <button class="ispag-action-btn"
     data-action="email"
-    data-company-ids="<?php echo ($actions['company_ids']); ?>"
-    data-company-names="<?php echo ($actions['company_names']); ?>"
-    data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-    data-contact-names="<?php echo ($actions['contact_names']); ?>"
-    data-contact-emails="<?php echo ($actions['contact_emails']); ?>"
-    data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-    data-deal-names="<?php echo ($actions['deal_names']); ?>"
-    
-    data-deal-offer-num="<?php echo $actions['offer_num']; ?>"
-    data-deal-project-num="<?php echo $actions['project_num']; ?>"
-    data-deal-deal-date="<?php echo date_i18n( 'd.m.Y', strtotime( $actions['closing_date'] ) ); ?>"
-    data-deal-total=" <?php echo number_format( (float)$actions['total_excl_vat'], 2, '.', '\'' ); ?> CHF"
+    data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+    data-company-names="<?php echo esc_attr( $company_names ); ?>"
+    data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+    data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+    data-contact-emails="<?php echo esc_attr( $contact_emails ); ?>"
+    data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+    data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
+    data-deal-offer-num="<?php echo esc_attr( $offer_num ); ?>"
+    data-deal-project-num="<?php echo esc_attr( $project_num ); ?>"
+    data-deal-deal-date="<?php echo esc_attr( $deal_date ); ?>"
+    data-deal-total="<?php echo esc_attr( $deal_total ); ?>"
     title="<?php esc_attr_e( 'Send an Email', 'ispag-crm' ); ?>"
 >
     <span class="dashicons dashicons-email"></span>
@@ -77,12 +92,12 @@ else:
 
 <button class="ispag-action-btn"
     data-action="task"
-    data-company-ids="<?php echo ($actions['company_ids']); ?>"
-    data-company-names="<?php echo ($actions['company_names']); ?>"
-    data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-    data-contact-names="<?php echo ($actions['contact_names']); ?>"
-    data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-    data-deal-names="<?php echo ($actions['deal_names']); ?>"
+    data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+    data-company-names="<?php echo esc_attr( $company_names ); ?>"
+    data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+    data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+    data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+    data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
     title="<?php esc_attr_e( 'Create Task', 'ispag-crm' ); ?>"
 >
     <span class="dashicons dashicons-list-view"></span>
@@ -91,40 +106,41 @@ else:
 
 <button class="ispag-action-btn"
     data-action="meeting"
-    data-company-ids="<?php echo ($actions['company_ids']); ?>"
-    data-company-names="<?php echo ($actions['company_names']); ?>"
-    data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-    data-contact-names="<?php echo ($actions['contact_names']); ?>"
-    data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-    data-deal-names="<?php echo ($actions['deal_names']); ?>"
+    data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+    data-company-names="<?php echo esc_attr( $company_names ); ?>"
+    data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+    data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+    data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+    data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
     title="<?php esc_attr_e( 'Log Meeting', 'ispag-crm' ); ?>"
 >
     <span class="dashicons dashicons-calendar-alt"></span>
     <?php esc_html_e( 'Meeting', 'ispag-crm' ); ?>
 </button>
+
 <div class="ispag-dropdown">
     <button class="ispag-action-btn ispag-dropdown-toggle" title="<?php esc_attr_e( 'More actions', 'ispag-crm' ); ?>">
         <span class="dashicons dashicons-ellipsis"></span>
         <?php esc_html_e( 'More', 'ispag-crm' ); ?>
     </button>
     <div class="ispag-dropdown-menu">
-        
+
         <button class="ispag-dropdown-item"
             data-action="log_email"
-            data-company-ids="<?php echo ($actions['company_ids']); ?>"
-            data-company-names="<?php echo ($actions['company_names']); ?>"
-            data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-            data-contact-names="<?php echo ($actions['contact_names']); ?>"
-            data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-            data-deal-names="<?php echo ($actions['deal_names']); ?>"
+            data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+            data-company-names="<?php echo esc_attr( $company_names ); ?>"
+            data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+            data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+            data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+            data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
             title="<?php esc_attr_e( 'Log an email', 'ispag-crm' ); ?>"
         >
             <span class="ispag-icon-svg emaillog-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
                     <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    
-                    <circle cx="4" cy="4" r="3.5" fill="white" stroke="none"/> <path d="M1 4H7M4 1V7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="4" cy="4" r="3.5" fill="white" stroke="none"/>
+                    <path d="M1 4H7M4 1V7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
             </span>
             <?php esc_html_e( 'Log an email', 'ispag-crm' ); ?>
@@ -132,12 +148,12 @@ else:
 
         <button class="ispag-dropdown-item"
             data-action="whatsapp"
-            data-company-ids="<?php echo ($actions['company_ids']); ?>"
-            data-company-names="<?php echo ($actions['company_names']); ?>"
-            data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-            data-contact-names="<?php echo ($actions['contact_names']); ?>"
-            data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-            data-deal-names="<?php echo ($actions['deal_names']); ?>"
+            data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+            data-company-names="<?php echo esc_attr( $company_names ); ?>"
+            data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+            data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+            data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+            data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
             title="<?php esc_attr_e( 'Send Whatsapp', 'ispag-crm' ); ?>"
         >
             <span class="ispag-icon-svg whatsapp-icon">
@@ -150,12 +166,12 @@ else:
 
         <button class="ispag-dropdown-item"
             data-action="sms"
-            data-company-ids="<?php echo ($actions['company_ids']); ?>"
-            data-company-names="<?php echo ($actions['company_names']); ?>"
-            data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-            data-contact-names="<?php echo ($actions['contact_names']); ?>"
-            data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-            data-deal-names="<?php echo ($actions['deal_names']); ?>"
+            data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+            data-company-names="<?php echo esc_attr( $company_names ); ?>"
+            data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+            data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+            data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+            data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
             title="<?php esc_attr_e( 'Log SMS', 'ispag-crm' ); ?>"
         >
             <span class="dashicons dashicons-smartphone"></span>
@@ -164,12 +180,12 @@ else:
 
         <button class="ispag-dropdown-item"
             data-action="linkedin"
-            data-company-ids="<?php echo ($actions['company_ids']); ?>"
-            data-company-names="<?php echo ($actions['company_names']); ?>"
-            data-contact-ids="<?php echo ($actions['contact_ids']); ?>"
-            data-contact-names="<?php echo ($actions['contact_names']); ?>"
-            data-deal-ids="<?php echo ($actions['deal_ids']); ?>"
-            data-deal-names="<?php echo ($actions['deal_names']); ?>"
+            data-company-ids="<?php echo esc_attr( $company_ids ); ?>"
+            data-company-names="<?php echo esc_attr( $company_names ); ?>"
+            data-contact-ids="<?php echo esc_attr( $contact_ids ); ?>"
+            data-contact-names="<?php echo esc_attr( $contact_names ); ?>"
+            data-deal-ids="<?php echo esc_attr( $deal_ids ); ?>"
+            data-deal-names="<?php echo esc_attr( $deal_names ); ?>"
             title="<?php esc_attr_e( 'Log a LinkedIn message', 'ispag-crm' ); ?>"
         >
             <span class="ispag-icon-svg linkedin-icon">
@@ -179,12 +195,12 @@ else:
             </span>
             <?php esc_html_e( 'Log a LinkedIn message', 'ispag-crm' ); ?>
         </button>
-        
+
         <div class="ispag-dropdown-divider"></div>
         <button class="ispag-dropdown-item ispag-item-danger"
             data-action="delete"
-            data-user-id="<?php echo absint($user_id); ?>"
-            data-contact-ids="<?php echo absint($user_id); ?>"
+            data-user-id="<?php echo absint( $user_id ); ?>"
+            data-contact-ids="<?php echo absint( $user_id ); ?>"
         >
             <span class="dashicons dashicons-trash"></span>
             <?php esc_html_e( 'Delete', 'ispag-crm' ); ?>

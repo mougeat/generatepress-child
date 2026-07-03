@@ -5,9 +5,10 @@
  * Description: Affiche la liste paginée et filtrable des contacts (ISPAG CRM) - Version Optimisée avec Indicateurs de Tri.
  */
 
-get_header();
+// get_header();
 
 if ( ! class_exists( 'ISPAG_Crm_Contacts_Repository' ) || ! class_exists( 'ISPAG_Crm_Contact_Constants' ) ) {
+    get_header();
     echo '<div id="primary" class="content-area"><main id="main" class="site-main">';
     echo '<div class="ispag-error-message">' . __( 'Technical error: Required CRM classes are missing.', 'ispag-crm' ) . '</div>';
     echo '</main></div>';
@@ -32,7 +33,11 @@ $order   = isset( $_GET['order'] ) && strtoupper($_GET['order']) === 'DESC' ? 'D
 $search  = isset( $_GET['search'] ) ? sanitize_text_field( $_GET['search'] ) : '';
 
 $limit  = absint( $a['limit'] );
-$paged  = ( isset( $_GET['paged'] ) && absint($_GET['paged']) > 1 ) ? absint( $_GET['paged'] ) : 1; 
+
+// On vérifie d'abord la query_var (pour /page/2/) puis le $_GET (pour ?paged=2)
+$paged = get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : ( isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1 );
+$paged = max( 1, $paged ); // Sécurité pour ne pas descendre sous 1
+
 $offset = ( $paged - 1 ) * $limit;
 
 // Filtres
@@ -60,11 +65,31 @@ $contacts    = $results['contacts'];
 $total_users = $results['total'];
 $total_pages = ceil( $total_users / $limit );
 
+$page_name = __('Contacts', 'ispag-crm');
+add_filter('pre_get_document_title', function($title) use ($page_name) {
+    if (!empty($page_name)) {
+        $site_name = get_bloginfo('name');
+        return $page_name . ' | ' . $site_name;
+    }
+    return $title;
+}, 999);
+
+get_header();
+
 ?>
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
 
-        <h1><?php the_title(); ?> (<?php echo $total_users; ?>)</h1>
+        <div class="ispag-header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1 style="margin: 0;"><?php the_title(); ?> (<?php echo $total_users; ?>)</h1>
+            
+            <button type="button" id="trigger-add-contact" class="button button-primary ispag-btn-large">
+                <span class="dashicons dashicons-plus" style="margin-top: 4px; margin-right: 5px;"></span>
+                <?php _e('Create contact', 'ispag-crm'); ?>
+            </button>
+        </div>
+
+        
 
         <div class="ispag-toolbar" style="background: #f6f7f7; padding: 15px; border: 1px solid #ccd0d4; margin-bottom: 20px;">
             <form method="get" class="ispag-contact-filter-form" action="<?php echo esc_url( $current_url ); ?>">
@@ -75,6 +100,7 @@ $total_pages = ceil( $total_users / $limit );
                         <option value="0"><?php esc_html_e( 'All Owners', 'ispag-crm' ); ?></option>
                         <?php 
                         $owners_options = $contacts_repo->get_ispag_owners_options();
+                        
                         foreach ( $owners_options as $id => $name ) : 
                             if ($id === '') continue;
                             echo "<option value='".esc_attr($id)."' ".selected($filter_owner_id, $id, false).">".esc_html($name)."</option>";
@@ -90,6 +116,30 @@ $total_pages = ceil( $total_users / $limit );
                 </div>
             </form>
         </div>
+
+        <form method="post" id="ispag-bulk-actions-form">
+            <?php wp_nonce_field('ispag_bulk_contact_action', 'ispag_bulk_nonce'); ?>
+
+            <div class="tablenav top">
+                <div class="alignleft actions bulkactions">
+                    <select name="ispag_bulk_action" id="bulk-action-selector-top">
+                        <option value="-1"><?php esc_html_e('Bulk actions', 'ispag-crm'); ?></option>
+                        <option value="set_owner"><?php esc_html_e('Assign owner', 'ispag-crm'); ?></option>
+                        <option value="set_company"><?php esc_html_e('Associate with company', 'ispag-crm'); ?></option>
+                        <option value="set_priority"><?php esc_html_e('Set priority', 'ispag-crm'); ?></option>
+                        <option value="delete"><?php esc_html_e('Delete', 'ispag-crm'); ?></option>
+                    </select>
+                    
+                    <span id="bulk-extra-fields" style="display:inline-block; margin-left: 10px;"></span>
+
+                    <input type="submit" id="doaction" class="button action" value="<?php esc_attr_e('Apply', 'ispag-crm'); ?>">
+                </div>
+            </div>
+
+            <table class="ispag-contact-list-table widefat fixed striped">
+                <?php /* Le contenu de votre table reste ici */ ?>
+            </table>
+        </form>
 
         <?php if ( empty( $contacts ) ) : ?>
             <p class="ispag-no-results"><?php esc_html_e( 'No contacts found.', 'ispag-crm' ); ?></p>
@@ -107,7 +157,7 @@ $total_pages = ceil( $total_users / $limit );
                         ISPAG_Crm_Contact_Constants::META_COMPANY_ID        => __( 'Company', 'ispag-crm' ), 
                         ISPAG_Crm_Contact_Constants::META_LEAD_STATUS       => __( 'Status', 'ispag-crm' ), 
                         ISPAG_Crm_Contact_Constants::META_LIFECYCLE_PHASE   => __( 'Lifecycle', 'ispag-crm' ), 
-                        ISPAG_Crm_Contact_Constants::META_LAST_CONTACT_DATE => __( 'Last Contact', 'ispag-crm' ), 
+                        ISPAG_Crm_Contact_Constants::META_LAST_CONTACT_DATE => __( 'Last contact', 'ispag-crm' ), 
                         ISPAG_Crm_Contact_Constants::META_OWNER             => __( 'Owner', 'ispag-crm' ), 
                         'user_email'                                        => __( 'Email', 'ispag-crm' ),
                     );
@@ -137,6 +187,7 @@ $total_pages = ceil( $total_users / $limit );
             <tbody>
                 <?php 
                 $company_repo = new ISPAG_Crm_Company_Repository();
+                // error_log(print_r($contacts, true));
                 foreach ( $contacts as $contact ) : 
                     $custom_contact_url = site_url( '/contact/' . $contact->ID . '/' );
                     
@@ -150,7 +201,7 @@ $total_pages = ceil( $total_users / $limit );
                     $priority_level  = ISPAG_Crm_Contact_Constants::PRIORITY_LEVEL;
 
                     $owner_display_name = !empty($contact->$owner_key) ? get_the_author_meta( 'display_name', $contact->$owner_key ) : __('Non assigné', 'ispag-crm');
-                    $last_contact_date  = !empty($contact->$date_key) ? date_i18n( get_option( 'date_format' ), strtotime( $contact->$date_key ) ) : '—';
+                    $last_contact_date  = $contact->last_contact_date ? date_i18n( 'd.m.Y', strtotime( $contact->last_contact_date ) ) : __('N/A', 'ispag-crm');   
                     $avatar_url         = $contact->avatar_url;
                     
                     $company_name = '—';
@@ -164,28 +215,37 @@ $total_pages = ceil( $total_users / $limit );
                     <td>
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <div class="ispag-company-icon-container <?php echo ($avatar_url) ? 'has-favicon' : 'no-favicon'; ?>">
-                                <?php if ($avatar_url) : ?>
-                                    <img src="<?php echo esc_url($avatar_url); ?>" 
-                                        alt="Avatar" 
-                                        class="ispag-avatar-img"
-                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                    
-                                    <span class="ispag-initials" style="display: none;"><?php echo esc_html($initials); ?></span>
-                                <?php else : ?>
-                                    <span class="ispag-initials"><?php echo esc_html($initials); ?></span>
-                                <?php endif; ?>
+                                <span class="current-value">
+                                    <?php if ($avatar_url) : ?>
+                                        <img src="<?php echo esc_url( $avatar_url ); ?>" 
+                                            alt="<?php echo esc_attr( $contact->display_name ); ?>"
+                                            class="ispag-avatar-img"> 
+                                    <?php else : 
+                                        // Calcul des initiales si pas d'image
+                                        $words = explode(' ', trim($contact_name));
+                                        $initials = strtoupper(substr($words[0], 0, 1));
+                                        if (isset($words[1])) {
+                                            $initials .= strtoupper(substr($words[1], 0, 1));
+                                        }
+                                        ?>
+                                        <span class="ispag-initials"><?php echo esc_html($initials); ?></span>
+                                    <?php endif; ?>
+                                </span>
                             </div>
-                            <strong><a href="<?php echo esc_url( $custom_contact_url ); ?>"><?php echo esc_html( $contact->display_name ); ?></a></strong>
+                            <strong>
+                                <a href="<?php echo esc_url( $custom_contact_url ); ?>">
+                                    <?php echo esc_html( $contact->display_name ); ?>
+                                </a>
+                            </strong>
                         </div>
-                        
                     </td>
                     <td><?php echo esc_html( $contact->$lead_function ?? '—' ); ?></td>
                     <td><?php echo esc_html( $contact->priority_level ?? '—' ); ?></td>
                     <td><?php echo esc_html( $company_name ); ?></td>
-                    <td><?php echo $contacts_repo->get_lead_status_badge( $contact->$status_key ); ?></td>
-                    <td><?php echo $contacts_repo->get_lifecycle_phase_badge( $contact->$lifecycle_key ); ?></td>
+                    <td title="<?php esc_attr_e( $contact->status_description, 'ispag-crm' ); ?>"><?php echo $contacts_repo->get_lead_status_badge( $contact->$status_key ); ?></td>
+                    <td title="<?php esc_attr_e( $contact->lifecycle_description, 'ispag-crm' ); ?>"><?php echo $contacts_repo->get_lifecycle_phase_badge( $contact->$lifecycle_key ); ?></td>
                     <td><?php echo esc_html( $last_contact_date ); ?></td> 
-                    <td><?php echo esc_html( $owner_display_name ); ?></td>
+                    <td><?php echo esc_html( $owner_display_name ); ?></td> 
                     <td><a href="mailto:<?php echo esc_attr( $contact->user_email ); ?>"><?php echo esc_html( $contact->user_email ); ?></a></td>
                 </tr>
                 <?php endforeach; ?>
@@ -229,5 +289,9 @@ $total_pages = ceil( $total_users / $limit );
     .tablenav .page-numbers li span.current { background: #2271b1; color: #fff; padding: 5px 10px; }
     .tablenav .page-numbers li a { text-decoration: none; padding: 5px 10px; border: 1px solid #ccd0d4; }
 </style>
+
+<?php
+ispag_get_template('ispag-create-contact-sidebar', []);
+?>
 
 <?php get_footer(); ?>

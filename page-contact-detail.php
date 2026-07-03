@@ -12,7 +12,7 @@
 
 // } 
 
-get_header(); // CONSERVÉ : Début du thème
+// get_header(); // CONSERVÉ : Début du thème
 
 // ====================================================
 // --- DÉPENDANCES ET INITIALISATION DES DONNÉES (Contrôleur dans la Vue) ---
@@ -20,6 +20,7 @@ get_header(); // CONSERVÉ : Début du thème
 
 // 1. Assurez-vous que les classes nécessaires sont chargées
 if ( ! class_exists( 'ISPAG_Crm_Contacts_Repository' ) ) {
+    get_header();
     // Affichage d'une erreur technique si les dépendances manquent
     echo '<div id="primary" class="content-area"><main id="main" class="site-main">';
     echo '<div class="ispag-error-message">' . __( 'Technical error: Required CRM classes are missing.', 'ispag-crm' ) . '</div>';
@@ -55,10 +56,11 @@ if ( empty( $user_id ) ) {
 
 // 4. Chargement des données de l'entreprise via le Repository
 $contact = $repository->get_contact_by_id( $user_id );
-
+// error_log(print_r($contact, true));
 
 // 5. Vérification des données et affichage de l'erreur
 if ( empty( $contact ) ) {
+    get_header();
     ?>
     <div id="primary" class="content-area">
         <main id="main" class="site-main">
@@ -95,10 +97,7 @@ $contact_lead_function   = esc_html( $contact->lead_function ?? '—' ); // Déj
 // Simulation de la récupération des autres méta-données pour le template
 // NOTE: En production, vous auriez probablement une méthode pour charger TOUTES les métadonnées ici.
 $contact_phone           = esc_html( $contact->phone ?? '' );
-$company_address         = esc_html( $contact->address ?? '' );
-$company_postal_code     = esc_html( $contact->postal_code ?? '' );
-$company_city            = esc_html( $contact->city ?? '' );
-$company_country         = esc_html( $contact->country ?? '' );
+
 $avatar_url              = $contact->avatar_url;
 $linkedin_url            = $contact->linkedin_page ?? '—' ;
 $company_domain          = ''; // Exemple statique
@@ -112,6 +111,7 @@ $company_meta_type       = 'installateur'; // Exemple
 $owner_options_js        = '...'; // Liste d'options JSON
 $type_options_js         = '...'; // Liste d'options JSON
 $contact_priority_level  = esc_html( $contact->priority_level ?? '—' );
+$priority_level_badge    =  $contact->priority_level_badge ?? '—';
 $contact_prio_options    = 'A:A;B:B;C:C';
 $link_contact_list       = home_url( '/contact-list/' ); // URL de la page de liste des contacts
 $link_new_contact        = home_url( '/add-contact/' ); // URL du formulaire d'ajout de contact
@@ -163,14 +163,59 @@ $company_names_arr = [];
 
 
 $company_repo = new ISPAG_Crm_Company_Repository();
+$primary_company_priority = '';
+$primary_company_owner = __('Not assigned', 'ispag-crm');
 
-foreach ($associated_companies_list_full as $company_id) {
+foreach ($associated_companies_list_full as $index => $company_id) {
     $company = $company_repo->get_company_by_viag_id($company_id);
     
     if ( $company && !empty($company->company_name) ) {
         $company_ids_arr[]   = $company_id;
         // On retire les virgules éventuelles du nom pour ne pas casser le split JS
         $company_names_arr[] = str_replace(',', ' ', $company->company_name); 
+        // On récupère la priorité de la première entreprise associée
+        if ($index === 0) {
+            $primary_company_priority = $company->priority_level ?? '';
+
+            // --- RÉCUPÉRATION DU PROPRIÉTAIRE ET FILTRAGE DES USERS ---
+            $current_owner_id = 0;
+            $target_dept = 'vaulruz_ispag'; 
+            $key = ISPAG_Crm_Contact_Constants::USER_DEPARTMENT;
+            $companies_owner_table = ISPAG_Crm_Company_Constants::TABLE_COMPANY_OWNER;
+
+            // 1. Chercher le propriétaire ACTUEL (status = 'active')
+            $owner_entry = $wpdb->get_row( $wpdb->prepare(
+                "SELECT user_id FROM {$companies_owner_table} 
+                WHERE company_id = %d 
+                AND department_key = %s 
+                AND status = 'active'", // Filtre crucial pour l'historique
+                $company_id,
+                $target_dept
+            ));
+
+            if ( $owner_entry ) {
+                $current_owner_id = absint( $owner_entry->user_id );
+                $user_info = get_userdata( $current_owner_id );
+                if ( $user_info ) {
+                    $primary_company_owner = $user_info->display_name;
+                }
+            } else {
+                // Optionnel : s'assurer que les variables sont vides si aucun owner actif
+                $current_owner_id = 0;
+                $primary_company_owner = __('Not assigned', 'ispag-crm');
+            }
+
+            $company_repo = new ISPAG_Crm_Company_Repository();
+            $company = $company_repo->get_company_by_viag_id($company_id);
+
+            //Adresse de l'entreprise principale
+            $company_address         = esc_html( $company->address ?? '' );
+            $company_postal_code     = esc_html( $company->postal_code ?? '' );
+            $company_city            = esc_html( $company->city ?? '' );
+            $company_country         = esc_html( $company->country ?? '' );
+
+            
+        }
     }
 }
 // On transforme les tableaux en chaînes propres
@@ -198,6 +243,54 @@ $deal_names = implode(',', $deal_names_arr);
 $project_nums = implode(',', $project_num_arr);
 $total_excl_vats = implode(',', $total_excl_vat_arr);
 $closing_dates = implode(',', $closing_date_arr);
+
+// --- RÉCUPÉRATION DU PROPRIÉTAIRE ET FILTRAGE DES USERS ---
+$current_owner_id = 0;
+$current_owner_name = __('Not assigned', 'ispag-crm');
+$target_dept = 'vaulruz_ispag'; 
+$key = ISPAG_Crm_Contact_Constants::USER_DEPARTMENT;
+$contacts_owner_table = ISPAG_Crm_Contact_Constants::TABLE_CONTACT_OWNER;
+
+// 1. Chercher le propriétaire ACTUEL (status = 'active')
+$owner_entry = $wpdb->get_row( $wpdb->prepare(
+    "SELECT user_id FROM {$contacts_owner_table} 
+     WHERE contact_id = %d 
+     AND department_key = %s 
+     AND status = 'active'", // Filtre crucial pour l'historique
+    $user_id,
+    $target_dept
+));
+
+if ( $owner_entry ) {
+    $current_owner_id = absint( $owner_entry->user_id );
+    $user_info = get_userdata( $current_owner_id );
+    if ( $user_info ) {
+        $current_owner_name = $user_info->display_name;
+    }
+} else {
+    // Optionnel : s'assurer que les variables sont vides si aucun owner actif
+    $current_owner_id = 0;
+    $current_owner_name = __('Not assigned', 'ispag-crm');
+}
+// 2. Préparer la liste des utilisateurs (Logique inchangée mais propre)
+$users = get_users( array( 
+    'fields'     => array( 'ID', 'display_name' ), 
+    'orderby'    => 'display_name',
+    'meta_query' => array(
+        array(
+            'key'     => $key, 
+            'value'   => $target_dept, 
+            'compare' => '=' 
+        ),
+    ),
+) );
+
+$users_list_arr = array( '0:' . __('Selectionner...', 'ispag-crm') );
+foreach ( $users as $u ) {
+    $users_list_arr[] = $u->ID . ':' . $u->display_name;
+}
+$users_list_source = implode( ';', $users_list_arr );
+
 // ----------------------------------------------
 // Selection du role principal sur wordpress
 // ----------------------------------------------
@@ -336,6 +429,17 @@ extract( $template_args );
 // ====================================================
 // --- DÉBUT DE LA VUE (Contenu HTML) ---
 // ====================================================
+// Filtrer le titre de la page dynamiquement
+add_filter('pre_get_document_title', function($title) use ($contact_name) {
+    if (!empty($contact_name)) {
+        $site_name = get_bloginfo('name');
+        return $contact_name . ' | ' . $site_name;
+    }
+    return $title;
+}, 999);
+wp_enqueue_media();
+get_header();
+
 ?>
 
 <div id="primary" class="content-area">
@@ -346,77 +450,115 @@ extract( $template_args );
             
             <div class="ispag-left-panel">
                 <div class="ispag-card ispag-header-card">
-                    <div class="ispag-profile-pic <?php echo ($favicon) ? 'has-favicon' : ''; ?>">
-                        <?php 
-                        if ( $avatar_url ){ ?>
-                            <img src="<?php echo esc_url( $avatar_url ); ?>" 
-                                alt="<?php echo esc_attr( $contact->display_name ); ?>"
-                                class="ispag-avatar-img"> 
-                        <?php
-                        } else {
-                            // Afficher les deux premières lettres du nom de l'entreprise
-                            $initials = strtoupper( substr( $contact_name, 0, 1 ) . substr( $contact_name, strpos($contact_name, ' ') + 1, 1 ) );
-                            echo esc_html( $initials ); 
-                        }
-                        
-                        ?>
-                    </div>
-                    <div class="ispag-header-info">
-                        <input type="hidden" id="hidden_contact_name"  value="<?php echo $contact_name; ?>"/>
-                        
-                        <h4>
-                            <?php echo $contact_name; ?>
+                    <div class="ispag-header-top-row">
+                        <div class="ispag-profile-pic <?php echo ($favicon) ? 'has-favicon' : ''; ?> ispag-popover-field ispag-avatar-trigger"
+                            data-field-type="avatar"  
+                            data-contact-id="<?php echo absint($user_id); ?>"
+                            style="cursor: pointer;"
+                            title="<?php _e('Modifier l\'avatar', 'ispag-crm'); ?>">
+                            <span class="current-value">
+                                <?php 
+                                if ( $avatar_url ){ ?>
+                                    <img src="<?php echo esc_url( $avatar_url ); ?>" 
+                                        alt="<?php echo esc_attr( $contact->display_name ); ?>"
+                                        class="ispag-avatar-img"> 
+                                <?php
+                                } else {
+                                    // Afficher les deux premières lettres du nom de l'entreprise
+                                    $initials = strtoupper( substr( $contact_name, 0, 1 ) . substr( $contact_name, strpos($contact_name, ' ') + 1, 1 ) );
+                                    echo esc_html( $initials ); 
+                                }
+                                
+                                ?>
+                            </span>
+                        </div>
+                        <div class="ispag-header-info">
+                            <input type="hidden" id="hidden_contact_name"  value="<?php echo $contact_name; ?>"/>
                             
-                        </h4>
-                        <p 
-                            class="ispag-editable-field" 
-                            data-type="text" 
-                            data-name="<?php echo ISPAG_Crm_Contact_Constants::META_LEAD_FUNCTION; ?>" 
-                            data-contact-ids="<?php echo absint($user_id); ?>"
-                            data-contact-names="<?php echo ($contact_name); ?>"
-                            data-value="<?php echo esc_attr( $contact_lead_function ); ?>"
-                        >
-                            <?php echo $contact_lead_function; ?>
-                            <span class="edit-icon">✏️</span>
-                        </p>
-                        <p 
-                            class="ispag-editable-field" 
-                            data-type="email" 
-                            data-name="user_email" 
-                            data-value="<?php echo esc_attr( $contact_mail ); ?>"
-                        >
-                            <?php echo esc_html( $contact_mail ); ?>
-                            <span class="edit-icon">✏️</span>
-                        </p>
+                            <h2 class="ispag-contact-title-fullname">
+                                <span 
+                                    class="ispag-editable-field" 
+                                    data-type="text" 
+                                    data-name="first_name" 
+                                    data-contact-ids="<?php echo absint($user_id); ?>"
+                                    data-value="<?php echo esc_attr( $contact->first_name ?? '' ); ?>"
+                                    placeholder="<?php _e('Prénom', 'ispag-crm'); ?>"
+                                >
+                                    <?php echo !empty($contact->first_name) ? esc_html($contact->first_name) : '<span class="ispag-placeholder">Prénom</span>'; ?>
+                                </span>
+
+                                <span 
+                                    class="ispag-editable-field" 
+                                    data-type="text" 
+                                    data-name="last_name" 
+                                    data-contact-ids="<?php echo absint($user_id); ?>"
+                                    data-value="<?php echo esc_attr( $contact->last_name ?? '' ); ?>"
+                                    placeholder="<?php _e('Nom', 'ispag-crm'); ?>"
+                                >
+                                    <?php echo !empty($contact->last_name) ? esc_html($contact->last_name) : '<span class="ispag-placeholder">Nom</span>'; ?>
+                                </span>
+                                <span class="edit-icon">✏️</span>
+                            </h2>
+                            
+                            <p
+                                class="ispag-popover-field" 
+                                data-field-type="text" 
+                                data-contact-id="<?php echo absint($user_id); ?>"
+                                data-name="<?php echo ISPAG_Crm_Contact_Constants::META_LEAD_FUNCTION; ?>" 
+                                data-value="<?php echo esc_attr( $contact_lead_function ?: '' ); ?>"
+                            >
+                                <span class="current-value"><?php echo $contact_lead_function ?: '—'; ?></span>
+                                
+                            </p>
+                            <p 
+                                class="ispag-popover-field" 
+                                data-type="email" 
+                                data-contact-id="<?php echo absint($user_id); ?>"
+                                data-name="user_email" 
+                                data-value="<?php echo esc_attr( $contact_mail ?: ''  ); ?>"
+                            >
+                                <?php echo esc_html( $contact_mail ); ?>
+                                
+                            </p>
+                        </div>
                     </div>
-                        
+                    <div class="ispag-actions-bar">
+
+                        <?php 
+                            $actions['company_ids']       = $company_ids;
+                            $actions['company_names']     = $company_names;
+                            $actions['contact_ids']       = $user_id;
+                            $actions['contact_names']     = $contact_name;
+                            $actions['contact_emails']    = $contact_emails;
+                            $actions['contact_phones']    = $contact_phones;
+                            $actions['deal_ids']          = $deal_ids;
+                            $actions['deal_names']        = $deal_names;
+
+                            $actions['project_nums']      = $project_nums;
+                            $actions['closing_dates']     = $closing_dates;
+                            $actions['total_excl_vats']   = $total_excl_vats;
+                                                    
+    
+                            // Appelle le template et lui passe les données
+                            ispag_get_template( 'action-bar', [ 'actions' => $actions ] ); 
+                        ?>
+                    </div>  
+                    <div class="ispag-field-group">
+                        <input type="button" 
+                            id="meeting-preparation" 
+                            class="button button-secondary btn-meeting-prep" 
+                            name="meeting_preparation" 
+                            data-contact-id="<?php echo $user_id; ?>"
+                            value="<?php esc_attr_e( 'Prepare meeting', 'ispag-crm' ); ?>">
+                    </div> 
                     
                 </div>
-                <div class="ispag-actions-bar">
-
-                    <?php 
-                        $actions['company_ids']       = $company_ids;
-                        $actions['company_names']     = $company_names;
-                        $actions['contact_ids']       = $user_id;
-                        $actions['contact_names']     = $contact_name;
-                        $actions['contact_emails']    = $contact_emails;
-                        $actions['contact_phones']    = $contact_phones;
-                        $actions['deal_ids']          = $deal_ids;
-                        $actions['deal_names']        = $deal_names;
-
-                        $actions['project_nums']      = $project_nums;
-                        $actions['closing_dates']     = $closing_dates;
-                        $actions['total_excl_vats']   = $total_excl_vats;
-                                                
- 
-                        // Appelle le template et lui passe les données
-                        ispag_get_template( 'action-bar', [ 'actions' => $actions ] ); 
-                    ?>
-                </div>
+                
                 <div class="ispag-card ispag-key-info">
                     <h5><?php _e( 'Key information', 'ispag-crm' ); ?></h5>
                     <dl class="ispag-key-info-list">
                         
+ 
                         <dt><?php _e( 'Ignore health reminder', 'ispag-crm' ); ?></dt>
                         <dd 
                             class="ispag-editable-field" 
@@ -429,28 +571,42 @@ extract( $template_args );
                             <span class="edit-icon">✏️</span>
                         </dd>
 
-
-                        <dt><?php _e( 'Email', 'ispag-crm' ); ?></dt>
+                        <dt><?php _e( 'Phone number', 'ispag-crm' ); ?></dt>
                         <dd 
-                            class="ispag-editable-field" 
-                            data-type="email" 
-                            data-name="user_email" 
-                            data-value="<?php echo esc_attr( $contact_mail ); ?>"
-                        >
-                            <?php echo esc_html( $contact_mail ); ?>
-                            <span class="edit-icon">✏️</span>
-                        </dd>
-
-                        <dt><?php _e( 'Phone', 'ispag-crm' ); ?></dt>
-                        <dd 
-                            class="ispag-editable-field" 
-                            data-type="text" 
+                            class="ispag-popover-field" 
+                            data-field-type="phone" 
+                            data-contact-id="<?php echo absint($user_id); ?>"
                             data-name="<?php echo ISPAG_Crm_Contact_Constants::META_LEAD_PHONE; ?>" 
                             data-value="<?php echo esc_attr( $contact_phone ); ?>"
                         >
-                            <?php echo $contact_phone; ?>
-                            <span class="edit-icon">✏️</span>
+                            <span class="current-value"><?php echo $contact_phone ?: '—'; ?></span>
+                            
                         </dd>
+
+
+                        <dt><?php _e( 'Birthday', 'ispag-crm' ); ?></dt>
+                        <dd 
+                            class="ispag-popover-field" 
+                            data-field-type="date" 
+                            data-contact-id="<?php echo absint($user_id); ?>"
+                            data-name="billing_birthdate" 
+                            data-value="<?php echo esc_attr( get_user_meta( $user_id, 'billing_birthdate', true ) ); ?>"
+                        >
+                            <span class="current-value">
+                                <?php 
+                                if ( ! empty( $contact->birthday ) && $contact->birthday !== 'Non renseignée' ) {
+                                    echo esc_html( $contact->birthday );
+                                    if ( ! empty( $contact->age ) ) {
+                                        echo ' <span style="color: #666; font-size: 0.9em;">(' . esc_html( $contact->age ) . ')</span>';
+                                    }
+                                } else {
+                                    echo '<span style="color: #999; font-style: italic;">' . __( 'Non renseignée', 'ispag-crm' ) . '</span>';
+                                }
+                                ?>
+                            </span>
+                        </dd>
+
+                        
 
                         <dt><?php _e( 'Role', 'ispag-crm' ); ?></dt>
                         <dd 
@@ -473,13 +629,18 @@ extract( $template_args );
                             data-value="<?php echo esc_attr( $contact_priority_level ); ?>"
                             data-options="<?php echo esc_attr($contact_prio_options); ?>"
                         >
-                            <?php echo $contact_priority_level; ?>
+                            <?php echo $priority_level_badge; ?>
+                           
                             <span class="edit-icon">✏️</span>
                         </dd>
 
+                        <?php
+                        $status_reason = get_user_meta( $user_id, ISPAG_Crm_Contact_Constants::META_LEAD_STATUS_REASON, true );
+                        ?>
+
                         <dt>
                             <?php _e( 'Lead status', 'ispag-crm' ); ?>
-                            <span class="info-icon" style="cursor:help; font-size: 0.8em; margin-left: 5px;" title="<?php echo esc_attr($contact->lead_status_description); ?>">ⓘ</span>
+                            <span class="info-icon" style="cursor:help; font-size: 0.8em; margin-left: 5px;" title="<?php echo esc_attr__($contact->status_description, 'ispag-crm'); ?>">ⓘ</span>
                         </dt>
                         <dd 
                             
@@ -494,7 +655,7 @@ extract( $template_args );
  
                         <dt>
                             <?php _e( 'Lifecycle phase', 'ispag-crm' ); ?>
-                            <span class="info-icon" style="cursor:help; font-size: 0.8em; margin-left: 5px;" title="<?php echo esc_attr($contact->lifecycle_status_description); ?>">ⓘ</span>
+                            <span class="info-icon" style="cursor:help; font-size: 0.8em; margin-left: 5px;" title="<?php echo esc_attr__($contact->lifecycle_description, 'ispag-crm'); ?>">ⓘ</span>
                         </dt>
                         <dd 
                             
@@ -511,25 +672,29 @@ extract( $template_args );
                             <?php _e( 'Linkedin page', 'ispag-crm' ); ?>
                             
                         </dt>
+                        
                         <dd 
-                            class="ispag-editable-field" 
-                            data-type="text" 
+                            class="ispag-popover-field" 
+                            data-field-type="text" 
+                            data-contact-id="<?php echo absint($user_id); ?>"
                             data-name="<?php echo ISPAG_Crm_Contact_Constants::META_LEAD_LINKEDIN_PAGE; ?>" 
-                            data-value="<?php echo esc_attr($contact->linkedin_url); ?>" 
+                            data-value="<?php echo esc_attr( $contact->linkedin_url ?: ''  ); ?>"
                         >
-                            <?php echo $contact->linkedin_url; ?>
+                            <span class="current-value"><?php echo $contact->linkedin_url ?: '—'; ?></span>
                             
                         </dd>
                         
-                        <dt><?php _e( 'Contact Owner', 'ispag-crm' ); ?></dt>
+                        <dt><?php _e( 'Contact owner', 'ispag-crm' ); ?></dt>
                         <dd 
                             class="ispag-editable-field" 
                             data-type="select" 
-                            data-name="<?php echo ISPAG_Crm_Contact_Constants::META_OWNER; ?>" 
-                            data-value="<?php echo esc_attr($contact_owner); ?>" 
-                            data-options="<?php echo esc_attr( ISPAG_Crm_Contacts_Repository::get_ispag_owners_for_inline_edit() ); ?>"
+                            data-name="department_owner"
+                            data-contact-id="<?php echo absint($user_id); ?>"
+                            data-department-id="<?php echo esc_attr($target_dept); ?>"
+                            data-value="<?php echo esc_attr($current_owner_id); ?>"
+                            data-options="<?php echo esc_attr($users_list_source); ?>"
                         >
-                            <?php echo $contact_owner; ?>
+                            <?php echo $current_owner_name; ?>
                         </dd>
 
                         <dt><?php _e( 'Last contacted', 'ispag-crm' ); ?></dt>
@@ -609,7 +774,9 @@ extract( $template_args );
                     </div>
                     
                     <div id="ispag-tab-activity" class="ispag-tab-pane">
-                        <?php echo $notes_list_full; ?>
+                        <div class="ispag-card">
+                            <?php echo $notes_list_full; ?> 
+                        </div>
                     </div>
                     
                     <div id="ispag-tab-deal" class="ispag-tab-pane">
@@ -663,9 +830,49 @@ extract( $template_args );
                             
                             $company = $company_repo->get_company_by_viag_id($company_id);
                             $company_app_url = home_url( '/company/' . $company->viag_id . '/' );
+
+                            // 1. On récupère le domaine (assure-tu que la propriété est bien 'compagny_domain' ou 'domain')
+                            $company_domain = !empty($company->compagny_domain) ? $company->compagny_domain : '';
+                            
+                            // 2. Génération du favicon via le domaine
+                            
+                            $favicon = $company->favicon ?? null;
+                            // if (!empty($company_domain)) {
+                            //     $favicon = "https://www.google.com/s2/favicons?domain=" . esc_attr($company_domain) . "&sz=64";
+                            // }
+
+                            // // 3. Calcul des initiales si pas de favicon
+                            // $initials = '';
+                            // if (empty($favicon)) {
+                            //     $name = $company->company_name;
+                            //     $words = explode(' ', $name);
+                            //     if (count($words) >= 2) {
+                            //         $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                            //     } else {
+                            //         $initials = strtoupper(substr($name, 0, 2));
+                            //     }
+                            // }
                             ?>
                             <div class="ispag-card" style="font-size: 14px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div class="ispag-mini-profile-pic" >
+                                        <?php
+                                        if ($favicon) {
+                                        ?>
+                                            <img src="<?php echo esc_url( $favicon ); ?>" 
+                                                alt="<?php echo esc_attr( $company_name ); ?>"
+                                                class="ispag-avatar-img"
+                                                style="width:20px; height:20px;"> 
+                                            <?php
+                                            
+                                        } else {
+                                            // Afficher les deux premières lettres du nom de l'entreprise
+                                            // $initials = strtoupper( substr( $company_name, 0, 1 ) . substr( $company_name, strpos($company_name, ' ') + 1, 1 ) );
+                                            echo esc_html( $initials ); 
+                                        }
+                                        ?>
+                                        
+                                    </div>
                                     <strong>
                                         <a href="<?php echo esc_url($company_app_url); ?>"><?php echo $company->company_name; ?></a>
                                     </strong>
@@ -681,7 +888,7 @@ extract( $template_args );
                                     </span>
                                 </div>
                                 <p style="margin: 5px 0 0;"><?php _e( 'City', 'ispag-crm' ); ?>: <?php echo $company->city; ?></p>
-                                <p style="margin: 5px 0 0;"><?php _e( 'Phone', 'ispag-crm' ); ?>: <?php echo $company->phone; ?></p>
+                                <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm' ); ?>: <?php echo $company->phone; ?></p>
                                 
                             </div>
                             <?php
@@ -756,7 +963,80 @@ extract( $template_args );
     </main>
 </div>
 
+
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Données du Contact (depuis PHP)
+        const contactPrio = "<?php echo esc_js( trim($contact_priority_level) ); ?>";
+        const contactOwner = "<?php echo esc_js( trim($contact_owner) ); ?>";
+        
+        // Données de l'Entreprise (depuis PHP)
+        const companyPrio = "<?php echo esc_js( trim($primary_company_priority) ); ?>";
+        const companyOwner = "<?php echo esc_js( trim($primary_company_owner) ); ?>";
+
+        // Traduction du message d'alerte principal
+        const alertTitle = "<?php echo esc_js(__('Warning', 'ispag-crm')); ?>";
+        const alertHeader = "<?php echo esc_js(__('Warning: Consistency issues detected!', 'ispag-crm')); ?>";
+
+        console.group("ISPAG CRM: Consistency Check");
+        console.log("Checking Contact vs Primary Company...");
+        
+        let errors = [];
+
+        // 1. Contrôle Priorité
+        if (companyPrio !== "" && contactPrio !== companyPrio) {
+            errors.push("<?php echo esc_js(__('- Priority mismatch:', 'ispag-crm')); ?> " + 
+                        "Contact(" + contactPrio + ") vs Company(" + companyPrio + ")");
+        }
+
+        // 2. Contrôle Propriétaire (Owner)
+        if (companyOwner !== "" && contactOwner !== companyOwner) {
+            errors.push("<?php echo esc_js(__('- Owner mismatch:', 'ispag-crm')); ?> " + 
+                        "Contact ID(" + contactOwner + ") vs Company ID(" + companyOwner + ")");
+        }
+
+        if (errors.length > 0) {
+            const alertMsg = alertHeader + "\n\n" + errors.join("\n");
+            console.warn(alertMsg);
+            // alert(alertMsg);
+            ispag_show_modal("Warning", alertMsg);
+        } else {
+            console.log("✅ All checks passed (Priority & Owner match).");
+        }
+        
+        console.groupEnd();
+    });
+
+    /**
+     * Affiche une modale à la place d'une alert()
+     * @param {string} title - Titre de la modale
+     * @param {string} message - Message à afficher
+     */
+    function ispag_show_modal(title, message) {
+        const modal = document.getElementById('ispag-crm-modal');
+        document.getElementById('ispag-modal-title').innerText = title;
+        document.getElementById('ispag-modal-message').innerText = message;
+        
+        modal.style.display = 'block';
+
+        // Fermeture (bouton X, bouton fermer, ou clic extérieur)
+        const closeElements = modal.querySelectorAll('.ispag-modal-close, .ispag-btn-close');
+        closeElements.forEach(el => {
+            el.onclick = () => modal.style.display = 'none';
+        });
+
+        window.onclick = (event) => {
+            if (event.target == modal) modal.style.display = 'none';
+        };
+    }
+</script>
+
+
+
 <?php 
 ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
-get_footer(); // CONSERVÉ : Fin du thème
+ispag_get_template( 'control-notif-modal', [] ); 
+ispag_get_template( 'ispag-popover-modal', [ null ] );
+ispag_get_template( 'ispag-sequence-modal', [ null ] );
+get_footer(); // CONSERVÉ : Fin du thème 
 ?>

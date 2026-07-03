@@ -199,3 +199,20 @@
     color: #646970;
     font-size: 14px;
 }
+
+/* Alignement et couleur de l'icône */
+.ispag-deal-title-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; /* Espace entre le titre et l'icône */
+}
+
+.ispag-copy-icon {
+    color: #0073aa; /* Même couleur que le lien du titre */
+    font-size: 16px;
+    line-height: 1;
+}
+
+.ispag-copy-icon:hover {
+    color: #0073aa;
+}

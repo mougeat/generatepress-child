@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+    
     // --- VARIABLES ---
     const $bulkBar = $('#ispag-bulk-edit-bar');
     const $selectedCount = $('#selected-count');
@@ -38,6 +39,7 @@ jQuery(document).ready(function($) {
     
     $('body').on('change', '#ispag-select-all-projects', function() {
         $('.ispag-project-checkbox').prop('checked', $(this).prop('checked'));
+        
         updateBulkBarVisibility();
     });
 
@@ -65,15 +67,31 @@ jQuery(document).ready(function($) {
     // BOUTON APPLIQUER BULK
     $('#ispag-bulk-submit').on('click', function() {
         const stageKey = $bulkSelect.val();
-        const contactDate = $bulkDateInput.val(); // Récupération de la date
-        const projectIds = $('.ispag-project-checkbox:checked').map(function() { return $(this).val(); }).get();
+        const contactDate = $bulkDateInput.val();
+        
+        // On logue ce qu'on récupère avant de mapper
+        // console.log("DEBUG: Tentative de soumission Bulk");
+        // console.log("DEBUG: Stage choisi =", stageKey);
+        // console.log("DEBUG: Date choisie =", contactDate);
 
-        if (!stageKey || !contactDate) { 
+        const projectIds = $('.ispag-project-checkbox:checked').map(function() { 
+            return $(this).val(); 
+        }).get();
+
+        // console.log("DEBUG: IDs récupérés =", projectIds);
+
+        if (!stageKey && !contactDate) { 
             alert('Veuillez choisir une étape ou une date de contact.'); 
             return; 
         }
 
+        if (projectIds.length === 0) {
+            alert('Aucun projet sélectionné.');
+            return;
+        }
+
         if (confirm('Appliquer les modifications à ' + projectIds.length + ' projets ?')) {
+            //  console.log("DEBUG: Confirmation OK -> Appel sendBulkUpdate");
              sendBulkUpdate(projectIds, stageKey, contactDate);
         }
     });
@@ -87,19 +105,27 @@ jQuery(document).ready(function($) {
         const label = $option.data('label') || '';
         const color = $option.data('color') || '';
 
+        // console.log("DEBUG: Entrée dans sendBulkUpdate");
+        // console.log("DEBUG: IDs passés =", ids);
+
         if (stageKey === 'closed_lost') {
+            // console.log("DEBUG: Mode 'Perdu' détecté - Ouverture Modal");
             const $modal = $('#ispag-lost-reason-modal');
             $modal.data({
                 'is-bulk': true,
                 'deal-ids': ids,
                 'stage-key': stageKey,
-                'contact-date': contactDate, // On stocke la date pour plus tard
+                'contact-date': contactDate,
                 'label': label,
                 'color': color
             }).show();
         } else {
-            // APPEL DE LA FONCTION AJAX (dans l'autre fichier)
-            executeBulkAjax(ids, stageKey, contactDate, '');
+            console.log("DEBUG: Appel executeBulkAjax direct");
+            if (typeof executeBulkAjax === "function") {
+                executeBulkAjax(ids, stageKey, contactDate, '');
+            } else {
+                console.error("DEBUG: La fonction executeBulkAjax n'est pas définie dans l'autre fichier !");
+            }
         }
     }
 
@@ -125,3 +151,4 @@ jQuery(document).ready(function($) {
         $modal.hide();
     });
 });
+

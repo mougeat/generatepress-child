@@ -8,6 +8,7 @@
 get_header();
 
 if ( ! is_user_logged_in() ) {
+    get_header();
     echo '<p class="ispag-error">' . esc_html__( 'You must be logged in to view templates.', 'ispag-crm' ) . '</p>';
     get_footer();
     exit;

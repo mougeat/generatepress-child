@@ -125,7 +125,7 @@
     cursor: pointer;
     font-size: 11px; /* Légèrement plus petit pour faciliter l'affichage */
     line-height: 1.2;
-    color: #444;
+    color: #0a0909;
     transition: all 0.2s;
     
     /* FIXER LA LARGEUR */

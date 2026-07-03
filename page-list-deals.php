@@ -4,7 +4,7 @@
  * Description: Affiche la liste des transactions ISPAG sous forme de tableau sécurisé.
  */
 
-get_header();
+// get_header();
 
 // Valeurs par défaut
 $kanban_filters = [
@@ -83,6 +83,17 @@ if ( class_exists( 'ISPAG_Crm_Deals_Repository' ) ) {
         }
     }
 }
+
+$page_name = __('Deals', 'ispag-crm');
+add_filter('pre_get_document_title', function($title) use ($page_name) {
+    if (!empty($page_name)) {
+        $site_name = get_bloginfo('name');
+        return $page_name . ' | ' . $site_name;
+    }
+    return $title;
+}, 999);
+
+get_header();
 ?>
 
 <div id="primary" class="content-area">
@@ -157,4 +168,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php get_footer(); ?>
+<?php 
+ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
+get_footer(); ?>
