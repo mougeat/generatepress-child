@@ -1,50 +1,66 @@
+/*---
+Fichier _modal.css
+*/
 /* ==========================================================================
    1. L'ARRIÈRE-PLAN (Overlay) - LOOK MODERNE
    ========================================================================== */
-.ispag-task-modal-overlay {
+.ispag-task-modal-overlay, .ispag-product-modal, .ispag-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(15, 23, 42, 0.6); /* Couleur Slate foncée semi-transparente */
-    backdrop-filter: blur(4px); /* Effet de flou moderne sur l'arrière-plan */
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
     z-index: 9999;
-    display: none; /* Ton JS passera cela en block/flex */
+    display: none;
 }
 
 /* ==========================================================================
    2. LA FENÊTRE (Content) - LOOK MODERNE
    ========================================================================== */
-.ispag-task-modal-content {
-    background: #ffffff;
-    width: 95%;
-    max-width: 750px;
-    border-radius: 16px; /* Arrondis plus prononcés */
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Ombre portée profonde */
-    position: absolute; /* ON GARDE ABSOLUTE pour ton JS de déplacement */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+
+.ispag-task-modal-content, .ispag-product-modal .ispag-modal-content, #ispag-note-modal .ispag-modal-content {
+    background-color: var(--ispag-white);
+    display: flex !important;
+    flex-direction: column !important; 
+    width: 100% !important;
+    max-width: 1600px !important;
+    height: 90vh !important;
+    max-height: 90vh !important;
+    padding: 0 !important;
+    border-radius: var(--ispag-badge-border-radius);
+    overflow: hidden !important; 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    position: relative;
+    box-sizing: border-box;
 }
+
 
 /* ==========================================================================
    3. EN-TÊTE (Header)
    ========================================================================== */
 .ispag-modal-header {
-    padding: 20px 24px;
-    background-color: #f8fafc; /* Gris très léger */
-    border-bottom: 1px solid #e2e8f0;
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
-    align-items: center;
-    cursor: grab;
+    gap: 15px;
+    width: 100%;
 }
 
+/* Zone de contenu dynamique (titre + prix) */
+#ispag-modal-header-content {
+    flex: 1;
+    min-width: 0; /* Évite le débordement des textes longs */
+}
+
+.ispag-modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #0f172a; /* Texte presque noir */
+    letter-spacing: -0.02em;
+}
 .ispag-modal-header h4 {
     margin: 0;
     font-size: 1.2rem;
@@ -53,13 +69,14 @@
     letter-spacing: -0.02em;
 }
 
-.ispag-close-modal {
+/* .ispag-close-modal, .ispag-modal-close */
+.ispag-close-croix {
     width: 32px;
     height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    border-radius: var(--ispag-badge-border-radius);
     background: #fee2e2; /* Fond rouge très clair */
     color: #ef4444; /* Croix rouge */
     border: none;
@@ -73,12 +90,13 @@
     color: white;
 }
 
+
 /* ==========================================================================
    4. CORPS & FORMULAIRES
    ========================================================================== */
 .ispag-modal-body {
     padding: 28px;
-    max-height: 70vh;
+    max-height: calc(30vh - 100px); /* Ajustez selon la hauteur du header/footer */
     overflow-y: auto;
     background: #ffffff;
 }
@@ -93,6 +111,18 @@
     margin-bottom: 6px;
 }
 
+/* --- 4. LE CORPS (LA ZONE DE SCROLL) --- */
+.ispag-modal-body-scroll {
+    flex: 1 1 auto !important; 
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    padding: 25px 30px 40px 30px;
+    box-sizing: border-box;
+    
+    max-height: calc(85vh - 180px); 
+    -webkit-overflow-scrolling: touch;
+}
+
 /* Inputs & Selects modernes */
 .ispag-modal-body input[type="text"],
 .ispag-modal-body input[type="date"],
@@ -102,7 +132,7 @@
     width: 100%;
     padding: 10px 14px;
     border: 1px solid #cbd5e1;
-    border-radius: 10px;
+    border-radius: var(--ispag-card-border-radius);
     background-color: #fcfcfd;
     font-size: 14px;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -122,6 +152,48 @@
     margin-top: 10px;
 }
 
+/* --- 5. GRILLES ET BLOCS --- */
+.ispag-modal-grid {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    margin-bottom: 30px; /* Espace vertical entre les blocs */
+}
+
+.ispag-modal-grid:last-of-type { margin-bottom: 0; }
+
+.ispag-modal-left, .ispag-modal-right {
+    flex: 1 1 45%;
+    background: var(--ispag-light-grey); 
+    /* border-color: var(--ispag-color-text-dark); */
+    border-color: red;
+    border-radius: var(--ispag-badge-border-radius);
+    padding: 20px;
+    min-width: 300px;
+    box-sizing: border-box;
+}
+
+/* IMAGE ET SVG */
+.visual-container {
+    background: #ffffff !important;
+    border: 1px solid var(--ispag-color-border-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px; /* Place pour le chauffe-eau */
+}
+
+.image-wrapper { width: 100%; display: flex; justify-content: center; }
+
+.responsive-svg {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 500px;
+    display: block;
+    margin: auto;
+}
+
 /* ==========================================================================
    5. SECTIONS & BOUTONS
    ========================================================================== */
@@ -129,34 +201,17 @@
     margin-top: 24px;
     padding: 20px;
     background-color: #f1f5f9;
-    border-radius: 12px;
+    border-radius: var(--ispag-card-border-radius);
     border: 1px solid #e2e8f0;
 }
 
 .ispag-modal-footer {
-    padding: 20px 24px;
+     padding: 20px 24px;
     background: #ffffff;
     border-top: 1px solid #e2e8f0;
     text-align: right;
-}
-
-/* Bouton principal moderne */
-#ispag-create-note-btn {
-    background-color: #2563eb;
-    color: white;
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-    transition: transform 0.1s, background 0.2s;
-}
-
-#ispag-create-note-btn:hover {
-    background-color: #1d4ed8;
-}
-
-#ispag-create-note-btn:active {
-    transform: translateY(1px);
+    position: relative; /* ou sticky si besoin */
+    bottom: 0;
+    width: 100%;
+    z-index: 10; /* Au-dessus du contenu */
 }

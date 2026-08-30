@@ -10,7 +10,7 @@ $all_ispag_users = $contact_manager->get_ispag_owners_options(); // Récupère t
     <div class="ispag-sidebar-content">
         <div class="ispag-modal-header">
             <h3><?php _e('Create a new contact', 'ispag-crm'); ?></h3>
-            <span class="ispag-modal-close" id="close-contact-sidebar">&times;</span>
+            <span class="ispag-modal-close ispag-btn ispag-btn-red-outlined ispag-close-croix" id="close-contact-sidebar">&times;</span>
         </div>
 
         <form id="ispag-create-contact-form">

@@ -14,18 +14,12 @@
 /** * COLONNE (ÉTAPE)
  */
 .kanban-column {
-    /* flex: 0 0 320px; 
-    background: #f4f6f8;
-    border-radius: 6px;
-    padding: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    min-height: 200px;
-    transition: background-color 0.2s; */
+
     flex-shrink: 0; 
     width: 300px; /* Ajustez selon vos besoins */
     margin-right: 20px;
-    background-color: #f4f5f7; /* Couleur de fond de la colonne */
-    border-radius: 4px;
+    background-color: var(--ispag-light-grey); /* Couleur de fond de la colonne */
+    border-radius: var(--ispag-btn-border-radius);
     display: flex; /* Nécessaire pour forcer le footer en bas */
     flex-direction: column;
 }
@@ -40,14 +34,14 @@
 .kanban-column-header {
     margin-bottom: 10px;
     padding-bottom: 5px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid var(--ispag-border);
 }
 
 .kanban-column-header h4 {
     margin: 0;
     font-size: 1.2em;
     font-weight: 600;
-    color: #333;
+    color: var(--ispag-color-text-dark);
 }
 
 /** * PIED DE COLONNE (TOTALS)
@@ -55,9 +49,9 @@
 .kanban-column-footer {
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px dashed #ddd;
+    border-top: 1px dashed var(--ispag-border);
     font-size: 0.9em;
-    color: #555;
+    color: var(--ispag-color-text-medium);
 }
 
 .kanban-column-footer .total-amount,
@@ -76,7 +70,7 @@
 }
 
 .no-deals-message {
-    color: #999;
+    color: var(--ispag-color-text-light);
     font-style: italic;
     text-align: center;
     padding: 15px 0;
@@ -85,8 +79,8 @@
 /** * CARTE DU DEAL
  */
 .kanban-deal-card {
-    background: #ffffff;
-    border-radius: 4px;
+    background: var(--ispag-white);
+    border-radius:var(--ispag-btn-border-radius);
     padding: 12px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.15);
     cursor: grab; /* Indique qu'elle est déplaçable */
@@ -101,7 +95,7 @@
 
 .deal-title a {
     font-weight: 700;
-    color: #0073aa; /* Couleur de lien WordPress standard */
+    color: var(--ispag-blue); /* Couleur de lien WordPress standard */
     text-decoration: none;
     display: block;
     margin-bottom: 5px;
@@ -109,13 +103,13 @@
 
 .deal-info {
     font-size: 0.9em;
-    color: #666;
+    color: var(--ispag-color-text-medium);
     margin: 2px 0;
 }
 
 .deal-owner {
     font-size: 0.85em;
-    color: #34495e;
+    color: var(--ispag-color-text-medium);
     margin: 2px 0;
     margin-top: 8px;
     padding-top: 5px;
@@ -123,7 +117,7 @@
 }
 .deal-relation {
     font-size: 0.85em;
-    color: #34495e;   
+    color: var(--ispag-color-text-medium);   
     margin: 2px 0; 
 }
 
@@ -148,8 +142,8 @@
     
     /* Style de la bordure et du fond */
     background-color: #ffffff;
-    border: 1px solid #c3c4c7; /* Bordure WP standard */
-    border-radius: 4px; /* Coins légèrement arrondis */
+    border: 1px solid var(--ispag-border); /* Bordure WP standard */
+    border-radius: var(--ispag-btn-border-radius); /* Coins légèrement arrondis */
     
     /* Espacement et taille */
     padding: 6px 30px 6px 10px; /* Espace pour le texte et l'icône de flèche */
@@ -159,7 +153,7 @@
     /* Typographie */
     font-size: 13px;
     line-height: 1.5;
-    color: #1e1e1e;
+    color: var(--ispag-color-text-medium);
     cursor: pointer;
     
     /* Transition pour l'effet de survol/focus */
@@ -168,11 +162,11 @@
 
 /* Effet au survol et au focus */
 .ispag-kanban-filters select:hover {
-    border-color: #7a7a7a;
+    border-color: var(--ispag-color-text-medium);
 }
 .ispag-kanban-filters select:focus {
-    border-color: #007cba; /* Couleur primaire WP */
-    box-shadow: 0 0 0 1px #007cba;
+    border-color: var(--ispag-blue); /* Couleur primaire WP */
+    box-shadow: 0 0 0 1px var(--ispag-blue);
     outline: none;
 }
 
@@ -196,7 +190,7 @@
     right: 10px;
     transform: translateY(-50%);
     pointer-events: none; /* Assure que le clic passe au select */
-    color: #646970;
+    color: var(--ispag-grey);
     font-size: 14px;
 }
 
@@ -208,11 +202,11 @@
 }
 
 .ispag-copy-icon {
-    color: #0073aa; /* Même couleur que le lien du titre */
+    color: var(--ispag-green); /* Même couleur que le lien du titre */
     font-size: 16px;
     line-height: 1;
 }
 
 .ispag-copy-icon:hover {
-    color: #0073aa;
+    color: var(--ispag-green);
 }

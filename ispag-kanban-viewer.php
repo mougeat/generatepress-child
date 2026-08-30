@@ -235,4 +235,5 @@ if ( $deal_repo && $stage_repo ) {
     </script>
 
 <?php 
+
 get_footer();

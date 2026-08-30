@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --ispag-red: #990000;
   --ispag-dark: #333;
   --ispag-grey: #f2f2f2;
@@ -18,12 +18,66 @@
   --ispag-color-background: #fff;
   --ispag-color-profile-pic: #e0e0e0;
   --ispag-color-profile-text: #666;
-  /* --ispag-red: #d90400;  */
-  /* --ispag-btn-grey: #ccc; */
-  /* --ispag-blue: #0073aa;  */
-  /* --ispag-orange: #ff9900; */
+  
+  --ispag-teal: #0F6F63;
+  --ispag-teal-hover: #0C5A50;
+  --ispag-border: #E4E7EC;
+  --ispag-text-primary: #101828;
+  --ispag-text-secondary: #667085;
+  --ispag-text-muted: #98A2B3;
+  --ispag-danger-bg: #FEF3F2;
+  --ispag-danger-text: #B42318;
+  --ispag-icon-bg: #F2F4F7;
 
   
   --ispag-success-color: #28a745;
   --ispag-danger-color: #dc3545;
+
+  --ispag-sidebar-width: 350px;
+} */
+
+:root {
+  /* Couleurs principales (Charte Groupe) */
+  --ispag-red: #e4032d;
+  --ispag-color-primary: #e4032d;
+  --ispag-color-primary-hover: #7a0000;
+  --ispag-dark: #1a1a1a;
+  --ispag-white: #ffffff;
+
+  /* Couleurs secondaires (Charte Groupe) */
+  --ispag-green: #8cbe26;
+  --ispag-blue: #2f4f9e;
+  --ispag-blue-light: #d6e0f0;
+  --ispag-orange: #f18619;
+
+  /* Nuances de gris */
+  --ispag-grey: #bcbaba;
+  --ispag-light-grey: #fafafa;
+  --ispag-btn-grey: #a19a9a;
+  --ispag-color-text-dark: #333333;
+  --ispag-color-text-medium: #555555;
+  --ispag-color-text-light: #777777;
+  --ispag-color-border-light: #e0e0e0;
+  --ispag-color-border-lighter: #f0f0f0;
+  --ispag-color-background: #ffffff;
+  --ispag-color-profile-pic: #e0e0e0;
+  --ispag-color-profile-text: #666666;
+
+  --ispag-border: #E4E7EC;
+  --ispag-text-primary: #101828;
+  --ispag-text-secondary: #667085;
+  --ispag-text-muted: #98A2B3;
+  --ispag-icon-bg: #F2F4F7;
+
+  /* États et alertes */
+  --ispag-success-color: #8cbe26;
+  --ispag-danger-bg: #FEF3F2;
+  --ispag-danger-text: #B42318;
+  --ispag-danger-color: #dc3545;
+
+  /* Dimensions */
+  --ispag-sidebar-width: 350px;
+  --ispag-badge-border-radius: 6px;
+  --ispag-btn-border-radius: 4px;
+  --ispag-card-border-radius: 16px;
 }

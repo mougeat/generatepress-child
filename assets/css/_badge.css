@@ -5,10 +5,12 @@
 
 .ispag-status-badge { 
     display: inline-block; 
-    padding: 3px 8px; 
-    border-radius: 12px; 
-    font-size: 0.8em; 
-    font-weight: bold; 
+    /* padding: 3px 8px;  */
+    padding: 2px 6px; 
+    border-radius: var(--ispag-badge-border-radius); 
+    /* font-size: 0.8em;  */
+    font-size: 11px;
+    /* font-weight: bold;  */
     text-transform: capitalize; 
     line-height: 1.2; /* Assure un bon alignement vertical dans <dd> */
     white-space: nowrap; /* Empêche la coupure du texte */
@@ -29,10 +31,10 @@
     bottom: 125%;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #333;
+    background-color: var(--ispag-color-text-dark);
     color: #fff;
     padding: 8px 12px;
-    border-radius: 4px;
+    border-radius: var(--ispag-badge-border-radius);
     font-size: 12px;
     white-space: nowrap;
     z-index: 100;

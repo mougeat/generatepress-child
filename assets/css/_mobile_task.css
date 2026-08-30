@@ -1,113 +1,270 @@
-/* Suppression des comportements de tableau WordPress sur Mobile */
+/* ===== RESPONSIVE POUR MOBILE ET TABLETTE ===== */
+
+/* --- MOBILE (écrans ≤ 782px) --- */
 @media screen and (max-width: 782px) {
-
-    /* 0. FORCE LA LARGEUR DU PARENT WP */
-    #wpbody-content, .wrap, .adm-table-responsive {
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 100vw !important;
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
+    /* 1. Supprimer les comportements par défaut du tableau */
+    .ispag-card {
+        width: 100%;
+        overflow-x: hidden;
+        padding: 0 10px;
+        box-sizing: border-box;
     }
 
-    /* 1. CACHER LES EN-TÊTES (Totalement) */
-    table.ispag-task-table thead,
-    table.ispag-task-table thead tr,
-    table.ispag-task-table thead th {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        padding: 0 !important;
+    /* 2. Masquer les en-têtes du tableau */
+    .ispag-table thead {
+        display: none;
     }
 
-    /* 2. RENDRE LE TABLEAU FLEXIBLE (Casse le min-width initial) */
-    table.ispag-task-table {
-        display: block !important;
-        width: 100% !important;
-        min-width: 0 !important; /* Casse la largeur forcée de WP */
-        max-width: 100vw !important;
-        border: none !important;
-        background: transparent !important;
-        box-sizing: border-box !important;
-        table-layout: auto !important;
+    /* 3. Transformer le tableau en bloc flexible */
+    .ispag-table {
+        display: block;
+        width: 100%;
+        border: none;
+        background: transparent;
     }
 
-    table.ispag-task-table tbody {
-        display: block !important;
-        width: 100% !important;
+    .ispag-table tbody {
+        display: block;
+        width: 100%;
     }
 
-    /* 3. LA CARTE (Chaque ligne devient un bloc) */
-    table.ispag-task-table tbody tr {
-        display: block !important;
-        /* On laisse 10px de marge de chaque côté pour éviter que ça touche les bords */
-        width: calc(100% - 20px) !important; 
-        margin: 10px auto 15px auto !important; 
-        background: var(--ispag-color-background) !important;
-        padding: 15px 15px 15px 50px !important; /* Espace pour le check à gauche */
-        border-radius: 12px !important;
-        border: 1px solid rgba(0,0,0,0.1) !important;
-        position: relative !important;
-        box-sizing: border-box !important;
-        float: none !important;
-        height: auto !important;
+    /* 4. Chaque ligne devient une carte */
+    .ispag-table tbody tr {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: var(--ispag-badge-border-radius);
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        position: relative;
     }
 
-    /* 4. LES CELLULES (Chaque colonne devient une ligne dans la carte) */
-    table.ispag-task-table tbody td {
-        display: block !important;
-        width: 100% !important;
-        padding: 4px 0 !important;
-        border: none !important;
-        text-align: left !important;
-        box-sizing: border-box !important;
-        height: auto !important;
-        white-space: normal !important; /* Permet le retour à la ligne du texte */
+    /* 5. Chaque cellule devient une ligne dans la carte */
+    .ispag-table tbody td {
+        display: block;
+        width: 100%;
+        padding: 8px 0;
+        border: none;
+        text-align: left;
+        border-bottom: 1px solid #f0f0f0;
     }
 
-    /* Style spécifique pour le Titre */
-    table.ispag-task-table td.column-title {
-        font-size: 1.1rem;
+    /* 6. Ajouter des labels pour chaque champ */
+    .ispag-table tbody td::before {
+        content: attr(data-label);
         font-weight: bold;
-        line-height: 1.2;
-        margin-bottom: 5px;
+        display: block;
+        margin-bottom: 4px;
+        color: #555;
     }
 
-    /* 5. LE BOUTON CHECK (Position fixe à gauche dans la carte) */
-    table.ispag-task-table tbody th.check-column {
-        display: block !important;
-        position: absolute !important;
-        left: 10px !important;
-        top: 15px !important;
-        width: 30px !important;
-        border: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        background: transparent !important;
+    /* 7. Positionner la checkbox à gauche */
+    .ispag-table tbody td.col-check {
+        position: absolute;
+        left: 15px;
+        top: 15px;
+        width: 20px;
+        padding: 0;
+        border: none;
     }
 
-    /* 6. LES BOUTONS D'ACTION (L'un sur l'autre) */
-    table.ispag-task-table td:last-child {
-        margin-top: 15px !important;
-        padding-top: 15px !important;
-        border-top: 1px solid rgba(0,0,0,0.08) !important;
-        display: flex !important;
-        flex-direction: column !important; /* Empilement vertical */
-        gap: 8px !important;
+    .ispag-table tbody td.col-check::before {
+        display: none; /* Masquer le label pour la checkbox */
     }
 
-    table.ispag-task-table .ispag-btn {
-        display: block !important;
-        width: 100% !important; /* Bouton pleine largeur */
-        margin: 0 !important;
-        padding: 12px !important; /* Plus facile à cliquer au doigt */
-        text-align: center !important;
-        box-sizing: border-box !important;
+    .ispag-table tbody td.col-task {
+        padding-left: 40px;
+        font-weight: bold;
+        font-size: 1.1em;
+        border-bottom: none;
     }
 
-    /* Correction couleur Date si en retard */
-    table.ispag-task-table td.ispag-overdue-date {
-        color: #d63638 !important; /* Rouge WP pour les alertes */
+    .ispag-table tbody td.col-rel {
+        padding-left: 40px;
+    }
+
+    .ispag-table tbody td.col-type {
+        padding-left: 40px;
+    }
+
+    .ispag-table tbody td.col-date {
+        padding-left: 40px;
+    }
+
+    /* 8. Boutons d'action en colonne */
+    .ispag-table tbody td.col-actions {
+        padding-left: 40px;
+        padding-top: 10px;
+        display: flex;
+        gap: 8px;
+    }
+
+    .ispag-table tbody td.col-actions .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .ispag-table tbody td.col-actions .icon-btn {
+        width: 100%;
+        padding: 8px;
+        text-align: center;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: var(--ispag-badge-border-radius);
+    }
+
+    /* 9. Mise en évidence des dates en retard */
+    .ispag-table tbody td .due-date-wrapper.is-late {
+        color: #d63638;
         font-weight: 600;
+    }
+
+    /* 10. Liens dans les relations */
+    .ispag-table tbody td.col-rel .rel-box {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .ispag-table tbody td.col-rel .rel-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        color: #0073aa;
+    }
+
+    /* 11. Header responsive */
+    .ispag-dash-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .header-left {
+        width: 100%;
+        text-align: center;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .ispag-search-container {
+        width: 100%;
+    }
+
+    .ispag-search-container input {
+        width: 100%;
+    }
+}
+
+/* --- TABLETTE (écrans entre 783px et 1024px) --- */
+@media screen and (min-width: 783px) and (max-width: 1024px) {
+    /* 1. Conserver un affichage en tableau mais avec des ajustements */
+    .ispag-table {
+        display: table;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .ispag-table thead {
+        display: table-header-group;
+    }
+
+    .ispag-table tbody {
+        display: table-row-group;
+    }
+
+    .ispag-table tbody tr {
+        display: table-row;
+    }
+
+    .ispag-table tbody td {
+        display: table-cell;
+        padding: 12px;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: middle;
+    }
+
+    /* 2. Masquer les labels sur tablette (car les en-têtes sont visibles) */
+    .ispag-table tbody td::before {
+        display: none;
+    }
+
+    /* 3. Ajustements pour les colonnes spécifiques */
+    .ispag-table .col-check {
+        width: 5%;
+        text-align: center;
+    }
+
+    .ispag-table .col-task {
+        width: 30%;
+        font-weight: bold;
+    }
+
+    .ispag-table .col-rel {
+        width: 25%;
+    }
+
+    .ispag-table .col-type {
+        width: 10%;
+        text-align: center;
+    }
+
+    .ispag-table .col-date {
+        width: 15%;
+        text-align: center;
+    }
+
+    .ispag-table .col-actions {
+        width: 15%;
+        text-align: center;
+    }
+
+    /* 4. Boutons d'action en ligne */
+    .ispag-table tbody td.col-actions .btn-group {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .ispag-table tbody td.col-actions .icon-btn {
+        padding: 6px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    /* 5. Header ajusté pour tablette */
+    .ispag-dash-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-left {
+        width: auto;
+        text-align: left;
+    }
+
+    .header-actions {
+        width: auto;
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .ispag-search-container {
+        width: auto;
+    }
+
+    .ispag-search-container input {
+        width: 200px;
     }
 }

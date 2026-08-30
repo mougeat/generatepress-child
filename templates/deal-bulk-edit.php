@@ -4,13 +4,13 @@
  * Variables attendues : $transactions (array)
  */
 ?> 
-<div id="ispag-bulk-edit-bar" style="display: none; background: #f0f0f1; border: 1px solid #ccd0d4; padding: 15px; margin-bottom: 15px; border-radius: 4px; align-items: center; gap: 15px;">
+<div id="ispag-bulk-edit-bar" style="display: none; background: #f0f0f1; border: 1px solid #ccd0d4; padding: 15px; margin-bottom: 15px; border-radius: var(--ispag-btn-border-radius); align-items: center; gap: 15px;">
     <strong><?php echo sprintf(__('%s selected projects', 'ispag-crm'), '<span id="selected-count">0</span>'); ?></strong>
     
     <div class="bulk-action-item">
         <label style="margin-right: 10px;"><?php _e('Move to stage :', 'ispag-crm'); ?></label>
         <span class="ispag-badge-container" style="position: relative; display: inline-block;">
-            <span id="bulk-stage-badge" class="ispag-status-badge" style="background-color: #cbd6e2; color: #fff; padding: 5px 12px; border-radius: 4px; display: inline-block; min-width: 100px; text-align: center;">
+            <span id="bulk-stage-badge" class="ispag-status-badge" style="background-color: #cbd6e2; color: #fff; padding: 5px 12px; border-radius: var(--ispag-btn-border-radius); display: inline-block; min-width: 100px; text-align: center;">
                 <?php _e('Select...', 'ispag-crm'); ?>
             </span>
             <select id="ispag-bulk-stage-updater" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">

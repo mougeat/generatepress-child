@@ -66,7 +66,7 @@
 .ispag-search-bar {
     display: flex;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: var(--ispag-btn-border-radius);
     overflow: hidden;
 }
 
@@ -131,24 +131,8 @@ td.due-date {
 
 /**********************************/
 .ispag-crm-table td{position: relative; padding: 12px 15px;}
-/* .ispag-badge {
-    display: inline-flex;    
-    align-items: center;
-    justify-content: center;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    white-space: nowrap;
-    
-    
-    position: static !important; 
-    float: none !important;      
-    line-height: 1.4;
-    margin: 0;
-} */
-.ispag-table-container { background: #fff; border: 1px solid #cbd6e2; border-radius: 8px; overflow: hidden; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+.ispag-table-container { background: #fff; border: 1px solid #cbd6e2; border-radius: var(--ispag-badge-border-radius); overflow: hidden; margin-top: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .ispag-crm-table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .ispag-crm-table th { background: #f5f8fa; text-align: left; padding: 12px 15px; border-bottom: 2px solid #cbd6e2; color: #33475b; font-weight: 600; }
 .ispag-crm-table td { padding: 12px 15px; border-bottom: 1px solid #eaf0f6; vertical-align: middle; }
@@ -156,7 +140,7 @@ td.due-date {
 .amount-cell { font-family: 'Courier New', Courier, monospace; font-weight: bold; text-align: right; color: #2d3e50; }
 /* .ispag-badge { padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; white-space: nowrap; } */
 .small-text { font-size: 11px; color: #7c98b6; margin-top: 2px; }
-.company-name { font-weight: 500; color: #33475b; }
+.company-name { font-weight: 700; color: #33475b; }
 .dashicons { vertical-align: middle; margin-right: 5px; font-size: 18px; }
 
 
@@ -197,4 +181,32 @@ td.due-date {
     opacity: 0;
     cursor: pointer;
     z-index: 10; /* Toujours au-dessus du badge */
+}
+
+.ispag-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.ispag-table th {
+    text-align: left;
+    padding: 12px 20px;
+    background: var(--ispag-light-grey);
+    color: var(--ispag-color-text-dark);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--ispag-border);
+}
+
+.task-row td, .ispag-table tr {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--ispag-border);
+    vertical-align: middle;
+}
+
+.task-row:hover td, .ispag-table tr:hover {
+    background: #f8fafc;
 }

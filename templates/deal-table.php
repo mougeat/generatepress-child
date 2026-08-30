@@ -62,7 +62,7 @@
                         <span class="ispag-badge-container" style="position: relative; display: inline-block;">
                             
                             <span class="ispag-status-badge individual-badge-<?php echo esc_attr($transaction->id); ?>" 
-                                style="background-color: <?php echo esc_attr($stage_color); ?>15; color: <?php echo esc_attr($stage_color); ?>; border: 1px solid <?php echo esc_attr($stage_color); ?>; padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 12px; display: inline-block; min-width: 80px; text-align: center;">
+                                style="background-color: <?php echo esc_attr($stage_color); ?>15; color: <?php echo esc_attr($stage_color); ?>; border: 1px solid <?php echo esc_attr($stage_color); ?>; padding: 4px 8px; border-radius: var(--ispag-btn-border-radius); font-weight: 600; font-size: 12px; display: inline-block; min-width: 80px; text-align: center;">
                                 <?php echo esc_html($stage_label); ?>
                             </span>
 

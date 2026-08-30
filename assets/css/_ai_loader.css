@@ -26,7 +26,7 @@
 .ispag-ai-drawing-loader .loader-text {
     font-size: 13px;
     font-weight: 600;
-    color: #333333;
+    color: var(--ispag-text-primary);
     letter-spacing: 0.5px;
 }
 
@@ -35,7 +35,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #D71920; /* Rouge Roth */
+    color: var(--ispag-color-primary); /* Rouge Roth */
 }
 
 .ispag-ai-loader-v1 .dashicons {
@@ -49,51 +49,14 @@
     100% { transform: scale(1); opacity: 1; }
 }
 
-/************ V2 */
-.ispag-ai-scanner-v2 {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
 
-.ispag-ai-scanner-v2 .scanner-box {
-    width: 30px;
-    height: 30px;
-    background: #333333; /* Anthracite Roth */
-    border-radius: 4px;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid #555;
-}
-
-.ispag-ai-scanner-v2 .scanner-line {
-    position: absolute;
-    width: 100%;
-    height: 4px;
-    background: #D71920; /* Rouge Roth */
-    box-shadow: 0 0 8px #D71920;
-    top: -5px;
-    animation: roth-scan 2s linear infinite;
-}
-
-@keyframes roth-scan {
-    0% { top: -5px; }
-    50% { top: 30px; }
-    100% { top: -5px; }
-}
-
-.ispag-ai-scanner-v2 .loader-text {
-    font-size: 13px;
-    font-weight: 500;
-    color: #333;
-}
  
 /**** V6 */
 .ispag-ai-loader {
     width: 24px;
     height: 24px;
-    border: 3px solid #333; /* Gris Anthracite */
-    border-top: 3px solid #D71920; /* Rouge Roth */
+    border: 3px solid var(--ispag-border); /* Gris Anthracite */
+    border-top: 3px solid var(--ispag-color-primary); /* Rouge Roth */
     border-radius: 50%;
     animation: ispag-spin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
 }

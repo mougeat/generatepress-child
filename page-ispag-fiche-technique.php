@@ -12,7 +12,10 @@ global $wpdb;
 $target_table = ISPAG_Crm_Deal_Constants::TABLE_NAME; 
 $serial = isset($_GET['serial']) ? sanitize_text_field($_GET['serial']) : null;
 
-$product = null; $project = null; $is_warranty_active = false; $days_left = 0;
+$product = null;
+$project = null;
+$is_warranty_active = false;
+$days_left = 0;
 
 if ( $serial ) {
     $parts = explode('-', $serial);
@@ -44,9 +47,9 @@ if ( $serial ) {
                 <span class="dashicons <?php echo $is_warranty_active ? 'dashicons-shield-alt' : 'dashicons-warning'; ?>"></span>
                 <?php 
                     if($is_warranty_active) {
-                        printf(__('Active Warranty (%s days left)', 'ispag-crm'), $days_left);
+                        printf(__('Active Warranty (%s days left)', 'creation-reservoir'), $days_left);
                     } else {
-                        _e('Warranty Expired', 'ispag-crm');
+                        _e('Warranty Expired', 'creation-reservoir');
                     }
                 ?>
             </div>
@@ -64,28 +67,28 @@ if ( $serial ) {
             <div class="stat-card">
                 <span class="dashicons dashicons-admin-home"></span>
                 <div class="stat-data">
-                    <label><?php _e('Project', 'ispag-crm'); ?></label>
+                    <label><?php _e('Project', 'creation-reservoir'); ?></label>
                     <strong><?php echo esc_html($project->project_name); ?></strong>
                 </div>
             </div>
             <div class="stat-card">
                 <span class="dashicons dashicons-calendar-alt"></span>
                 <div class="stat-data">
-                    <label><?php _e('Delivery date', 'ispag-crm'); ?></label>
+                    <label><?php _e('Delivery date', 'creation-reservoir'); ?></label>
                     <strong><?php echo date('d.m.Y', strtotime($product->date_livraison)); ?></strong>
                 </div>
             </div>
         </div>
 
         <section class="details-section">
-            <h3 class="section-subtitle"><span class="dashicons dashicons-performance"></span> <?php _e('Technical Specifications', 'ispag-crm'); ?></h3>
+            <h3 class="section-subtitle"><span class="dashicons dashicons-performance"></span> <?php _e('Technical Specifications', 'creation-reservoir'); ?></h3>
             <div class="specs-card">
                 <?php 
                 $specs = [
-                    __('Nominal Volume', 'ispag-crm') => $product->Volume ? $product->Volume . ' L' : null,
-                    __('Material', 'ispag-crm') => $product->Matiere ?? null,
-                    __('Operating Pressure', 'ispag-crm') => $product->Pression ?? null,
-                    __('Article ID', 'ispag-crm') => $article_id
+                    __('Nominal Volume', 'creation-reservoir') => $product->Volume ? $product->Volume . ' L' : null,
+                    __('Material', 'creation-reservoir') => $product->Matiere ?? null,
+                    __('Operating Pressure', 'creation-reservoir') => $product->Pression ?? null,
+                    __('Article ID', 'creation-reservoir') => $article_id
                 ];
                 foreach($specs as $label => $value): if($value): ?>
                     <div class="spec-row">
@@ -97,22 +100,23 @@ if ( $serial ) {
         </section>
 
         <section class="details-section">
-            <h3 class="section-subtitle"><span class="dashicons dashicons-media-document"></span> <?php _e('Documentation', 'ispag-crm'); ?></h3>
+            <h3 class="section-subtitle"><span class="dashicons dashicons-media-document"></span> <?php _e('Documentation', 'creation-reservoir'); ?></h3>
             <div class="doc-actions-grid">
                 <?php if (!empty($product->last_drawing_url)): ?>
                     <a href="<?php echo esc_url($product->last_drawing_url); ?>" target="_blank" class="action-card">
                         <div class="icon-box pdf"><span class="dashicons dashicons-pdf"></span></div>
                         <div class="action-text">
-                            <strong><?php _e('Technical Drawing', 'ispag-crm'); ?></strong>
+                            <strong><?php _e('Technical Drawing', 'creation-reservoir'); ?></strong>
                             <span>PDF Format</span>
                         </div>
                     </a>
                 <?php endif; ?>
                 
-                <a href="#" class="action-card">
+                <a href="#" class="action-card" onclick="generateNoticePDF(<?php echo($article_id); ?>, 'fr')">
+                
                     <div class="icon-box book"><span class="dashicons dashicons-clipboard"></span></div>
                     <div class="action-text">
-                        <strong><?php _e('Maintenance Manual', 'ispag-crm'); ?></strong>
+                        <strong><?php _e('Maintenance Manual', 'creation-reservoir'); ?></strong>
                         <span>View Online</span>
                     </div>
                 </a>
@@ -120,22 +124,24 @@ if ( $serial ) {
         </section>
 
         <div class="support-footer-card">
-            <h4><?php _e('Need Assistance?', 'ispag-crm'); ?></h4>
-            <p><?php _e('Our technical team in Vaulruz is here to help you.', 'ispag-crm'); ?></p>
+            <h4><?php _e('Need Assistance?', 'creation-reservoir'); ?></h4>
+            <p><?php _e('Our technical team in Vaulruz is here to help you.', 'creation-reservoir'); ?></p>
             <div class="btn-group">
-                <a href="tel:+41269125672" class="btn-primary"><span class="dashicons dashicons-phone"></span> <?php _e('Call Now', 'ispag-crm'); ?></a>
-                <a href="mailto:info@ispag-asp.ch?subject=Support Request Serial <?php echo $serial; ?>" class="btn-secondary"><?php _e('Email Support', 'ispag-crm'); ?></a>
+                <a href="tel:+41269125672" class="btn-primary"><span class="dashicons dashicons-phone"></span> <?php _e('Call Now', 'creation-reservoir'); ?></a>
+                <a href="mailto:info@ispag-asp.ch?subject=Support Request Serial <?php echo $serial; ?>" class="btn-secondary"><?php _e('Email Support', 'creation-reservoir'); ?></a>
             </div>
         </div>
 
     <?php else: ?>
         <div class="modern-error-state">
             <div class="error-icon">!</div>
-            <h2><?php _e('Product Not Found', 'ispag-crm'); ?></h2>
-            <p><?php _e('The serial number is invalid or not found in our database.', 'ispag-crm'); ?></p>
-            <a href="/" class="btn-back"><?php _e('Back to Home', 'ispag-crm'); ?></a>
+            <h2><?php _e('Product Not Found', 'creation-reservoir'); ?></h2>
+            <p><?php _e('The serial number is invalid or not found in our database.', 'creation-reservoir'); ?></p>
+            <a href="/" class="btn-back"><?php _e('Back to Home', 'creation-reservoir'); ?></a>
         </div>
     <?php endif; ?>
 </div>
 
-<?php get_footer(); ?>
+<?php
+
+get_footer(); ?>

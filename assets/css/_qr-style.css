@@ -25,7 +25,7 @@
     background: var(--ispag-blue);
     color: white;
     padding: 25px;
-    border-radius: 16px;
+    border-radius: var(--ispag-card-border-radius);
     display: flex;
     flex-direction: column; /* Empilement vertical strict */
     gap: 12px;
@@ -75,7 +75,7 @@
     align-self: flex-start;
     background: rgba(255, 255, 255, 0.15);
     padding: 5px 12px;
-    border-radius: 8px;
+    border-radius: var(--ispag-badge-border-radius);
     font-size: 0.9em;
 }
 
@@ -182,7 +182,7 @@
 .support-footer-card {
     background: white;
     padding: 25px;
-    border-radius: 16px;
+    border-radius: var(--ispag-card-border-radius);
     text-align: center;
     border: 2px dashed var(--border-color);
     margin-top: 30px;

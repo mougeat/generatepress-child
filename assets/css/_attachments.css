@@ -1,0 +1,364 @@
+/* ==========================================================================
+   ISPAG Docu Card — carte "Pièces jointes"
+   Ajouter le contenu de ce fichier à assets/css/ispag-crm-styles.css
+   (ou l'enqueue séparément via wp_enqueue_style si tu préfères l'isoler)
+   ========================================================================== */
+
+.ispag-docu-card {
+    
+    background: #ffffff;
+    border: 1px solid var(--ispag-border);
+    border-radius: var(--ispag-card-border-radius);
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    padding: 20px;
+    font-family: inherit;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Header                                                                  */
+/* ---------------------------------------------------------------------- */
+
+.ispag-docu-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.ispag-docu-card__toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.ispag-docu-card__toggle:focus-visible {
+    outline: 2px solid var(--ispag-teal);
+    outline-offset: 2px;
+    border-radius: var(--ispag-btn-border-radius);
+}
+
+.ispag-docu-card__chevron {
+    color: var(--ispag-text-secondary);
+    font-size: 12px;
+    transition: transform 0.15s ease;
+    display: inline-block;
+}
+
+/* Collapse : basculé en JS quand aria-expanded="false" */
+.ispag-docu-card__toggle[aria-expanded="false"] .ispag-docu-card__chevron {
+    transform: rotate(-90deg);
+}
+
+.ispag-docu-card__toggle[aria-expanded="false"] ~ .ispag-docu-card__body {
+    display: none;
+}
+
+.ispag-docu-card__title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ispag-text-primary);
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.ispag-docu-card__add {
+    position: relative;
+}
+
+.ispag-docu-card__add-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--ispag-teal);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--ispag-btn-border-radius);
+}
+
+.ispag-docu-card__add-btn:hover {
+    background: var(--ispag-icon-bg);
+}
+
+.ispag-docu-card__add-btn:focus-visible {
+    outline: 2px solid var(--ispag-teal);
+    outline-offset: 2px;
+}
+
+.ispag-docu-card__caret {
+    font-size: 11px;
+}
+
+/* Menu déroulant injecté en JS sous le bouton Ajouter */
+.ispag-docu-card__add-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 180px;
+    background: #ffffff;
+    border: 1px solid var(--ispag-border);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(16, 24, 40, 0.08);
+    padding: 6px;
+    z-index: 20;
+}
+
+.ispag-docu-card__add-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 8px 10px;
+    font-size: 13px;
+    color: var(--ispag-text-primary);
+    border-radius: var(--ispag-badge-border-radius);
+    cursor: pointer;
+}
+
+.ispag-docu-card__add-menu button:hover {
+    background: var(--ispag-icon-bg);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Body                                                                    */
+/* ---------------------------------------------------------------------- */
+
+.ispag-docu-card__subtitle {
+    font-size: 13px;
+    color: var(--ispag-text-secondary);
+    margin: 0 0 10px;
+}
+
+.ispag-docu-card__empty {
+    font-size: 13px;
+    color: var(--ispag-text-muted);
+    text-align: center;
+    padding: 24px 12px;
+    margin: 0;
+    border: 1px dashed var(--ispag-border);
+    border-radius: 10px;
+}
+
+.ispag-docu-card__list {
+    list-style: none;
+    margin: 0 0 12px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ispag-docu-card__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid var(--ispag-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.ispag-docu-card__item:hover {
+    background: #FAFAFA;
+    border-color: #D0D5DD;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Icônes par type de fichier                                             */
+/* ---------------------------------------------------------------------- */
+
+.ispag-docu-card__icon {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--ispag-badge-border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ispag-docu-card__icon--pdf {
+    border: 1.5px solid var(--ispag-teal);
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--ispag-teal);
+    letter-spacing: 0.3px;
+}
+
+.ispag-docu-card__icon--pdf::before {
+    content: "PDF";
+}
+
+.ispag-docu-card__icon--image,
+.ispag-docu-card__icon--doc,
+.ispag-docu-card__icon--xls,
+.ispag-docu-card__icon--file {
+    background: var(--ispag-icon-bg);
+}
+
+.ispag-docu-card__icon--image::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    display: block;
+    background-color: var(--ispag-text-secondary);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpath d='M21 15l-5-5-9 9'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpath d='M21 15l-5-5-9 9'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.ispag-docu-card__icon--doc::before,
+.ispag-docu-card__icon--xls::before,
+.ispag-docu-card__icon--file::before {
+    content: "";
+    width: 16px;
+    height: 18px;
+    display: block;
+    background-color: var(--ispag-text-secondary);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Meta (nom + date) et bouton supprimer                                  */
+/* ---------------------------------------------------------------------- */
+
+.ispag-docu-card__meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.ispag-docu-card__filename {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ispag-teal);
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: normal;
+    min-width: 0;
+    white-space: nowrap;
+}
+
+.ispag-docu-card__filename:hover {
+    text-decoration: underline;
+}
+
+.ispag-docu-card__filename:focus-visible {
+    outline: 2px solid var(--ispag-teal);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.ispag-docu-card__date {
+    font-size: 12px;
+    color: var(--ispag-text-muted);
+    margin-top: 2px;
+    word-break: normal;
+    min-width: 0;
+    white-space: nowrap;
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+.ispag-docu-card__remove {
+    /* flex: 0 0 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: var(--ispag-text-muted);
+    font-size: 16px !important;
+    line-height: 1 !important;
+    cursor: pointer;
+    padding: 0 !important; */
+    margin-left: auto; /* Pousse le bouton complètement à droite */
+    /* border-radius: var(--ispag-btn-border-radius); */
+}
+
+.ispag-docu-card__remove:hover {
+    background: var(--ispag-danger-bg) !important;
+    color: var(--ispag-danger-text) !important;
+}
+
+.ispag-docu-card__remove:focus-visible {
+    outline: 1px solid var(--ispag-danger-text);
+    outline-offset: 1px;
+}
+
+/* État "en cours de suppression" (à toggler en JS pendant l'appel AJAX) */
+.ispag-docu-card__item.is-removing {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Lien "Voir toutes les pièces jointes"                                  */
+/* ---------------------------------------------------------------------- */
+
+.ispag-docu-card__view-all {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--ispag-teal);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ispag-docu-card__view-all:hover {
+    text-decoration: underline;
+}
+
+.ispag-docu-card__view-all:focus-visible {
+    outline: 2px solid var(--ispag-teal);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Responsive                                                              */
+/* ---------------------------------------------------------------------- */
+
+@media (max-width: 480px) {
+    .ispag-docu-card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .ispag-docu-card__item {
+        padding: 8px 10px;
+        gap: 10px;
+    }
+
+    .ispag-docu-card__icon {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Reduced motion                                                          */
+/* ---------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .ispag-docu-card__chevron,
+    .ispag-docu-card__item {
+        transition: none;
+    }
+}

@@ -9,11 +9,16 @@
 
 <div id="ispag-crm-modal" class="ispag-modal-overlay">
     <div class="ispag-modal-content">
-        
-        <div class="ispag-modal-header">
-            <h4 id="ispag-modal-title"><?php _e('Notification', 'ispag-crm'); ?></h4>
-            <span class="ispag-modal-close ispag-close-modal">&times;</span>
+        <!-- En-tête de la modale avec titre et croix -->
+        <div class="ispag-modal-header ui-draggable-handle">
+            <h4 id="ispag-modal-title">Préférences de notification</h4>
+            <span class="ispag-modal-close ispag-btn ispag-btn-red-outlined ispag-close-croix">&times;</span>
         </div>
+        
+        <!-- <div class="ispag-modal-header">
+            <h4 id="ispag-modal-title"><?php _e('Notification', 'ispag-crm'); ?></h4>
+            <span class="ispag-close-modal ispag-btn ispag-btn-red-outlined">&times;</span>
+        </div> -->
 
         <div class="ispag-modal-body">
             <p id="ispag-modal-message" style="margin-bottom: 20px;"></p>
@@ -26,8 +31,8 @@
         </div>
 
         <div class="ispag-modal-footer" style="text-align: right; border-top: 1px solid #eee;">
-            <button id="ispag-cancel-lost" class="button ispag-modal-close ispag-close-modal"><?php _e('Close', 'ispag-crm'); ?></button>
+            <button id="ispag-cancel-lost" class="ispag-btn ispag-modal-close"><?php _e('Close', 'ispag-crm'); ?></button><!--  ispag-modal-close ispag-close-modal -->
         </div>
-        
+
     </div>
-</div>
+</div> 

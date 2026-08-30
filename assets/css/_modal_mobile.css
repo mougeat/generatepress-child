@@ -1,0 +1,117 @@
+/* ==========================================================================
+   MODALES ET SIDEBARS - PLEIN ÉCRAN SUR MOBILE & TABLETTE
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+    /* Arrière-plan de la modale (masqué par défaut) */
+    /* .ispag-task-modal-overlay {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 10000;
+     
+    } */
+     #ispag-modal-product{
+        top: 0;
+        padding: 0;
+     }
+
+    /* Contenu de la modale en plein écran */
+    .ispag-task-modal-content,
+    .ispag-modal-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        border-radius: 0 !important;
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        box-shadow: none !important;
+    }
+
+    /* En-tête de la modale (fixe en haut) */
+    .ispag-modal-header {
+        position: sticky !important;
+        top: 0;
+        z-index: 100;
+        background: #ffffff;
+        padding: 16px 20px;
+        border-bottom: 1px solid #e2e8f0;
+        cursor: default !important;
+    }
+
+    /* Corps de la modale (scrollable) */
+    .ispag-modal-body {
+        padding: 16px 20px;
+        flex: 1;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Pied de page de la modale (fixe en bas) */
+    .ispag-modal-footer {
+        position: sticky !important;
+        bottom: 0;
+        background: #ffffff;
+        border-top: 1px solid #e2e8f0;
+        padding: 16px 20px;
+        z-index: 100;
+    }
+
+    /* Grille responsive */
+    .ispag-modal-grid {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    /* Conteneurs gauche/droite */
+    .ispag-modal-left,
+    .ispag-modal-right {
+        flex: 1 1 100% !important;
+        min-width: 100% !important;
+        width: 100% !important;
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    /* Conteneur visuel (image) */
+    .visual-container {
+        min-height: 300px !important;
+        margin-bottom: 20px;
+    }
+
+    /* Image responsive */
+    .responsive-svg {
+        max-height: 250px !important;
+    }
+}
+
+/* Ajustements pour mobile (< 768px) */
+@media (max-width: 768px) {
+    .ispag-modal-header h2,
+    .ispag-modal-header h4 {
+        font-size: 1.3rem !important;
+    }
+
+    .ispag-modal-header {
+        padding: 12px 16px;
+    }
+
+    .ispag-modal-body {
+        padding: 12px 16px;
+    }
+
+    .ispag-modal-footer {
+        padding: 12px 16px;
+    }
+}
+
+/* Bloque le scroll du body quand une modale est ouverte */
+body.modal-open {
+    overflow: hidden !important;
+    height: 100vh;
+}

@@ -16,26 +16,33 @@
 
 if ( ! function_exists( 'ispag_get_all_deal_owners' ) ) {
     function ispag_get_all_deal_owners() {
-        // Cette fonction doit retourner un tableau associatif [user_id => 'Display Name']
-        // Exemple simplifié :
-        return [
-            1 => 'Cyril Barthel',
-            2 => 'Stéphane Martin',
-            3 => 'Sophie Dubois',
-        ];
+        if(class_exists('ISPAG_Contact_Ajax_Handler')){
+            $contact_repo = new ISPAG_Contact_Ajax_Handler();
+            return $contact_repo->get_all_owners();
+        }
     }
 }
+
 // ====================================================
 
-
+$can_view_prices = current_user_can('display_sales_prices');
 
 // ----------------------------------------------------
 // 1. Initialisation des données et Condition A (Extérieure)
 // ----------------------------------------------------
-$deal_id = absint( get_query_var( 'ispag_deal_id' ) ); 
-$deal    = null;
+$repository = new ISPAG_Crm_Deals_Repository();
+$pattern = '/^OF[0-9]{2}-\d{5}$/';
 
-if ( $deal_id <= 0 ) {
+$param_deal_id =  get_query_var( 'ispag_deal_id' ); 
+$deal    = null;
+if ( preg_match( $pattern, $param_deal_id ) ) { 
+    $deal_id = $repository->get_deal_id_by_of($param_deal_id);
+}
+else{
+    $deal_id = $param_deal_id;
+}
+
+if ( empty( $deal_id ) ) {
     get_header();
     ?>
     <div id="primary" class="content-area">
@@ -47,7 +54,7 @@ if ( $deal_id <= 0 ) {
                 <?php 
                 printf( 
                     __( 'Deal data are missing or not found for ID : %s', 'ispag-crm' ), 
-                    esc_html( $user_id ) 
+                    esc_html( $param_deal_id ) 
                 ); 
                 ?>
             </div>
@@ -65,9 +72,8 @@ if ( $deal_id <= 0 ) {
 
 
 // Vérification A : L'ID est présent ET la classe modèle existe.
-if ( $deal_id > 0 && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exists( 'ISPAG_Crm_Deals_Repository' ) ) :
+if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exists( 'ISPAG_Crm_Deals_Repository' ) ) :
 
-    $repository = new ISPAG_Crm_Deals_Repository();
     $deal_data  = $repository->get_deal_by_id( $deal_id );
 
     
@@ -84,11 +90,16 @@ if ( $deal_id > 0 && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exists( 'IS
         $associated_contacts_list = $deal->get_associated_contacts_list();
         
         $associated_companies_list = $deal->get_associated_company_list();
+        $associated_companies_list_full = array();
+        foreach ($associated_companies_list as $companies) {
+            $associated_companies_list_full[] = $companies->viag_id;
+        }
         // error_log(print_r($associated_companies_list, true));
 
         $contacts_count           = count( $associated_contacts_list );
         $companies_count           = count( $associated_companies_list );
         $company_id               = absint( $deal->associated_company_id );
+
         
         // NOUVEAUTÉ : Récupération de la compagnie et de la dernière activité (basé sur le modèle)
         $company_name             = $deal->associated_company_name ?? __('N/A', 'ispag-crm');
@@ -219,11 +230,10 @@ get_header();
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
-
-
         <div class="ispag-detail-container ispag-company-detail" data-deal-id="<?php echo absint($deal->id); ?>">
             
-            <div class="ispag-left-panel">
+            <!-- Colonne de gauche -->
+            <div class="ispag-left-panel" data-panel="left">
                 <div class="ispag-card ispag-header-card">
                     <div class="ispag-header-top-row">
                         <div class="ispag-header-info">
@@ -240,7 +250,7 @@ get_header();
 
                                 <span class="ispag-badge-container" style="position: relative; display: inline-block; margin-left: 5px;">
                                     
-                                    <span class="ispag-status-badge" style="background-color: <?php echo esc_attr($current_stage_color); ?>; color: #fff; padding: 2px 8px; border-radius: 4px; display: inline-block;">
+                                    <span class="ispag-status-badge" style="background-color: <?php echo esc_attr($current_stage_color); ?>; ">
                                         <?php echo esc_html( $current_stage_label ); ?> 
                                     </span>
 
@@ -346,10 +356,19 @@ get_header();
                         </dl>
                     </div>
                 </div>
+
+                <?php if ( $hubspot_deal_id ) : ?>
+                <div class="ispag-card ispag-project-btn-card">
+                    <?php
+                    // echo $article_renderer->render_project_action_button($hubspot_deal_id);
+                    ?>
+                </div>
+                <?php endif; ?>
             </div>
         
 
-            <div class="ispag-main-content">
+            <!-- Contenu principal -->
+            <div class="ispag-main-content" data-panel="main">
                 <div class="ispag-tabs-navigation">
                     <button class="ispag-tab-btn active" data-tab="overview">
                         <?php esc_html_e( 'Overview', 'ispag-crm' ); ?>
@@ -418,10 +437,14 @@ get_header();
                     <?php if ( $hubspot_deal_id ) : ?>
 
                     <div id="ispag-tab-articles" class="ispag-tab-pane">
-                        <a href="<?php echo esc_url( home_url( '/details-du-projet/?deal_id=' . $hubspot_deal_id ) ); ?>" class="button" target="_blank">
+                        <a href="<?php echo esc_url( home_url( '/project-detail/' . $hubspot_deal_id ) ); ?>" class="button" target="_blank">
                             <?php _e( 'View project details', 'ispag-crm' ); ?>
                         </a>
-                        <?php echo display_ispag_project_articles($hubspot_deal_id, 999); ?>
+                        <?php
+                        $datas['deal_id'] = $hubspot_deal_id;
+                        $datas['can_view_prices'] = $can_view_prices;
+                        ispag_get_template( 'ispag-project-articles', [ 'datas' => $datas ] );  
+                        ?>
                         
                     </div>
                     <?php endif; ?>
@@ -429,137 +452,38 @@ get_header();
 
             </div>
 
-            <div class="ispag-right-panel">
+            <!-- Colonne de droite -->
+            <!-- Wrapper qui porte la largeur flex + le bouton -->
+            <div class="ispag-right-panel-wrapper" data-panel="right-wrapper">
+                                <!-- Bouton collé au bord gauche du wrapper : il suit le panneau -->
+                <button id="toggle-right-panel" class="ispag-panel-toggle-right" type="button"
+                        aria-label="<?php esc_attr_e('Display / Mask panel', 'ispag-crm'); ?>"
+                        title="<?php esc_attr_e('Mask panel', 'ispag-crm'); ?>">
+                    <img
+                        src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-hide.png'); ?>"
+                        data-icon-hide="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-hide.png'); ?>"
+                        data-icon-show="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-display.png'); ?>"
+                        alt=""
+                        class="ispag-panel-toggle-icon">
+                </button>
+                <div class="ispag-right-panel" data-panel="right">
                 
-                
-                <?php if ( $company_id > 0 ) : ?>
-                    <div class="ispag-card ispag-company-card">
-                        <h5>
-                            <?php _e( 'Associated Company', 'ispag-crm'); ?> 
-                            <span style="font-size: 12px;">(ID: <?php echo $company_id; ?>)</span>
-                        </h5>
-                        <?php if ( ! empty( $associated_companies_list ) ): ?>
-                        
-                            <?php foreach ( $associated_companies_list as $company ): 
-                                $last_contact_date_display = date_i18n( 'd.m.Y - h:m', strtotime( $company->last_contact_date ) );
-                                // 1. On récupère le domaine (assure-tu que la propriété est bien 'compagny_domain' ou 'domain')
-                                $company_domain = !empty($company->compagny_domain) ? $company->compagny_domain : '';
-                                
-                                // 2. Génération du favicon via le domaine
-                                $favicon = '';
-                                if (!empty($company_domain)) {
-                                    $favicon = "https://www.google.com/s2/favicons?domain=" . esc_attr($company_domain) . "&sz=64";
-                                }
+                    <?php
+                    $datas['associated_companies_list_full'] = $associated_companies_list_full;
+                    $datas['deal_id'] = $deal_id;
+                    ispag_get_template( 'ispag-template-company-card', [ 'datas' => $datas ] ); 
+                    ?>
 
-                                // 3. Calcul des initiales si pas de favicon
-                                $initials = '';
-                                if (empty($favicon)) {
-                                    $name = $company->company_name;
-                                    $words = explode(' ', $name);
-                                    if (count($words) >= 2) {
-                                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
-                                    } else {
-                                        $initials = strtoupper(substr($name, 0, 2));
-                                    }
-                                }
-                                ?>
-                                <div class="ispag-card" style="font-size: 14px;">
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div class="ispag-mini-profile-pic" >
-                                            <?php if ($favicon) : ?>
-                                                <img src="<?php echo $favicon; ?>" alt="Favicon" style="width:20px; height:20px;">
-                                            <?php else : ?>
-                                                <span style="font-size: 12px;"><?php echo esc_html($initials); ?></span>
-                                            <?php endif; ?>
-                                        </div>
-                                        <strong style="color: #007bff;">
-                                            <a href="<?php echo $company_link; ?>" > <?php echo esc_html( $company->company_name ); ?></a>
-                                        </strong>
-                                        
-                                        <span 
-                                            class="ispag-remove-association" 
-                                            data-contact-id="<?php echo absint($company->Id); ?>"
-                                            data-deal-id="<?php echo absint($deal->id); ?>"
-                                            title="<?php esc_attr_e( 'Remove association', 'ispag-crm' ); ?>"
-                                            style="color: #e74c3c; cursor: pointer;"
-                                        >
-                                            <span class="dashicons dashicons-trash"></span>
-                                        </span>
-                                    </div>
-                                    <p style="margin: 5px 0 0;"><?php _e( 'Last contact', 'ispag-crm'); ?>: <?php echo $last_contact_date_display; ?></p>
-                                    <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm'); ?>: <?php echo esc_html( $company->phone ); ?></p>
-                                    <p style="margin: 5px 0 0;"><?php _e( 'Email', 'ispag-crm'); ?>: <?php echo esc_html( $company->email ); ?></p>
-                                </div>
-                            <?php endforeach; ?>
-                            
-                            <?php if ( $contacts_count >= 5 ): ?>
-                                <a href="<?php echo $link_contact_list; ?>?filter_company=<?php echo $company_id; ?>" class="ispag-button-link" target="_blank"><?php _e( 'View all associated Contacts', 'ispag-crm'); ?></a>
-                            <?php endif; ?>
-                        <?php else: ?>
-                            <p style="font-size: 14px; color: #777;"><?php _e( 'No contacts associated with this deal.', 'ispag-crm'); ?></p>
-                        <?php endif; ?>
-                    </div>
-                <?php endif; ?>
+                    <?php
+                    $datas['associated_contacts_list_full'] = $associated_contacts_list;
+                    $datas['company_id'] = $company_id;
+                    $datas['deal_id'] = $deal_id;
+                    ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
+                    ?>
 
-                
-                <div class="ispag-card ispag-contacts-card">
-                    <h5>
-                        <?php _e( 'Contacts', 'ispag-crm'); ?> (<span class="ispag-contact-count"><?php echo $contacts_count; ?></span>) 
-                        <span id="open-add-contact-modal" 
-                            style="font-size: 12px; color: #007bff; cursor: pointer;" 
-                            data-company-id="<?php echo $company_id; ?>"
-                            data-deal-group-ref="<?php echo $deal->deal_group_ref; ?>"
-                            >
-                            + <?php _e( 'Add', 'ispag-crm'); ?>
-                        </span>
-                    </h5> 
                     
-                    <?php if ( ! empty( $associated_contacts_list ) ): ?>
-                        
-                        <?php foreach ( $associated_contacts_list as $contact ): 
-                            $last_contact_date_display = date_i18n( 'd.m.Y - h:m', strtotime( $contact->last_contact_date ) );
-                            $contact_link = trailingslashit( $base_url . '/contact/' . $contact->ID );
-                            ?>
-                            <div class="ispag-card" style="font-size: 14px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div class="ispag-mini-profile-pic" >
-                                        <?php if ($contact->avatar_url) : ?>
-                                            <img src="<?php echo $contact->avatar_url; ?>" alt="<?php echo esc_attr( $contact->display_name ); ?>" style="width:20px; height:20px;">
-                                        <?php else : 
-                                            $initials = strtoupper( substr( $contact->display_name, 0, 1 ) . substr( $contact->display_name, strpos($contact->display_name, ' ') + 1, 1 ) ); ?>
-                                            <span style="font-size: 12px;"><?php echo esc_html($initials); ?></span>
-                                        <?php endif; ?>
-                                    </div>
-                                    <strong style="color: #007bff;">
-                                        <a href="<?php echo esc_url($contact_link); ?>" ><?php echo esc_html( $contact->display_name ); ?></a>
-                                    </strong>
-                                    
-                                    <span 
-                                        class="ispag-remove-association" 
-                                        data-contact-id="<?php echo absint($contact->ID); ?>"
-                                        data-deal-id="<?php echo absint($deal->id); ?>"
-                                        data-action="remove-contact-from-deal"
-                                        title="<?php esc_attr_e( 'Remove association', 'ispag-crm' ); ?>"
-                                        style="color: #e74c3c; cursor: pointer;"
-                                    >
-                                        <span class="dashicons dashicons-trash"></span>
-                                    </span>
-                                </div> 
-                                <p style="margin: 5px 0 0;"><?php _e( 'Function', 'ispag-crm'); ?>: <?php echo esc_html( $contact->lead_function ); ?></p>
-                                <p style="margin: 5px 0 0;"><?php _e( 'Last contact', 'ispag-crm'); ?>: <?php echo $last_contact_date_display; ?></p>
-                                <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm'); ?>: <?php echo esc_html( $contact->phone ); ?></p>
-                                <p style="margin: 5px 0 0;"><?php _e( 'Email', 'ispag-crm'); ?>: <?php echo esc_html( $contact->email ); ?></p>
-                            </div>
-                        <?php endforeach; ?>
-                        
-                        <?php if ( $contacts_count >= 5 ): ?>
-                            <a href="<?php echo $link_contact_list; ?>?filter_company=<?php echo $company_id; ?>" class="ispag-button-link" target="_blank"><?php _e( 'View all associated Contacts', 'ispag-crm'); ?></a>
-                        <?php endif; ?>
-                    <?php else: ?>
-                        <p style="font-size: 14px; color: #777;"><?php _e( 'No contacts associated with this deal.', 'ispag-crm'); ?></p>
-                    <?php endif; ?>
+                    <div id="ispag-modal-container"></div>
                 </div>
-                <div id="ispag-modal-container"></div>
             </div>
         </div>
 
@@ -588,4 +512,6 @@ endif; // FIN de la condition A (extérieure)
 
 ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
 ispag_get_template( 'ispag-sequence-modal', [ null ] );
+
+
 get_footer();

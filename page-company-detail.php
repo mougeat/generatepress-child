@@ -5,30 +5,22 @@
  * Description: Affiche le détail d'une entreprise dans l'interface CRM d'ISPAG.
  */
 
-// // S'assurer que la classe existe avant d'enregistrer l'action
-// if ( class_exists( 'ISPAG_Contact_Note_Manager' ) ) {
-//     // Le modal sera ajouté au wp_footer si et seulement si ce template est chargé.
-//     add_action( 'wp_footer', array( new ISPAG_Contact_Note_Manager(), 'render_note_modal_html' ) );
 
-// } 
+global $user_department;
 
-// get_header(); // CONSERVÉ : Début du thème
 
-// ====================================================
-// --- DÉPENDANCES ET INITIALISATION DES DONNÉES (Contrôleur dans la Vue) ---
-// ====================================================
-
-// 1. Assurez-vous que les classes nécessaires sont chargées
-if ( ! class_exists( 'ISPAG_Crm_Company_Repository' ) ) {
+// S'assurer que les classes nécessaires sont chargées
+if (!class_exists('ISPAG_Crm_Company_Repository')) {
     get_header();
-    // Affichage d'une erreur technique si les dépendances manquent
     echo '<div id="primary" class="content-area"><main id="main" class="site-main">';
-    echo '<div class="ispag-error-message">' . __( 'Technical error: Required CRM classes are missing.', 'ispag-crm' ) . '</div>';
+    echo '<div class="ispag-error-message">' . __('Technical error: Required CRM classes are missing.', 'ispag-crm') . '</div>';
     echo '</main></div>';
     get_footer();
     return;
 }
 
+
+// Options pour le type d'entreprise
 $company_types_options = [
     'Prospect' => __('Prospect', 'ispag-crm'),
     'Partner'  => __('Partner', 'ispag-crm'),
@@ -37,53 +29,79 @@ $company_types_options = [
     'Engineer' => __('Engineer', 'ispag-crm'),
     'Other'    => __('Other', 'ispag-crm'),
 ];
+
 // Transformation en format "Prospect:Prospect;Partner:Partner;..."
 $options_string = [];
-foreach ( $company_types_options as $key => $display ) {
+foreach ($company_types_options as $key => $display) {
     $options_string[] = $key . ':' . $display;
 }
-$type_source_options = implode( ';', $options_string );
+$type_source_options = implode(';', $options_string);
 
-// 2. Initialisation du Repository
+// Initialisation du Repository
 $repository = new ISPAG_Crm_Company_Repository();
-if ( class_exists( 'ISPAG_Revenue_Stats' ) ) {
+if (class_exists('ISPAG_Revenue_Stats')) {
     $revenue_stats = new ISPAG_Revenue_Stats();
 }
 
-CONST NB_TRANSACTIONS_RIGHT = 5;
-// 3. Récupération de l'ID VIAG de l'URL
-// NOTE: Vous devez avoir une règle de réécriture qui mappe l'ID de l'URL (/company/46390/)
-// à une variable de requête personnalisée comme 'ispag_viag_id' (ou 'viag_id').
-// Si 'viag_id' fonctionne, utilisez 'viag_id'.
-$company_viag_id = get_query_var( 'company_id' ); 
+define('NB_TRANSACTIONS_RIGHT', 5);
 
-// Fallback pour tester ou si le query_var n'est pas enregistré
-if ( empty( $company_viag_id ) ) {
+// Récupération de l'ID VIAG de l'URL
+$company_viag_id = get_query_var('company_id');
+if (empty($company_viag_id)) {
     global $wp_query;
-    // Essaie d'utiliser 'viag_id' qui est souvent le nom donné dans les rewrite rules
     $company_viag_id = $wp_query->query_vars['company_id'] ?? 0;
 }
 
+// Chargement des données de l'entreprise
+$company = $repository->get_company_by_viag_id($company_viag_id);
 
-// 4. Chargement des données de l'entreprise via le Repository
-$company = $repository->get_company_by_viag_id( $company_viag_id );
+// // Récupération des options de coefficients (wpcb_sales_coef*)
+// $sales_coef_options = [];
+// $all_options = wp_load_alloptions();
+// foreach ($all_options as $option_name => $option_value) {
+//     if (strpos($option_name, 'wpcb_sales_coef') === 0) {
+//         $key = str_replace('wpcb_sales_coef', '', $option_name);
+//         $sales_coef_options[$key] = $option_value;
+//     }
+// }
+// $sales_coef_options = array_unique($sales_coef_options);
+// sort($sales_coef_options);
 
- 
-// 5. Vérification des données et affichage de l'erreur
-if ( empty( $company ) ) {
+// Options pour les types de rabais
+$discount_values = array();
+if(class_exists('ISPAG_Crm_Discount_Manager')){
+    $discount_values = ISPAG_Crm_Discount_Manager::get_standard_discounts(false);
+    $discount_values = array_unique($discount_values);
+    sort($discount_values);
+
+    $sales_coef_options = ISPAG_Crm_Discount_Manager::get_sales_coef_options();
+    $sales_coef_options = array_unique($sales_coef_options);
+    sort($sales_coef_options);
+}
+
+
+// // Options pour les coefficients
+// $sales_coef_options_string = [];
+// foreach ($sales_coef_options as $key => $value) {
+//     $sales_coef_options_string[] = $key . ':' . $value;
+// }
+// $sales_coef_options_string = implode(';', $sales_coef_options_string);
+
+// Vérification des données et affichage de l'erreur
+if (empty($company)) {
     get_header();
     ?>
     <div id="primary" class="content-area">
         <main id="main" class="site-main">
             <header class="page-header">
-                <h1 class="page-title"><?php _e( 'Détail de l\'Entreprise', 'ispag-crm' ); ?></h1>
+                <h1 class="page-title"><?php _e('Company Datas', 'ispag-crm'); ?></h1>
             </header>
             <div class="ispag-error-message">
-                <?php 
-                printf( 
-                    __( 'Company data is missing or not found for ID VIAG: %s', 'ispag-crm' ), 
-                    esc_html( $company_viag_id ) 
-                ); 
+                <?php
+                printf(
+                    __('Company data is missing or not found for ID VIAG: %s', 'ispag-crm'),
+                    esc_html($company_viag_id)
+                );
                 ?>
             </div>
         </main>
@@ -93,88 +111,54 @@ if ( empty( $company ) ) {
     return;
 }
 
-// ----------------------------------------------------
-// 6. Préparation des variables (Extraction des propriétés de l'objet $company)
-// ----------------------------------------------------
-$company_id              = absint( $company->Id );
-$company_name            = esc_html( $company->company_name ?? '' );
-$company_viag_id         = esc_html( $company->viag_id ?? '' );
-$company_type            = esc_html( $company->type ?? '' );
-$isIngenieur             = esc_html( $company->isIngenieur ?? '' );
-$is_active               = esc_html( $company->is_active ?? '' );
-// Simulation de la récupération des autres méta-données pour le template
-// NOTE: En production, vous auriez probablement une méthode pour charger TOUTES les métadonnées ici.
-$company_phone           = esc_html( $company->phone ?? '' );
-$company_address         = esc_html( $company->address ?? '' );
-$company_postal_code     = esc_html( $company->postal_code ?? '' );
-$company_city            = esc_html( $company->city ?? '' );
-$company_country         = esc_html( $company->country ?? '' );
-$company_domain          = !empty($company->compagny_domain) 
-                         ? esc_html($company->compagny_domain) 
-                         : null;
-$favicon                 = $company->favicon ?? null;
-$initials                = $company->initials ?? null;
-$company_meta_owner      = 1; // Exemple ID
-$company_meta_type       = 'installateur'; // Exemple
-$owner_options_js        = '...'; // Liste d'options JSON
-$type_options_js         = '...'; // Liste d'options JSON
-$company_priority_level  = esc_html( $company->priority_level ?? '' );
-$company_prio_options    = 'A:A;B:B;C:C';
-$link_contact_list       = home_url( '/contact-list/' ); // URL de la page de liste des contacts
-$link_new_contact        = home_url( '/add-contact/' ); // URL du formulaire d'ajout de contact
-$link_new_project        = home_url( '/add-project/' ); // URL du formulaire d'ajout de projet
-$transactions_list_full  = []; // Liste complète des transactions (devrait être chargée ici)
-$associated_contacts_list_full = $company->associated_contacts_list_full; // Liste complète des contacts (devrait être chargée ici)
-$last_activity_date       = $company->last_contact_date ? date_i18n( 'd.m.Y', strtotime( $company->last_contact_date ) ) : __('N/A', 'ispag-crm');
+// Préparation des variables
+$company_id = absint($company->Id);
+$company_name = esc_html($company->company_name ?? '');
+$company_viag_id = esc_html($company->viag_id ?? '');
+$company_type = esc_html($company->type ?? '');
+$isIngenieur = esc_html($company->isIngenieur ?? '');
+$is_active = esc_html($company->is_active ?? '');
+$company_phone = esc_html($company->phone ?? '');
+$company_address = esc_html($company->address ?? '');
+$company_postal_code = esc_html($company->postal_code ?? '');
+$company_city = esc_html($company->city ?? '');
+$company_country = esc_html($company->country ?? '');
+$company_domain = !empty($company->compagny_domain) ? esc_html($company->compagny_domain) : null;
+$favicon = $company->favicon ?? null;
+$initials = $company->initials ?? null;
+$company_meta_owner = 1;
+$company_meta_type = 'installateur';
+$company_priority_level = esc_html($company->priority_level ?? '');
+$company_prio_options = 'A:A;B:B;C:C';
+$link_contact_list = home_url('/contact-list/');
+$link_new_contact = home_url('/add-contact/');
+$link_new_project = home_url('/add-project/');
+$transactions_list_full = [];
+$associated_contacts_list_full = $company->associated_contacts_list_full ?? [];
+$last_activity_date = $company->last_contact_date ? date_i18n('d.m.Y', strtotime($company->last_contact_date)) : __('N/A', 'ispag-crm');
+$coef_value = $company->coef_value ?? null;
+$discount_value = $company->discount_value ?? null;
 
-// ⚠️ Assurez-vous que la classe Deals Repository existe.
-if ( class_exists( 'ISPAG_Crm_Deals_Repository' ) ) {
+error_log('Coef de vente : ' . $coef_value);
+error_log('Rabais : ' . $discount_value);
+
+// Chargement des transactions
+if (class_exists('ISPAG_Crm_Deals_Repository')) {
     $deals_repository = new ISPAG_Crm_Deals_Repository();
-    // On charge la liste et on l'affecte à la variable destinée au template
-    $transactions_list_full = $deals_repository->get_projects_by_company( $company_viag_id );
-} 
+    $transactions_list_full = $deals_repository->get_projects_by_company($company_viag_id);
+}
 
-// ⚠️ À FAIRE : Charger les contacts de la même manière
-// $associated_contacts_list_full = []; // Remplacer par l'appel au Repository de Contacts
- 
-
-// ⚠️ Assurez-vous que la classe Deals Repository existe.
-if ( class_exists( 'ISPAG_Note_Manager' ) ) {
+// Chargement des notes
+if (class_exists('ISPAG_Note_Manager')) {
     $note_repository = new ISPAG_Note_Repository();
     $note_renderer = new ISPAG_Note_Renderer();
     $activity_detail = $note_repository->get_activities_for_entity('company', $company_viag_id);
-    // error_log('-> activity_detail ', printf($activity_detail, true));
-
-    // On charge la liste et on l'affecte à la variable destinée au template
-    $notes_list_full = $note_renderer->render_activities_list( $activity_detail);
+    $notes_list_full = $note_renderer->render_activities_list($activity_detail);
 } else {
-    // Sinon, on s'assure qu'elle est un tableau vide pour éviter les erreurs dans la vue.
-    $notes_list_full = '<p>' . __( 'No registered activity', 'ispag-crm' ) . '</p>';
+    $notes_list_full = '<p>' . __('No registered activity', 'ispag-crm') . '</p>';
 }
 
-$company_ids_arr[] = $company_viag_id;
-$company_names_arr[] = $company_name;
-
-$company_ids   = implode(',', $company_ids_arr);
-$company_names = implode(',', $company_names_arr);
-
-// $contact_ids_arr = [];
-// $contact_names_arr = [];
-// foreach ($associated_contacts_list_full as $contact) {
-       
-//     if ( $contact && !empty($contact->display_name) ) {
-//         $contact_ids_arr[]   = $contact->ID ;
-//         // On retire les virgules éventuelles du nom pour ne pas casser le split JS
-//         $contact_names_arr[] = str_replace(',', ' ', $contact->display_name); 
-//     }
-// }
-// // On transforme les tableaux en chaînes propres
-// $contact_ids   = implode(',', $contact_ids_arr);
-// $contact_names = implode(',', $contact_names_arr);
-
-
-//**** Contacts */
-// Création des tableaux pour les attributs data
+// Préparation des données pour les contacts
 $contact_ids_arr = [];
 $contact_names_arr = [];
 $contact_emails_arr = [];
@@ -183,118 +167,116 @@ $contact_phones_arr = [];
 if (!empty($associated_contacts_list_full) && is_array($associated_contacts_list_full)) {
     foreach ($associated_contacts_list_full as $contact_obj) {
         if (is_object($contact_obj)) {
-            // On gère les deux cas de figure pour l'ID (ID ou Id)
             $id = isset($contact_obj->ID) ? $contact_obj->ID : ($contact_obj->Id ?? 0);
-            
-            $contact_ids_arr[]    = $id;
-            $contact_names_arr[]  = str_replace(',', ' ', $contact_obj->display_name ?? 'Inconnu');
+            $contact_ids_arr[] = $id;
+            $contact_names_arr[] = str_replace(',', ' ', $contact_obj->display_name ?? 'Inconnu');
             $contact_emails_arr[] = $contact_obj->email ?? '';
             $contact_phones_arr[] = $contact_obj->phone ?? '';
         }
     }
 }
 
-$contact_ids    = implode(',', $contact_ids_arr);
-$contact_names  = implode(',', $contact_names_arr);
+$contact_ids = implode(',', $contact_ids_arr);
+$contact_names = implode(',', $contact_names_arr);
 $contact_emails = implode(',', $contact_emails_arr);
 $contact_phones = implode(',', $contact_phones_arr);
 
-
+// Préparation des données pour les transactions
 $deal_ids_arr = [];
 $deal_names_arr = [];
 
 foreach ($transactions_list_full as $transaction) {
-       
-    if ( $transaction && !empty($transaction->project_name) ) {
-        $deal_ids_arr[]   = $transaction->deal_group_ref ;
-        // On retire les virgules éventuelles du nom pour ne pas casser le split JS
-        $deal_names_arr[] = str_replace(',', ' ', $transaction->project_name); 
+    if ($transaction && !empty($transaction->project_name)) {
+        $deal_ids_arr[] = $transaction->deal_group_ref;
+        $deal_names_arr[] = str_replace(',', ' ', $transaction->project_name);
     }
 }
-// On transforme les tableaux en chaînes propres
-$deal_ids   = implode(',', $deal_ids_arr);
+
+$deal_ids = implode(',', $deal_ids_arr);
 $deal_names = implode(',', $deal_names_arr);
 
-
-
-// --- RÉCUPÉRATION DU PROPRIÉTAIRE ET FILTRAGE DES USERS ---
+// Récupération du propriétaire actuel
 $current_owner_id = 0;
 $current_owner_name = __('Not assigned', 'ispag-crm');
-$target_dept = 'vaulruz_ispag'; 
 $key = ISPAG_Crm_Contact_Constants::USER_DEPARTMENT;
 $companies_owner_table = ISPAG_Crm_Company_Constants::TABLE_COMPANY_OWNER;
 
-// 1. Chercher le propriétaire ACTUEL (status = 'active')
-$owner_entry = $wpdb->get_row( $wpdb->prepare(
-    "SELECT user_id FROM {$companies_owner_table} 
-     WHERE company_id = %d 
-     AND department_key = %s 
-     AND status = 'active'", // Filtre crucial pour l'historique
+$owner_entry = $wpdb->get_row($wpdb->prepare(
+    "SELECT user_id FROM {$companies_owner_table}
+     WHERE company_id = %d
+     AND department_key = %s
+     AND status = 'active'",
     $company_viag_id,
-    $target_dept
+    $user_department
 ));
 
-if ( $owner_entry ) {
-    $current_owner_id = absint( $owner_entry->user_id );
-    $user_info = get_userdata( $current_owner_id );
-    if ( $user_info ) {
+if ($owner_entry) {
+    $current_owner_id = absint($owner_entry->user_id);
+    $user_info = get_userdata($current_owner_id);
+    if ($user_info) {
         $current_owner_name = $user_info->display_name;
     }
-} else {
-    // Optionnel : s'assurer que les variables sont vides si aucun owner actif
-    $current_owner_id = 0;
-    $current_owner_name = __('Not assigned', 'ispag-crm');
 }
 
+// Préparation de la liste des utilisateurs
+$users = get_users([
+    'fields' => ['ID', 'display_name'],
+    'orderby' => 'display_name',
+    'meta_query' => [
+        [
+            'key' => $key,
+            'value' => $user_department,
+            'compare' => '='
+        ],
+    ],
+]);
 
-// 2. Préparer la liste des utilisateurs (Logique inchangée mais propre)
-$users = get_users( array( 
-    'fields'     => array( 'ID', 'display_name' ), 
-    'orderby'    => 'display_name',
-    'meta_query' => array(
-        array(
-            'key'     => $key, 
-            'value'   => $target_dept, 
-            'compare' => '=' 
-        ),
-    ),
-) );
-
-$users_list_arr = array( '0:' . __('Selectionner...', 'ispag-crm') );
-foreach ( $users as $u ) {
+$users_list_arr = ['0:' . __('Select...', 'ispag-crm')];
+foreach ($users as $u) {
     $users_list_arr[] = $u->ID . ':' . $u->display_name;
 }
-$users_list_source = implode( ';', $users_list_arr );
-// ----------------------------------------------------
-// 7. Création et Extraction des variables
-// ----------------------------------------------------
+$users_list_source = implode(';', $users_list_arr);
 
-// On met toutes les variables nécessaires dans un tableau pour l'extraction (bonne pratique)
+// Préparation des variables pour le template
 $template_args = compact(
-    'company', 
-    'company_id', 
-    'company_name', 
+    'company',
+    'company_id',
+    'company_name',
     'company_viag_id',
     'company_type',
-    'isIngenieur', 'is_active',
-    // ... toutes les autres variables ...
-    'contact_names','contact_names', 'target_dept',
-    'company_phone', 'company_city', 'company_country', 
-    'company_address', 'company_postal_code',
-    'company_domain', 'favicon', 'company_meta_owner', 
-    'company_priority_level', 'company_meta_type', 'owner_options_js', 'type_options_js',
-    'link_contact_list', 'link_new_contact', 'link_new_project',
-    'transactions_list_full', 'associated_contacts_list_full'
-    // ... etc.
+    'isIngenieur',
+    'is_active',
+    'company_phone',
+    'company_city',
+    'company_country',
+    'company_address',
+    'company_postal_code',
+    'company_domain',
+    'favicon',
+    'initials',
+    'company_meta_owner',
+    'company_priority_level',
+    'company_meta_type',
+    'owner_options_js',
+    'type_options_js',
+    'link_contact_list',
+    'link_new_contact',
+    'link_new_project',
+    'transactions_list_full',
+    'associated_contacts_list_full',
+    'coef_value',
+    'discount_value',
+    'discount_type_options_string',
+    'sales_coef_options_string',
+    'user_department',
+    'current_owner_id',
+    'current_owner_name',
+    'users_list_source'
 );
 
 // Rendre toutes les variables disponibles dans la portée du template
-extract( $template_args );
+extract($template_args);
 
-
-// ====================================================
-// --- DÉBUT DE LA VUE (Contenu HTML) ---
-// ====================================================
 // Filtrer le titre de la page dynamiquement
 add_filter('pre_get_document_title', function($title) use ($company_name) {
     if (!empty($company_name)) {
@@ -303,189 +285,158 @@ add_filter('pre_get_document_title', function($title) use ($company_name) {
     }
     return $title;
 }, 999);
+
 wp_enqueue_media();
 get_header();
-
 ?>
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
-
-
         <div class="ispag-detail-container ispag-company-detail" data-company-id="<?php echo absint($company_id); ?>">
             
-            <div class="ispag-left-panel">
+        
+            <!-- Colonne de gauche -->
+            <div class="ispag-left-panel" data-panel="left">
                 <div class="ispag-card ispag-header-card">
                     <div class="ispag-header-top-row">
                         <div class="ispag-profile-pic <?php echo ($favicon) ? 'has-favicon' : ''; ?> ispag-popover-field ispag-avatar-trigger"
-                            data-field-type="avatar"  
+                            data-field-type="avatar"
                             data-company-id="<?php echo absint($company_id); ?>"
-                            
                             style="cursor: pointer;"
-                            title="<?php _e('Modifier l\'icone', 'ispag-crm'); ?>">
+                            title="<?php _e('Modifier l\'icône', 'ispag-crm'); ?>">
                             <span class="current-value">
-                                <?php 
+                                <?php
                                 if ($favicon) {
                                     ?>
-                                    <img src="<?php echo esc_url( $favicon ); ?>" 
-                                        alt="<?php echo esc_attr( $company_name ); ?>"
-                                        class="ispag-avatar-img"> 
+                                    <img src="<?php echo esc_url($favicon); ?>"
+                                        alt="<?php echo esc_attr($company_name); ?>"
+                                        class="ispag-avatar-img">
                                     <?php
-                                    
                                 } else {
-                                    // Afficher les deux premières lettres du nom de l'entreprise
-                                    // $initials = strtoupper( substr( $company_name, 0, 1 ) . substr( $company_name, strpos($company_name, ' ') + 1, 1 ) );
-                                    echo esc_html( $initials ); 
+                                    echo esc_html($initials);
                                 }
-                                
                                 ?>
                             </span>
                         </div>
-                        
-                        <div class="ispag-header-info">
-                            <input type="hidden" id="hidden_company_name"  value="<?php echo $company_name; ?>"/>
-                            <h4 
-                                class="ispag-popover-field" 
-                                data-field-type="text" 
-                                data-department-id="<?php echo $target_dept; ?>"
-                                data-company-id="<?php echo $company_id; ?>"
-                                data-name="company_name " 
-                                data-value="<?php echo esc_attr( $company_name ); ?>"
-                                >
-                                <?php echo $company_name; ?>
-                                
-                            </h4>
-                            <p 
-                                class="ispag-popover-field" 
-                                data-field-type="text" 
-                                data-department-id="<?php echo $target_dept; ?>"
-                                data-company-id="<?php echo $company_id; ?>"
-                                data-name="compagny_domain" 
-                                data-value="<?php echo esc_attr( $company_domain ); ?>"
-                            >
 
-                                <?php echo $company_domain ?? 'pas de domain défini'; ?>
-                                
-                            </p>
-                            <p 
-                               class="ispag-popover-field" 
-                                data-field-type="text" 
-                                data-department-id="<?php echo $target_dept; ?>"
+                        <div class="ispag-header-info">
+                            <input type="hidden" id="hidden_company_name" value="<?php echo $company_name; ?>"/>
+                            <h4
+                                class="ispag-popover-field"
+                                data-field-type="text"
+                                data-department-id="<?php echo $user_department; ?>"
                                 data-company-id="<?php echo $company_id; ?>"
-                                data-name="viag_id" 
-                                data-value="<?php echo esc_attr( $company_viag_id ); ?>"
-                            >
+                                data-name="company_name"
+                                data-value="<?php echo esc_attr($company_name); ?>">
+                                <?php echo $company_name; ?>
+                            </h4>
+                            <p
+                                class="ispag-popover-field"
+                                data-field-type="text"
+                                data-department-id="<?php echo $user_department; ?>"
+                                data-company-id="<?php echo $company_id; ?>"
+                                data-name="compagny_domain"
+                                data-value="<?php echo esc_attr($company_domain); ?>">
+                                <?php echo $company_domain ?? 'pas de domaine défini'; ?>
+                            </p>
+                            <p
+                                class="ispag-popover-field"
+                                data-field-type="text"
+                                data-department-id="<?php echo $user_department; ?>"
+                                data-company-id="<?php echo $company_id; ?>"
+                                data-name="viag_id"
+                                data-value="<?php echo esc_attr($company_viag_id); ?>">
                                 <?php echo $company_viag_id; ?>
                                 <span class="edit-icon">✏️</span>
                             </p>
                         </div>
-                        
                     </div>
-                
+
                     <div class="ispag-actions-bar">
-                        <?php 
-                            $actions['company_ids']       = $company_ids;
-                            $actions['company_names']     = $company_names;
-                            $actions['user_id']           = $user_id;
-                            $actions['contact_ids']       = $contact_ids;
-                            $actions['contact_names']     = $contact_names;
-                            $actions['contact_emails']    = $contact_emails;
-                            $actions['contact_phones']    = $contact_phones;
-                            $actions['deal_ids']          = $deal_ids;
-                            $actions['deal_names']        = $deal_names;
+                        <?php
+                        $actions['company_ids'] = $company_viag_id;
+                        $actions['company_names'] = $company_name;
+                        $actions['user_id'] = get_current_user_id();
+                        $actions['contact_ids'] = $contact_ids;
+                        $actions['contact_names'] = $contact_names;
+                        $actions['contact_emails'] = $contact_emails;
+                        $actions['contact_phones'] = $contact_phones;
+                        $actions['deal_ids'] = $deal_ids;
+                        $actions['deal_names'] = $deal_names;
+                        $actions['user_department'] = $user_department;
 
-                            $actions['project_nums']      = $project_nums;
-                            $actions['closing_dates']     = $closing_dates;
-                            $actions['total_excl_vats']   = $total_excl_vats;
-
-                            $actions['target_dept']       = $target_dept;
-                                                    
-
-                            // Appelle le template et lui passe les données
-                            ispag_get_template( 'action-bar', [ 'actions' => $actions ] ); 
+                        ispag_get_template('action-bar', ['actions' => $actions]);
                         ?>
-                        
                     </div>
                 </div>
-                <div class="ispag-card ispag-key-info">
-                    <h5><?php _e( 'Key information', 'ispag-crm' ); ?></h5>
-                    <dl class="ispag-key-info-list">
 
-                        <dt><?php _e( 'Company Status', 'ispag-crm' ); ?></dt>
-                        <dd 
-                            class="ispag-editable-field" 
-                            data-type="checkbox" 
-                            data-department-id="<?php echo $target_dept; ?>"
-                            data-title="<?php _e( 'Company Status', 'ispag-crm' ); ?>"
-                            data-name="is_active" 
-                            data-value="<?php echo esc_attr( $is_active ); ?>"
-                        >
-                            <?php 
-                                // Si la valeur est 1 (ou true), on affiche le ✅, sinon on affiche "Non" (ou rien)
-                                echo ( $is_active == 1 ) ? '✅' : '❌'; 
-                            ?>
+                <div class="ispag-card ispag-key-info">
+                    <h5><?php _e('Key Information', 'ispag-crm'); ?></h5>
+                    <dl class="ispag-key-info-list">
+                        <dt><?php _e('Company Status', 'ispag-crm'); ?></dt>
+                        <dd
+                            class="ispag-editable-field"
+                            data-type="checkbox"
+                            data-department-id="<?php echo $user_department; ?>"
+                            data-title="<?php _e('Company Status', 'ispag-crm'); ?>"
+                            data-name="is_active"
+                            data-value="<?php echo esc_attr($is_active); ?>">
+                            <?php echo ($is_active == 1) ? '✅' : '❌'; ?>
                             <span class="edit-icon">✏️</span>
                         </dd>
-                        <dt><?php _e( 'Is engineer', 'ispag-crm' ); ?></dt>
-                        <dd 
-                            class="ispag-editable-field" 
-                            data-type="checkbox" 
-                            data-department-id="<?php echo $target_dept; ?>"
-                            data-title="<?php _e( 'Is engineer', 'ispag-crm' ); ?>"
-                            data-name="isIngenieur" 
-                            data-value="<?php echo esc_attr( $isIngenieur ); ?>"
-                        >
-                            <?php 
-                                // Si la valeur est 1 (ou true), on affiche le ✅, sinon on affiche "Non" (ou rien)
-                                echo ( $isIngenieur == 1 ) ? '✅' : '❌'; 
-                            ?>
+
+                        <dt><?php _e('Is Engineer', 'ispag-crm'); ?></dt>
+                        <dd
+                            class="ispag-editable-field"
+                            data-type="checkbox"
+                            data-department-id="<?php echo $user_department; ?>"
+                            data-title="<?php _e('Is Engineer', 'ispag-crm'); ?>"
+                            data-name="isIngenieur"
+                            data-value="<?php echo esc_attr($isIngenieur); ?>">
+                            <?php echo ($isIngenieur == 1) ? '✅' : '❌'; ?>
                             <span class="edit-icon">✏️</span>
                         </dd>
-                        
-                        <dt><?php _e( 'Phone number', 'ispag-crm' ); ?></dt>
-                        <dd 
+
+                        <dt><?php _e('Phone Number', 'ispag-crm'); ?></dt>
+                        <dd
                             class="ispag-popover-field"
-                            data-department-id="<?php echo $target_dept; ?>"
+                            data-department-id="<?php echo $user_department; ?>"
                             data-company-id="<?php echo $company_viag_id; ?>"
-                            data-field-type="phone" 
-                            data-value="<?php echo esc_attr( $company_phone ); ?>"
-                        >
+                            data-field-type="phone"
+                            data-value="<?php echo esc_attr($company_phone); ?>">
                             <?php echo $company_phone; ?>
                         </dd>
 
-                        <dt><?php _e( 'Type', 'ispag-crm' ); ?></dt>
-                        <dd 
-                            class="ispag-editable-field" 
-                            data-type="select" 
-                            data-department-id="<?php echo $target_dept; ?>"
+                        <dt><?php _e('Type', 'ispag-crm'); ?></dt>
+                        <dd
+                            class="ispag-editable-field"
+                            data-type="select"
+                            data-department-id="<?php echo $user_department; ?>"
                             data-company-id="<?php echo $company_viag_id; ?>"
-                            data-name="<?php echo ISPAG_Crm_Company_Constants::COMPANY_TYPE; ?>"  
-                            data-options='<?php echo $type_source_options; ?>'
-                        >
+                            data-name="<?php echo ISPAG_Crm_Company_Constants::COMPANY_TYPE; ?>"
+                            data-options='<?php echo $type_source_options; ?>'>
                             <?php echo $company_type; ?>
                             <span class="edit-icon">✏️</span>
                         </dd>
 
-                        <dt><?php _e( 'Priority level', 'ispag-crm' ); ?></dt>
-                        <dd 
-                            class="ispag-editable-field" 
-                            data-type="select" 
-                            data-department-id="<?php echo $target_dept; ?>"
+                        <dt><?php _e('Priority Level', 'ispag-crm'); ?></dt>
+                        <dd
+                            class="ispag-editable-field"
+                            data-type="select"
+                            data-department-id="<?php echo $user_department; ?>"
                             data-company-id="<?php echo $company_viag_id; ?>"
-                            data-name="<?php echo ISPAG_Crm_Company_Constants::PRIORITY_LEVEL; ?>" 
-                            data-value="<?php echo esc_attr( $company_priority_level ); ?>"
-                            data-options="<?php echo esc_attr($company_prio_options); ?>"
-                        >
-                            <?php 
+                            data-name="<?php echo ISPAG_Crm_Company_Constants::PRIORITY_LEVEL; ?>"
+                            data-value="<?php echo esc_attr($company_priority_level); ?>"
+                            data-options="<?php echo esc_attr($company_prio_options); ?>">
+                            <?php
                             $priority = strtoupper($company_priority_level);
-                            
                             $badge_configs = [
-                                'A' => ['color' => '#d63031', 'label' => 'A - ' . __( 'High', 'ispag-crm' )],
-                                'B' => ['color' => '#e67e22', 'label' => 'B - ' . __( 'Medium', 'ispag-crm' )],
-                                'C' => ['color' => '#2980b9', 'label' => 'C - ' . __( 'Low', 'ispag-crm' )],
+                                'A' => ['color' => '#d63031', 'label' => 'A - ' . __('High', 'ispag-crm')],
+                                'B' => ['color' => '#e67e22', 'label' => 'B - ' . __('Medium', 'ispag-crm')],
+                                'C' => ['color' => '#2980b9', 'label' => 'C - ' . __('Low', 'ispag-crm')],
                             ];
 
-                            if ( isset($badge_configs[$priority]) ) : 
+                            if (isset($badge_configs[$priority])) :
                                 $config = $badge_configs[$priority];
                                 ?>
                                 <span class="ispag-status-badge" style="background-color: <?php echo $config['color']; ?>; color: #fff;">
@@ -496,257 +447,203 @@ get_header();
                                     <?php echo __('None', 'ispag-crm'); ?>
                                 </span>
                             <?php endif; ?>
-
                             <span class="edit-icon" style="margin-left: 5px; cursor: pointer; opacity: 0.6;">✏️</span>
                         </dd>
-                        
-                        <dt><?php _e( 'Company Owner', 'ispag-crm' ); ?></dt>
-                        <dd 
-                            class="ispag-editable-field" 
-                            data-type="select" 
+
+                        <dt><?php _e('Company Owner', 'ispag-crm'); ?></dt>
+                        <dd
+                            class="ispag-editable-field"
+                            data-type="select"
                             data-name="department_owner"
                             data-company-id="<?php echo esc_attr($company_viag_id); ?>"
-                            data-department-id="<?php echo esc_attr($target_dept); ?>"
+                            data-department-id="<?php echo esc_attr($user_department); ?>"
                             data-value="<?php echo esc_attr($current_owner_id); ?>"
-                            data-options='<?php echo esc_attr($users_list_source); ?>'
-                        >
+                            data-options='<?php echo esc_attr($users_list_source); ?>'>
                             <?php echo esc_html($current_owner_name); ?>
                             <span class="edit-icon" style="margin-left: 5px; cursor: pointer; opacity: 0.6;">✏️</span>
                         </dd>
 
-                        <dt><?php _e( 'Last contacted', 'ispag-crm' ); ?></dt>
-                        <dd >
+                        <dt><?php _e('Last Contacted', 'ispag-crm'); ?></dt>
+                        <dd>
                             <?php echo $last_activity_date; ?>
                         </dd>
-                        
+
+                        <!-- Menus déroulants pour le type de rabais et le coefficient -->
+                        <dt><?php _e('Discount', 'ispag-crm'); ?></dt>
+                        <dd>
+                            <select
+                                class="ispag-discount-select"
+                                data-field-name="rabais"
+                                data-company-id="<?php echo absint($company_id); ?>"
+                                >
+                                <option value="" <?php echo empty($discount_value) ? 'selected' : ''; ?>>
+                                    <?php _e('Select a discount for submission', 'ispag-crm'); ?>
+                                </option>
+
+                                <?php foreach ($discount_values as $key => $value) : ?>
+                                    <option value="<?php echo esc_attr($value); ?>" <?php echo (floatval($discount_value) == floatval($value)) ? 'selected' : ''; ?>>
+                                        <?php echo esc_html($value) . '%'; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <span class="edit-icon">✏️</span>
+                        </dd>
+
+                        <dt><?php _e('Sales Coefficient', 'ispag-crm'); ?></dt>
+                        <dd>
+                            <select
+                                class="ispag-discount-select"
+                                data-field-name="coef_vente"
+                                data-company-id="<?php echo absint($company_id); ?>"
+                                >
+                                <option value="" <?php echo empty($coef_value) ? 'selected' : ''; ?>>
+                                    <?php _e('Select a coefficient', 'ispag-crm'); ?>
+                                </option>
+                                <?php foreach ($sales_coef_options as $key => $value) : ?>
+                                    <option value="<?php echo esc_attr($value); ?>" <?php echo (floatval($coef_value) == floatval($value)) ? 'selected' : ''; ?>>
+                                        <?php echo esc_html($value); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <span class="edit-icon">✏️</span>
+                        </dd>
                     </dl>
                 </div>
-            </div> 
-            
-            <div class="ispag-main-content">
+            </div>
+
+            <!-- Contenu principal -->
+            <div class="ispag-main-content" data-panel="main">
                 <div class="ispag-tabs-navigation">
                     <button class="ispag-tab-btn active" data-tab="about">
-                        <?php esc_html_e( 'About', 'ispag-crm' ); ?>
+                        <?php esc_html_e('About', 'ispag-crm'); ?>
                     </button>
                     <button class="ispag-tab-btn" data-tab="activity">
-                        <?php esc_html_e( 'Activities', 'ispag-crm' ); ?>
+                        <?php esc_html_e('Activities', 'ispag-crm'); ?>
                     </button>
                     <button class="ispag-tab-btn" data-tab="deal">
-                        <?php esc_html_e( 'Transactions', 'ispag-crm' ); ?>
+                        <?php esc_html_e('Transactions', 'ispag-crm'); ?>
                     </button>
                     <button class="ispag-tab-btn" data-tab="intelligence">
-                        <?php esc_html_e( 'Intelligence', 'ispag-crm' ); ?>
+                        <?php esc_html_e('Intelligence', 'ispag-crm'); ?>
                     </button>
                 </div>
+
                 <div class="ispag-tabs-content">
-                    
                     <div id="ispag-tab-about" class="ispag-tab-pane active">
-                        
                         <div class="ispag-card">
-                            <h5><?php _e( 'Company Profile', 'ispag-crm' ); ?></h5>
+                            <h5><?php _e('Company Profile', 'ispag-crm'); ?></h5>
                             <div data-company-id="<?php echo $company_id; ?>" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
-                                
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Street adress', 'ispag-crm' ); ?> :</strong>
+                                    <strong><?php _e('Street Address', 'ispag-crm'); ?>:</strong>
                                     <p>
-                                        <span ><?php echo esc_html($company_address); ?></span>
-                                    </p>
-                                </div>
-                                
-                                <div class="ispag-field-container">
-                                    <strong><?php _e( 'Postal code', 'ispag-crm' ); ?> :</strong>
-                                    <p>
-                                        <span ><?php echo esc_html($company_postal_code); ?></span>
+                                        <span><?php echo esc_html($company_address); ?></span>
                                     </p>
                                 </div>
 
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'City', 'ispag-crm' ); ?> :</strong>
+                                    <strong><?php _e('Postal Code', 'ispag-crm'); ?>:</strong>
                                     <p>
-                                        <span ><?php echo esc_html($company_city); ?></span>
+                                        <span><?php echo esc_html($company_postal_code); ?></span>
                                     </p>
                                 </div>
 
-                               
+                                <div class="ispag-field-container">
+                                    <strong><?php _e('City', 'ispag-crm'); ?>:</strong>
+                                    <p>
+                                        <span><?php echo esc_html($company_city); ?></span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
-                        <?php if ( isset( $revenue_stats ) ) : ?>
+                        <?php if (isset($revenue_stats)) : ?>
                             <div class="ispag-card ispag-revenue-dashboard">
-                                <h5><?php _e( 'Revenue Perspectives', 'ispag-crm' ); ?></h5>
-                                <?php echo $revenue_stats->render_perspective_cards( $company_viag_id, 'company' ); ?>
+                                <h5><?php _e('Revenue Perspectives', 'ispag-crm'); ?></h5>
+                                <?php echo $revenue_stats->render_perspective_cards($company_viag_id, 'company'); ?>
                             </div>
                         <?php endif; ?>
 
-                        
-                        <div 
-                            id="gemini-ai-summary-<?php echo absint($user_id); ?>" 
+                        <div
+                            id="gemini-ai-summary-<?php echo absint(get_current_user_id()); ?>"
                             class="ispag-ai-placeholder"
-                            data-contact-id="<?php echo absint($user_id); ?>"
-                            data-company-id="<?php echo absint($company_viag_id); ?>"
-                        >
-                            <?php ispag_get_template( 'ai-loader', [ null ] ); ?>
+                            data-contact-id="<?php echo absint(get_current_user_id()); ?>"
+                            data-company-id="<?php echo absint($company_viag_id); ?>">
+                            <?php ispag_get_template('ai-loader', [null]); ?>
                         </div>
-                         
                     </div>
-                    
+
                     <div id="ispag-tab-activity" class="ispag-tab-pane">
                         <?php echo $notes_list_full; ?>
                     </div>
-                    
+
                     <div id="ispag-tab-deal" class="ispag-tab-pane">
-                        <h5><?php esc_html_e( 'Transaction information', 'ispag-crm' ); ?></h5>
-
-                        <?php 
-                            // Appelle le template et lui passe les données
-                            ispag_get_template( 'deal-table', [ 'transactions' => $transactions_list_full ] ); 
-                        ?>
+                        <h5><?php esc_html_e('Transaction Information', 'ispag-crm'); ?></h5>
+                        <?php ispag_get_template('deal-table', ['transactions' => $transactions_list_full]); ?>
                     </div>
-                    
+
                     <div id="ispag-tab-intelligence" class="ispag-tab-pane">
-                        <div 
-                        id="gemini-ai-profil-<?php echo absint($user_id); ?>" 
-                        class="ispag-ai-profil-placeholder"
-                        data-contact-id="<?php echo absint($user_id); ?>"
-                        data-company-id="<?php echo absint($company_viag_id); ?>"
-                        >
-                            <?php ispag_get_template( 'ai-loader', [ null ] ); ?>
+                        <div
+                            id="gemini-ai-profil-<?php echo absint(get_current_user_id()); ?>"
+                            class="ispag-ai-profil-placeholder"
+                            data-contact-id="<?php echo absint(get_current_user_id()); ?>"
+                            data-company-id="<?php echo absint($company_viag_id); ?>">
+                            <?php ispag_get_template('ai-loader', [null]); ?>
                         </div>
-                        
-                        <div 
-                        id="gemini-ai-actions-<?php echo absint($user_id); ?>" 
-                        class="ispag-ai-actions-placeholder"
-                        data-contact-id="<?php echo absint($user_id); ?>"
-                        data-company-id="<?php echo absint($company_viag_id); ?>"
-                        >
-                            <?php ispag_get_template( 'ai-loader', [ null ] ); ?>
+
+                        <div
+                            id="gemini-ai-actions-<?php echo absint(get_current_user_id()); ?>"
+                            class="ispag-ai-actions-placeholder"
+                            data-contact-id="<?php echo absint(get_current_user_id()); ?>"
+                            data-company-id="<?php echo absint($company_viag_id); ?>">
+                            <?php ispag_get_template('ai-loader', [null]); ?>
                         </div>
                     </div>
-                    
                 </div>
-            </div> 
-            
-            <div class="ispag-right-panel">
-                <div class="ispag-card ispag-company-card">
-                    <h5>
-                        <?php _e( 'Contacts', 'ispag-crm' ); ?> (<?php echo count($associated_contacts_list_full); ?>) 
-                        <span id="open-add-contact-modal" 
-                            style="font-size: 12px; color: #007bff; cursor: pointer;" 
-                            data-company-id="<?php echo absint($company_id); ?>">
-                            + <?php _e( 'Add', 'ispag-crm' ); ?>
-                        </span>
-                    </h5>
-                    <?php 
-                        $date_format = get_option( 'date_format' );
-                        // Définition de la constante si elle n'est pas déjà définie dans un fichier de configuration
-                        if ( ! defined( 'NB_TRANSACTIONS_RIGHT' ) ) {
-                            define( 'NB_TRANSACTIONS_RIGHT', 5 );
-                        }
-                        $nb_contact = 0;
-                        foreach ( $associated_contacts_list_full as $contact ): 
-                        $nb_contact++;
-    
-                        // 2. Vérifier si on a atteint la limite après l'incrémentation
-                        // Si $nb_transactions est strictement supérieur à la limite, on arrête la boucle.
-                        if ( $nb_contact > NB_TRANSACTIONS_RIGHT ) {
-                            break; // Arrête l'exécution de la boucle foreach
-                        }
-                        $contact_deal_url = home_url( '/contact/' . $contact->ID . '/' );
-                        ?>
-                        <div class="ispag-card" style="font-size: 14px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div class="ispag-mini-profile-pic" >
-                                    <?php if ($contact->avatar_url) : ?>
-                                        <img src="<?php echo $contact->avatar_url; ?>" alt="<?php echo esc_attr( $contact->display_name ); ?>" style="width:20px; height:20px;">
-                                    <?php else : 
-                                        $initials = strtoupper( substr( $contact->display_name, 0, 1 ) . substr( $contact->display_name, strpos($contact->display_name, ' ') + 1, 1 ) ); ?>
-                                        <span style="font-size: 12px;"><?php echo esc_html($initials); ?></span>
-                                    <?php endif; ?>
-                                </div>
-                                <strong>
-                                    <a href="<?php echo $contact_deal_url; ?>"><?php echo $contact->display_name; ?></a>
-                                </strong>
-                                <span 
-                                    class="ispag-remove-association" 
-                                    data-action="remove-contact-from-company"
-                                    data-contact-id="<?php echo absint($contact->ID); ?>"
-                                    data-company-id="<?php echo absint($company_viag_id); ?>"
-                                    title="<?php esc_attr_e( 'Remove association', 'ispag-crm' ); ?>"
-                                    style="color: #e74c3c; cursor: pointer;"
-                                >
-                                    <span class="dashicons dashicons-trash"></span>
-                                </span>
-                            </div>
-                            <p style="margin: 5px 0 0;"><?php _e( 'Function', 'ispag-crm' ); ?>: <?php echo esc_html( $contact->lead_function ?? '' ); ?></p>
-                            <p style="margin: 5px 0 0;"><?php _e( 'Last contact', 'ispag-crm' ); ?>: <?php echo date_i18n(  get_option('date_format'), strtotime( $contact->last_contact_date) ); ?></p>
-                            
-                        </div>
-                    <?php 
-                    endforeach; 
-                    
-                    if ( $nb_contact > NB_TRANSACTIONS_RIGHT ) {
-                        
-                        $company_url = home_url( '/listes-des-contacts/?filter_company=' . $company_viag_id . '/' );
-                        ?>
-                        <a href="<?php echo $company_url; ?>" class="ispag-button-link"><?php _e( 'Show all contacts', 'ispag-crm' ); ?></a>
-                    <?php
-                    }
-                    ?>
-                </div>
-                <div id="ispag-modal-container"></div>
+            </div>
 
-                <div class="ispag-card ispag-transactions-card">
-                    <h5>
-                        <?php _e( 'Transactions', 'ispag-crm' ); ?> (<?php echo count($transactions_list_full); ?>)
-                        <span style="font-size: 12px; color: #007bff; cursor: pointer;"><a href="<?php echo $link_new_project; ?>" target="_blank">+ <?php _e( 'Add', 'ispag-crm' ); ?></a></span>
-                    </h5>
-                     <?php 
-                        // Définition de la constante si elle n'est pas déjà définie dans un fichier de configuration
-                        if ( ! defined( 'NB_TRANSACTIONS_RIGHT' ) ) {
-                            define( 'NB_TRANSACTIONS_RIGHT', 5 );
-                        }
-                        $nb_transactions = 0;
-                        foreach ( $transactions_list_full as $transaction ): 
-                        $nb_transactions++;
-    
-                        // 2. Vérifier si on a atteint la limite après l'incrémentation
-                        // Si $nb_transactions est strictement supérieur à la limite, on arrête la boucle.
-                        if ( $nb_transactions > NB_TRANSACTIONS_RIGHT ) {
-                            break; // Arrête l'exécution de la boucle foreach
-                        }
-                        ?>
-                        <div class="ispag-transaction-item">
-                            <strong>
-                                <a href="<?php echo esc_url($transaction->get_deal_detail_link()); ?>"><?php echo $transaction->project_name; ?></a>
-                            </strong>
-                            <p><?php _e( 'Amount', 'ispag-crm' ); ?>: <?php echo number_format( (float)$transaction->total_excl_vat, 2, '.', '\'' ) . ' CHF'; ?></p>
-                            <p><?php _e( 'Closing date', 'ispag-crm' ); ?>: <?php echo date_i18n( get_option('date_format'), strtotime( $transaction->closing_date ) ); ?></p>
-                            <p><?php _e( 'Transaction phase', 'ispag-crm' ); ?>: 
-                                <span class="ispag-status-badge" style="background-color: <?php echo esc_attr($transaction->stage_color); ?>; color: #fff;">
-                                    <?php echo esc_html($transaction->stage_label); ?>
-                                </span>
-                            </p>
-                        </div>
-                    <?php 
-                    endforeach; 
-                    
-                    if ( $nb_transactions > NB_TRANSACTIONS_RIGHT ) {
-                        $company_deal_url = home_url( '/deals-list/?search=company-' . $company->viag_id );
-                        ?>
-                        <a href="<?php echo $company_deal_url; ?>" class="ispag-button-link"><?php _e( 'Show all transactions', 'ispag-crm' ); ?></a>
-                    <?php
-                    }
-                    ?>
-                </div>
-            </div> 
+
+            <!-- Colonne de droite -->
+            <!-- Wrapper qui porte la largeur flex + le bouton -->
+            <div class="ispag-right-panel-wrapper" data-panel="right-wrapper">
+                                <!-- Bouton collé au bord gauche du wrapper : il suit le panneau -->
+                <button id="toggle-right-panel" class="ispag-panel-toggle-right" type="button"
+                        aria-label="<?php esc_attr_e('Display / Mask panel', 'ispag-crm'); ?>"
+                        title="<?php esc_attr_e('Mask panel', 'ispag-crm'); ?>">
+                    <img
+                        src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-hide.png'); ?>"
+                        data-icon-hide="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-hide.png'); ?>"
+                        data-icon-show="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-display.png'); ?>"
+                        alt=""
+                        class="ispag-panel-toggle-icon">
+                </button>
+                <div class="ispag-right-panel" data-panel="right">
             
+                    <?php
+                    $datas['associated_contacts_list_full'] = $associated_contacts_list_full;
+                    $datas['company_id'] = $company_id;
+                    $datas['company_viag_id'] = $company_viag_id;
+                    ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
+                    ?>
+                    
+
+                    <?php
+                    $datas['transactions_list_full'] = $transactions_list_full;
+                    $datas['link_new_project'] = $link_new_project;
+                    ispag_get_template( 'ispag-template-deal-card', [ 'datas' => $datas ] ); 
+                    ?>
+                    <div id="ispag-modal-container"></div>
+
+                </div>
+            </div>
         </div>
-
     </main>
 </div>
 
-<?php 
-ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
-ispag_get_template( 'ispag-popover-modal', [ null ] );
-get_footer(); // CONSERVÉ : Fin du thème
+
+<?php
+ispag_get_template('deal-reason-for-rejection-modal', []);
+ispag_get_template('ispag-popover-modal', [null]);
+
+
+get_footer();
 ?>

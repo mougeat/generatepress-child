@@ -170,4 +170,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <?php 
 ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
+
 get_footer(); ?>

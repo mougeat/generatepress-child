@@ -9,8 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const phoneInput    = document.getElementById('c_phone'); 
     const extraFields   = document.getElementById('contact-extra-fields');
     const submitBtn     = document.getElementById('btn-submit-contact');
-    const triggerBtn    = document.getElementById('trigger-add-contact');
+    // const triggerBtn    = document.getElementById('trigger-add-contact');
+    const triggerBtn    = document.querySelector('.trigger-add-contact');
     const closeBtns     = document.querySelectorAll('.ispag-modal-close');
+    const department    = document.getElementById('user_departement');
 
     // Sécurité : On ne continue l'initialisation que si on est sur une page avec le formulaire/sidebar
     if (!sidebar || !form) return;
@@ -81,6 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.disabled = true;
         const originalText = submitBtn.textContent;
         submitBtn.textContent = "Creating...";
+        
+        
 
         const formData = new FormData(form);
         
@@ -132,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('action', 'ispag_check_email_exists');
         formData.append('email', email);
         formData.append('nonce', ispag_params.nonce);
+        formData.append('user_department', department);
 
         fetch(ispag_params.ajax_url, {
             method: 'POST',

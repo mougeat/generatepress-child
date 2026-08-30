@@ -5,7 +5,7 @@
  * Text Domain: ispag-crm
  */
 
-get_header(); ?>
+get_header(); ?> 
 
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
@@ -28,6 +28,14 @@ get_header(); ?>
                     <?php _e('Technical Configurator', 'ispag-crm'); ?>
                 </span>
             </div>
+            <button id="ispag-add-article" class="ispag-btn ispag-btn-secondary-outlined"
+                data-id="1"
+                 source="project"
+                data-card-titel="<?php _e('Special tanks', 'creation-reservoir'); ?>"
+                data-tank-configurator="true"
+                data-selector-type="product_type">
+                <span class="dashicons dashicons-plus-alt"></span><?php _e('Add product', 'creation-reservoir'); ?>
+            </button>
             <button onclick="window.print()" class="text-slate-600 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-100 transition-all flex items-center gap-2 border border-slate-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
                 <?php _e('Save as PDF', 'ispag-crm'); ?>
@@ -160,4 +168,9 @@ get_header(); ?>
     </main>
 </div>
 
-<?php get_footer(); ?>
+
+
+
+<?php
+
+get_footer(); ?>

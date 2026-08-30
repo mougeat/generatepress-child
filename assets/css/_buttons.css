@@ -1,17 +1,17 @@
 .button, .ispag-btn  {
   background-color: var(--ispag-red);
-  color: white;
+  color: var(--ispag-white);
   padding: 6px 12px;
   margin-right: 3px;
-  border-radius: 4px;
+  border-radius: var(--ispag-btn-border-radius);
   font-size: 0.85em;
   cursor: pointer;
   transition: background-color 0.3s ease;
   border: none;
 }
 
-.ispag-btn:hover { background-color: #7a0000; color:#fff; }
-.ispag-btn:active { background-color: #5c0000; color:#fff; }
+.ispag-btn:hover { background-color: var(--ispag-color-primary-hover); color:var(--ispag-white); }
+.ispag-btn:active { background-color: var(--ispag-color-primary-hover); color:var(--ispag-white); }
 
 /* .ispag-btn-grey { background-color: var(--ispag-btn-grey); color: #000; } */
 .ispag-btn-red-outlined { border: 1px solid var(--ispag-red); background-color: transparent; color: var(--ispag-red);}
@@ -20,11 +20,24 @@
 .ispag-btn-warning-outlined { border: 1px solid var(--ispag-orange); background-color: transparent; color: var(--ispag-orange);}
 .ispag-btn-danger-outlined { border: 1px solid var(--ispag-red); background-color: transparent; color: var(--ispag-red);}
 
-.button-primary { border: 1px solid var(--ispag-btn-grey); background-color: var(--ispag-btn-grey); color: white;}
-.ispag-btn-grey { border: 1px solid var(--ispag-btn-grey); background-color: var(--ispag-btn-grey); color: white;}
-.ispag-btn-secondary { border: 1px solid var(--ispag-blue); background-color: var(--ispag-blue); color: white;}
-.ispag-btn-warning { border: 1px solid var(--ispag-orange); background-color: var(--ispag-orange); color: white;}
-.ispag-btn-danger { border: 1px solid var(--ispag-red); background-color: var(--ispag-red); color: white;}
+.ispag-btn-primary, .button-primary { border: 1px solid var(--ispag-btn-grey); background-color: var(--ispag-btn-grey); color: var(--ispag-white);}
+.ispag-btn-grey { border: 1px solid var(--ispag-btn-grey); background-color: var(--ispag-btn-grey); color: var(--ispag-white);}
+.ispag-btn-secondary { border: 1px solid var(--ispag-blue); background-color: var(--ispag-blue); color: var(--ispag-white);}
+.ispag-btn-warning { border: 1px solid var(--ispag-orange); background-color: var(--ispag-orange); color: var(--ispag-white);}
+.ispag-btn-danger { border: 1px solid var(--ispag-red); background-color: var(--ispag-red); color: var(--ispag-white);}
+.ispag-btn-success {
+    background: var(--ispag-success-color);
+    color: white; border: none;
+    padding: 10px 20px; border-radius: var(--ispag-badge-border-radius);
+    font-weight: 600; cursor: pointer; flex: 2;
+}
+
+
+.ispag-btn-ghost {
+    background: transparent;
+    color: #94a3b8; border: none;
+    cursor: pointer; padding: 10px;
+}
 
 /* BOUTON DE SUIVI */
 .suivi-button {
@@ -32,7 +45,7 @@
   color: var(--ispag-white);
   padding: 6px 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--ispag-btn-border-radius);
   font-size: 0.9em;
   transition: all 0.2s ease-in-out;
   display: inline-block;
@@ -52,56 +65,27 @@
 
 .doc-badge {
     display: inline-block;
-    background-color: gold;
-    color: black;
+    background-color: var(--ispag-grey);
+    color: var(----ispag-dark);
     font-size: 11px;
     padding: 2px 6px;
-    border-radius: 6px;
+    border-radius: var(--ispag-badge-border-radius);
     margin-right: 6px;
     text-transform: uppercase;
 }
 
-/* .ispag-state-badge {
-  padding: 2px 6px;
-  font-size: 8px;
-  border-radius: 8px;
-  white-space: nowrap;
-} */
+
 .ispag-drawing-wrapper {
     position: relative; /* Indispensable pour que le badge se place par rapport au bouton */
     display: inline-block; /* Permet de coller à la largeur du bouton */
 }
-/* .ispag-badge {
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(65%, -60%);
-    z-index: 2;
-    padding: 2px 6px;
-    font-size: 9px;
-    border-radius: 8px;
-    font-weight: 600;
-    white-space: nowrap;
-} */
-.ispag-badge {
-    position: absolute;
-    top: 0;
-    left: 10px; /* Positionne le badge à 10px du bord gauche du bouton */
-    transform: translateY(-50%); /* Le centre verticalement sur le bord supérieur */
-    z-index: 2;
-    padding: 2px 6px;
-    font-size: 9px;
-    border-radius: 8px;
-    font-weight: 600;
-    white-space: nowrap;
-    line-height: 1;
-}
+
 
 .badge-warning {
-    color: #000;
+    color: var(--ispag-dark);
 }
 .badge-success {
-    color: #fff;
+    color: var(--ispag-white);
 }
 
 
@@ -125,7 +109,7 @@
     cursor: pointer;
     font-size: 11px; /* Légèrement plus petit pour faciliter l'affichage */
     line-height: 1.2;
-    color: #0a0909;
+    color: var(--ispag-dark);
     transition: all 0.2s;
     
     /* FIXER LA LARGEUR */
@@ -154,11 +138,11 @@
 /* Style de l'icône (utilise les Dashicons de WordPress) */
 .ispag-action-btn .dashicons, .ispag-action-btn .ispag-icon-svg {
     font-size: 14px;
-    color: var(--ispag-color-profile-pic); /* Orange ISPAG */
+    color: var(--ispag-grey); /* Orange ISPAG */
     
     /* Création du cercle */
-    border: 2px solid #e0e0e0; /* Gris clair */
-    border-radius: 50%; /* Rend le contour parfaitement rond */
+    border: 2px solid var(--ispag-grey); /* Gris clair */
+    border-radius: var(--ispag-btn-border-radius);
     
     /* Taille du cercle (à ajuster selon tes besoins) */
     width: 32px;
@@ -178,14 +162,15 @@
 
 /* Optionnel : Effet au survol du bouton pour que le cercle réagisse */
 .ispag-action-btn:hover .dashicons {
-    border-color: var(--ispag-color-profile-pic); /* Le cercle devient orange au survol */
-    /* background-color: #f9f9f9; */
+    border-color: var(--ispag-color-primary);
+    color: var(--ispag-color-primary);
+    background: transparent !important;
 }
 
-/* .ispag-action-btn:hover {
-    background-color: #f0f0f0;
-    border-color: var(--ispag-color-profile-pic);
-} */
+.ispag-action-btn:hover {
+    color: var(--ispag-color-primary);
+    background: transparent !important;
+}
 
 
 /* Check box de tâches*/
@@ -207,7 +192,7 @@
     justify-content: center;
     width: 24px;
     height: 24px;
-    border: 2px solid #ccc; /* Couleur grise de ton image */
+    border: 2px solid var(--ispag-btn-grey);
     border-radius: 50%;
     transition: all 0.2s ease;
     cursor: pointer;
@@ -215,7 +200,7 @@
 
 /* La coche (cachée par défaut) */
 .checkmark {
-    color: white;
+    color: var(--ispag-white);
     font-size: 14px;
     display: none;
 }
@@ -224,8 +209,8 @@
 
 /* Le cercle devient vert */
 .task-input:checked + .task-circle {
-    background-color: #007a3d; /* Le vert de ton image */
-    border-color: #007a3d;
+    background-color: var(--ispag-success-color); /* Le vert de ton image */
+    border-color: var(--ispag-success-color);
 }
 
 /* On affiche la coche blanche */
@@ -235,7 +220,7 @@
 
 /* Optionnel : effet au survol */
 .task-circle:hover {
-    border-color: #007a3d;
+    border-color: var(--ispag-success-color);
 }
 
 /* Conteneur principal */
@@ -250,12 +235,12 @@
     position: absolute;
     right: 0;
     bottom: 100%; /* S'ouvre vers le haut si la barre est en bas, sinon mettez top: 100% */
-    background-color: #fff;
+    background-color: var(--ispag-white);
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 99;
-    border-radius: 4px;
-    border: 1px solid #ddd;
+    border-radius: var(--ispag-badge-border-radius);
+    border: 1px solid var(--ispag-border);
     margin-bottom: 5px;
 }
 
@@ -274,12 +259,12 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: #333;
+    color: var(--ispag-dark);
     font-size: 13px;
 }
 
 .ispag-dropdown-item:hover {
-    background-color: #f1f1f1;
+    background-color: var(--ispag-icon-bg);
 }
 
 .ispag-dropdown-item .dashicons {
@@ -289,12 +274,12 @@
 
 .ispag-dropdown-divider {
     height: 1px;
-    background-color: #eee;
+    background-color: var(--ispag-icon-bg);
     margin: 5px 0;
 }
 
 .ispag-item-danger {
-    color: #d63638;
+    color: var(--ispag-danger-text);
 }
 
 
@@ -316,7 +301,7 @@
 }
 
 .ispag-btn-loading {
-    background-color: #f1f1f1 !important;
-    color: #666 !important;
-    border-color: #ccc !important;
+    background-color: var(--ispag-icon-bg) !important;
+    color: var(--ispag-text-primary) !important;
+    border-color: var(--ispag-border) !important;
 }

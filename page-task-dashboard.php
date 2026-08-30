@@ -13,7 +13,7 @@ if ( ! is_user_logged_in() ) {
 
 $task_repo = class_exists( 'ISPAG_Note_Repository' ) ? new ISPAG_Note_Repository() : null;
 $tasks_list = $task_repo ? $task_repo->get_active_tasks() : [];
-$current_time = time();
+$current_time = current_time('timestamp');
 
 // Titre de la page
 $page_name = __('Task dashboard', 'ispag-crm');
@@ -27,19 +27,19 @@ get_header();
 <div id="primary" class="content-area ispag-dark-mode-ready">
     <main id="main" class="site-main">
         <div class="ispag-dashboard-wrapper">
-            
+
             <header class="ispag-dash-header">
                 <div class="header-left">
                     <h1 class="ispag-page-title"><?php the_title(); ?></h1>
                     <span class="task-count-badge"><?php echo count($tasks_list); ?> <?php _e('Active tasks', 'ispag-crm'); ?></span>
                 </div>
-                
+
                 <div class="header-actions">
                     <div class="ispag-search-container">
                         <i class="dashicons dashicons-search"></i>
                         <input type="text" id="taskSearch" placeholder="<?php _e('Search...', 'ispag-crm'); ?>">
                     </div>
-                    <button class="ispag-btn-primary">
+                    <button class="ispag-action-btn" data-action="task"style="width: 200px;">
                         <i class="dashicons dashicons-plus"></i> <?php _e('New task', 'ispag-crm'); ?>
                     </button>
                 </div>
@@ -60,27 +60,27 @@ get_header();
                         </thead>
                         <tbody id="the-list">
                             <?php if ( ! empty( $tasks_list ) ) : ?>
-                                <?php foreach ( $tasks_list as $task ) : 
+                                <?php foreach ( $tasks_list as $task ) :
                                     $due_ts = strtotime( $task->due_date );
                                     $is_overdue = ( ! $task->is_completed && $due_ts < $current_time );
                                     $type_class = 'type-' . sanitize_title($task->task_type);
                                 ?>
                                 <tr id="task-<?php echo $task->id; ?>" class="task-row <?php echo $is_overdue ? 'row-overdue' : ''; ?>">
-                                    
-                                    <td class="col-check">
+
+                                    <td class="col-check" data-label="Terminé ?">
                                         <div class="custom-checkbox">
                                             <input type="checkbox" id="check-<?php echo $task->id; ?>" class="complete-task-btn" data-activity-id="<?php echo esc_attr( $task->id ); ?>">
                                             <label for="check-<?php echo $task->id; ?>"></label>
                                         </div>
                                     </td>
 
-                                    <td class="col-task">
+                                    <td class="col-task" data-label="<?php _e('Task', 'ispag-crm'); ?>">
                                         <span class="task-title-link open-task-sidebar" data-task-id="<?php echo $task->id; ?>">
                                             <?php echo esc_html( $task->title ); ?>
                                         </span>
                                     </td>
 
-                                    <td class="col-rel">
+                                    <td class="col-rel" data-label="<?php _e('Relationships', 'ispag-crm'); ?>">
                                         <div class="rel-box">
                                             <?php if($task->contact_name): ?>
                                                 <a href="<?php echo home_url('/contact/'.$task->contact_id.'/'); ?>" class="rel-item contact">
@@ -88,34 +88,32 @@ get_header();
                                                 </a>
                                             <?php endif; ?>
                                             <?php if($task->company_name): ?>
-                                                
-                                            <a href="<?php echo home_url('/company/'.$task->company_id.'/'); ?>" class="rel-item company">
-                                                <i class="dashicons dashicons-bank"></i> <?php echo esc_html($task->company_name); ?>
-                                            </a>
+                                                <a href="<?php echo home_url('/company/'.$task->company_id.'/'); ?>" class="rel-item company">
+                                                    <i class="dashicons dashicons-bank"></i> <?php echo esc_html($task->company_name); ?>
+                                                </a>
                                             <?php endif; ?>
                                             <?php if($task->deal_id): ?>
-                                                
-                                            <a href="<?php echo home_url('/deal/'.$task->deal_id.'/'); ?>" class="rel-item deal">
-                                                <i class="dashicons dashicons-bank"></i> <?php echo esc_html($task->deal_name); ?>
-                                            </a>
+                                                <a href="<?php echo home_url('/deal/'.$task->deal_id.'/'); ?>" class="rel-item deal">
+                                                    <i class="dashicons dashicons-bank"></i> <?php echo esc_html($task->deal_name); ?>
+                                                </a>
                                             <?php endif; ?>
                                         </div>
                                     </td>
 
-                                    <td class="col-type">
+                                    <td class="col-type" data-label="<?php _e('Type', 'ispag-crm'); ?>">
                                         <span class="">
                                             <?php echo esc_html( $task->task_type ); ?>
                                         </span>
                                     </td>
 
-                                    <td class="col-date">
+                                    <td class="col-date" data-label="<?php _e('Due date', 'ispag-crm'); ?>">
                                         <div class="due-date-wrapper <?php echo $is_overdue ? 'is-late' : ''; ?>">
                                             <i class="dashicons dashicons-calendar-alt"></i>
                                             <?php echo date_i18n( 'j M Y', $due_ts ); ?>
                                         </div>
                                     </td>
 
-                                    <td class="col-actions">
+                                    <td class="col-actions" data-label="<?php _e('Actions', 'ispag-crm'); ?>">
                                         <div class="btn-group">
                                             <button class="icon-btn edit-activity" data-activity-id="<?php echo $task->id; ?>" title="Modifier">
                                                 <i class="dashicons dashicons-edit"></i>
@@ -135,4 +133,11 @@ get_header();
     </main>
 </div>
 
-<?php get_footer(); ?>
+<?php 
+if ( is_active_sidebar( 'ispag_crm_sidebar' ) ) {
+    dynamic_sidebar( 'ispag_crm_sidebar' );
+}
+?>
+<?php
+
+get_footer(); ?>

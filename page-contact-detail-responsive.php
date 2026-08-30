@@ -230,7 +230,7 @@ $all_roles = $wp_roles->get_names();
 
 // 2. Préparer le tableau des options avec le rôle par défaut "none"
 $role_options_data = [
-    'none' => __('(No selected role)', 'ispag-crm')
+    'none' => __('(No role selected)', 'ispag-crm')
 ];
 
 // 2b. Filtrage des rôles
@@ -402,7 +402,7 @@ extract( $template_args );
                         $actions['closing_dates']     = $closing_dates;
                         $actions['total_excl_vats']   = $total_excl_vats;
 
-                        ispag_get_template( 'action-bar', [ 'actions' => $actions ] ); 
+                        ispag_get_template( 'action-bar', [ 'actions' => $actions ] );  
                     ?>
                 </div>
 
@@ -494,5 +494,6 @@ extract( $template_args );
         </div> </main> </div> <div id="ispag-modal-container"></div>
 
 <?php 
+
 get_footer(); 
 ?>

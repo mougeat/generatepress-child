@@ -68,7 +68,8 @@ $pagination_args = array(
 );
 
 // --- OWNER FILTER CONFIGURATION ---
-$target_dept_filter = 'vaulruz_ispag'; 
+global $user_department;
+$target_dept_filter = $user_department; 
 $meta_key_dept = ISPAG_Crm_Contact_Constants::USER_DEPARTMENT;
 
 $users_vaulruz = get_users( array( 
@@ -259,7 +260,7 @@ get_header();
                                 $colors = ['A' => '#d63031', 'B' => '#e67e22', 'C' => '#2980b9'];
                                 $color = $colors[$prio] ?? '#f0f0f0';
                                 ?>
-                                <span class="ispag-status-badge" style="background-color: <?php echo $color; ?>; color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">
+                                <span class="ispag-status-badge" style="background-color: <?php echo $color; ?>; ">
                                     <?php echo $prio ?: '—'; ?>
                                 </span>
                             </td>
@@ -303,4 +304,6 @@ get_header();
 
     </main>
 </div>
-<?php get_footer(); ?>
+<?php
+
+get_footer(); ?>

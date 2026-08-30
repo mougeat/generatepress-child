@@ -1,6 +1,7 @@
-#page{
+#page {
     background-color: #F0F0F0;
 }
+
 /*
  * Styles pour les messages d'erreur et d'alerte dans l'interface ISPAG
  */
@@ -10,13 +11,13 @@
     margin: 20px 0;
     border: 1px solid #e0b4b4; /* Bordure rouge clair */
     border-left: 5px solid #a94442; /* Bordure épaisse à gauche (style alerte) */
-    border-radius: 4px;
+    border-radius: var(--ispag-badge-border-radius);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); /* Légère ombre pour le faire ressortir */
-    
+
     /* Couleurs */
     background-color: #f2dede; /* Fond rouge très clair */
     color: #a94442; /* Texte rouge foncé */
-    
+
     /* Typographie */
     font-size: 14px;
     line-height: 1.5;
@@ -34,62 +35,194 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* --- 2. STRUCTURE ET MISE EN PAGE PRINCIPALE --- */
+/* --- 2. STRUCTURE ET MISE EN PAGE PRINCIPALE (MODIFIÉE POUR LE REDIMENSIONNEMENT) --- */
 /* -------------------------------------------------------------------------- */
 
-.ispag-detail-container {  
-    /* Utilisation de la flexbox pour un layout à colonnes */
-    display: flex; 
-    gap: 20px; /* Espace entre les colonnes */
-    /* max-width: 1200px;  */
-    margin: 20px auto; /* Centrage et marge extérieure */
+/* -------------------------------------------------------------------------- */
+/* --- STRUCTURE (SANS REDIMENSIONNEMENT) --- */
+/* -------------------------------------------------------------------------- */
+
+/* .site-content{
+    height: 100%;
+    max-height: 81vh;
+} */
+.ispag-detail-container {
+    display: flex;
+    gap: 20px;
+    margin: 20px auto;
     font-family: Arial, sans-serif;
+    height: calc(100vh - 120px);
 }
 
-/* Définition des largeurs des colonnes */
-.ispag-left-panel, .ispag-right-panel { 
-    flex: 0 1 22%; 
-    min-width: 300px;
-}
-.ispag-main-content { 
-    /* Colonne centrale (Résumé/Notes) : Prend l'espace restant */
-    flex: 1; 
+.ispag-left-panel {
+    flex: 0 0 var(--ispag-sidebar-width);
+    min-width: var(--ispag-sidebar-width);
+    /* height: 100%;
+    max-height: 70vh; */
+    overflow: auto;
 }
 
-/* Styles de carte/bloc d'information */
-.ispag-card { 
-    background: var(--ispag-color-background); 
-    border: 1px solid var(--ispag-color-border-light); 
-    border-radius: 8px; 
-    padding: 15px; 
-    margin-bottom: 20px; 
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Légère ombre */
+.ispag-main-content {
+    flex: 1;
+    min-width: var(--ispag-sidebar-width);
+    /* height: 100%;
+    max-height: 70vh; */
+    overflow: hidden;
 }
-.ispag-card:hover{
-    border-color: #d1d9e2; /* Bordure légèrement plus foncée au survol */
+
+.ispag-right-panel-wrapper {
+    position: relative;
+    flex: 0 0 var(--ispag-sidebar-width);
+    min-width: var(--ispag-sidebar-width);
+    
+    
+    transition: flex-basis .25s ease, min-width .25s ease;
+    padding: 0;
+}
+
+/* État replié : le wrapper se réduit à la largeur du bouton uniquement */
+.ispag-right-panel-wrapper.collapsed {
+    flex: 0 0 18px;
+    min-width: 18px;
+}
+
+.ispag-right-panel {
+    width: 100%;
+    height: 100%;
+    /* max-height: 60vh; */
+    overflow-y: auto;
+    padding: 0 10px;
+    transition: opacity .2s ease;
+}
+
+.ispag-right-panel-wrapper.collapsed .ispag-right-panel {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* --- Bouton ancré au wrapper : il suit le panneau automatiquement --- */
+
+.ispag-panel-toggle-right {
+    position: absolute;
+    top: 24px;
+    left: -17px;
+    width: 33px;
+    height: 33px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #cbd6e2;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    padding: 0;
+    transition: background .15s ease, border-color .15s ease;
+}
+
+.ispag-panel-toggle-right:hover {
+    background: #eaf0f6;
+    border-color: #7fa8d9;
+}
+
+.ispag-panel-toggle-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    display: block;
+    pointer-events: none; /* le clic reste géré par le bouton parent */
+}
+
+@media (max-width: 992px) {
+    .ispag-detail-container {
+        flex-direction: column;
+        gap: 0;
+        height: auto;
+    }
+    .ispag-left-panel,
+    .ispag-right-panel-wrapper {
+        flex: 1 1 100% !important;
+        min-width: 0 !important;
+    }
+    .ispag-panel-toggle-right {
+        display: none !important;
+    }
+}
+
+.ispag-card {
+    background: var(--ispag-color-background);
+    border: 1px solid var(--ispag-color-border-light);
+    border-radius: var(--ispag-card-border-radius);
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ispag-card:hover {
+    border-color: #d1d9e2;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Style des titres de section à l'intérieur des cartes */
-.ispag-card h5 { 
-    border-bottom: 1px solid #eee; /* Ligne de séparation */
-    padding-bottom: 10px; 
-    font-weight: 600; 
+.ispag-card h5 {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    font-weight: 600;
     margin-top: 0;
     margin-bottom: 15px;
     color: var(--ispag-color-text-dark);
 }
 
+.ispag-project-btn-card{
+    text-align:left;
+}
+
+@media (max-width: 992px) {
+    .ispag-detail-container {
+        flex-direction: column;
+        gap: 0;
+        height: auto;
+    }
+
+    .ispag-left-panel,
+    .ispag-right-panel {
+        flex: 1 1 100%;
+        min-width: 0;
+        max-width: none;
+    }
+
+    .ispag-panel-toggle-right {
+        display: none !important;
+    }
+}
+
+
 /* Gestion du responsive pour les petits écrans */
 @media (max-width: 992px) {
     .ispag-detail-container {
         /* Passe en mode colonne sur les petits écrans */
-        flex-direction: column; 
+        flex-direction: column;
         gap: 0;
+        height: auto;
     }
-    .ispag-left-panel, .ispag-right-panel {
+
+    .ispag-left-panel,
+    .ispag-right-panel {
         /* Les colonnes prennent toute la largeur disponible */
         flex: 1 1 100%;
+        min-width: 0;
+        max-width: none;
+        
+    }
+
+    .resize-handle {
+        display: none !important;
+    }
+
+    .ispag-column-controls {
+        flex-direction: column;
+        gap: 5px;
     }
 }
 
@@ -133,44 +266,31 @@
 }
 
 /* Photo de profil / Initiales agrandies */
-/* .ispag-profile-pic { 
-    width: 75px; 
-    height: 75px; 
-    border-radius: 50%; 
-    background: var(--ispag-color-profile-pic); 
-    color: var(--ispag-color-background); 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
+.ispag-profile-pic {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    background: var(--ispag-color-profile-pic);
+    color: var(--ispag-color-background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 30px;
-    font-weight: bold; 
-    flex-shrink: 0; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-} */
-.ispag-profile-pic { 
-    width: 75px; 
-    height: 75px; 
-    border-radius: 50%; /* Rend le conteneur rond */
-    background: var(--ispag-color-profile-pic); 
-    color: var(--ispag-color-background); 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    font-size: 30px;
-    font-weight: bold; 
-    flex-shrink: 0; 
-    overflow: hidden; /* Coupe tout ce qui dépasse du cercle */
+    font-weight: bold;
+    flex-shrink: 0;
+    overflow: hidden;
     border: 1px solid #eee;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-.ispag-mini-profile-pic{
-    width: 32px; 
-    height: 32px; 
-    background: #f0f0f0; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    border-radius: 50%; 
+
+.ispag-mini-profile-pic {
+    width: 32px;
+    height: 32px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
     overflow: hidden;
     font-weight: bold;
     color: #555;
@@ -188,13 +308,13 @@
     margin-bottom: 4px;
 }
 
-/* TITRE NOM ET PRÉNOM (La partie que tu voulais agrandir) */
+/* TITRE NOM ET PRÉNOM */
 .ispag-contact-title-fullname {
     display: flex;
-    gap: 12px; 
+    gap: 12px;
     align-items: center;
     margin: 0;
-    font-size: 32px !important; /* TAILLE MACRO */
+    font-size: 32px !important;
     font-weight: 700 !important;
     line-height: 1.1;
     color: var(--ispag-color-text-dark);
@@ -226,9 +346,8 @@
 }
 
 /* --- SECTION FAVICON --- */
-
 .ispag-profile-pic.has-favicon {
-    background: #fff; /* Fond blanc pour les logos transparents */
+    background: #fff;
     border: 1px solid #eee;
     overflow: hidden;
 }
@@ -236,33 +355,29 @@
 .ispag-profile-pic.has-favicon img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Garde les proportions du logo */
-    padding: 10px; /* Évite que le logo ne colle aux bords */
+    object-fit: contain;
+    padding: 10px;
 }
 
 /* Ajustements des infos secondaires sous le titre */
-.ispag-header-info p { 
-    margin: 2px 0 0; 
-    font-size: 14px; 
-    color: var(--ispag-color-text-light); 
+.ispag-header-info p {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: var(--ispag-color-text-light);
 }
 
 /* -------------------------------------------------------------------------- */
 /* --- 6. ÉDITION EN LIGNE (INLINE EDIT) --- */
 /* -------------------------------------------------------------------------- */
-
 .ispag-editable-field {
-    /* Pointeur pour indiquer que le champ est cliquable */
-    cursor: pointer; 
-    /* Souligne légèrement ou change l'arrière-plan au survol */
+    cursor: pointer;
     transition: background-color 0.2s;
-    border-radius: 3px;
-    /* Pour aligner l'icône d'édition à droite du texte */
+    border-radius: var(--ispag-btn-border-radius);
     display: flex;
-    justify-content: flex-end; 
+    justify-content: flex-end;
     align-items: center;
-    gap: 5px; /* Espace entre le texte/select et l'icône */
-    min-height: 18px; /* Assure une hauteur minimale pour l'édition */
+    gap: 5px;
+    min-height: 18px;
     box-sizing: border-box;
 }
 
@@ -272,11 +387,11 @@
 
 /* Style de l'icône de crayon */
 .ispag-editable-field .edit-icon {
-    font-size: 10px; /* Taille plus petite pour l'icône */
-    opacity: 0; /* Masqué par défaut */
+    font-size: 10px;
+    opacity: 0;
     color: var(--ispag-color-primary);
     transition: opacity 0.2s;
-    flex-shrink: 0; /* Empêche le rétrécissement */
+    flex-shrink: 0;
 }
 
 /* Afficher l'icône au survol du champ éditable */
@@ -285,22 +400,21 @@
 }
 
 /* Styles pour les champs d'édition (Input/Select) */
-.ispag-edit-input, 
+.ispag-edit-input,
 .ispag-edit-select {
     width: 100%;
     box-sizing: border-box;
     padding: 3px 6px;
-    border: 1px solid var(--ispag-color-primary); /* Bordure bleue en mode édition */
-    border-radius: 3px;
-    font-size: 14px; 
-    height: 28px; /* Hauteur cohérente */
+    border: 1px solid var(--ispag-color-primary);
+    border-radius: var(--ispag-btn-border-radius);
+    font-size: 14px;
+    height: 28px;
 }
 
 /* Le mode édition masque la valeur affichée et l'icône */
 .ispag-editable-field.editing {
     background-color: transparent;
     cursor: default;
-    /* Cache l'icône pendant l'édition */
 }
 
 /* Le champ de l'en-tête nécessite une adaptation de taille */
@@ -310,19 +424,21 @@
     justify-content: flex-start;
     padding: 0;
 }
+
 .ispag-header-info .ispag-editable-field:hover {
     background-color: transparent;
 }
+
 .ispag-header-info .ispag-edit-input {
     font-size: 13px;
     padding: 1px 4px;
     height: auto;
 }
+
 .ispag-header-info .edit-icon {
-    font-size: 8px; 
+    font-size: 8px;
     opacity: 0.5;
 }
-
 
 /* État de chargement */
 .ispag-editable-field.loading {
@@ -333,77 +449,76 @@
 /* -------------------------------------------------------------------------- */
 /* --- 4. LISTE D'INFORMATIONS CLÉS (Définition List) --- */
 /* -------------------------------------------------------------------------- */
+.ispag-key-info-list {
+    list-style: none;
+    padding: 0;
+}
 
-.ispag-key-info-list { 
-    list-style: none; 
-    padding: 0; 
+.ispag-key-info-list dt,
+.ispag-key-info-list dd {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--ispag-color-border-lighter);
+    margin: 0;
+    font-size: 14px;
 }
-.ispag-key-info-list dt, 
-.ispag-key-info-list dd { 
-    display: flex; /* Utilisé pour aligner les éléments sur la ligne */
-    justify-content: space-between; 
-    padding: 8px 0; 
-    border-bottom: 1px dotted var(--ispag-color-border-lighter); 
-    margin: 0; 
-    font-size: 14px; 
+
+.ispag-key-info-list dt {
+    font-weight: 500;
+    color: var(--ispag-color-text-medium);
 }
-.ispag-key-info-list dt { 
-    font-weight: 500; 
-    color: var(--ispag-color-text-medium); 
-}
-.ispag-key-info-list dd { 
-    font-weight: 400; 
-    text-align: right; 
-    /* max-width: 60%; /* Pour éviter les dépassements si le contenu est trop long */
-    /* Permet le positionnement de l'icône d'édition dans le DD */
-    position: relative; 
+
+.ispag-key-info-list dd {
+    font-weight: 400;
+    text-align: right;
+    position: relative;
 }
 
 /* -------------------------------------------------------------------------- */
 /* --- 7. CARTES DE DROITE (Company, Transactions, Tickets) --- */
 /* -------------------------------------------------------------------------- */
-
 /* Titres avec boutons d'action (+ Add) */
 .ispag-company-card h5,
 .ispag-transactions-card h5,
 .ispag-tickets-card h5 {
-    display: flex; 
-    justify-content: space-between; 
+    display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 
 /* Style de l'action '+ Add' */
 .ispag-right-panel h5 span {
-    font-size: 12px; 
-    color: var(--ispag-color-primary); 
+    font-size: 12px;
+    color: var(--ispag-color-primary);
     cursor: pointer;
 }
 
 /* Style de l'entreprise (Nom en bleu) */
-.ispag-company-card strong { 
+.ispag-company-card strong {
     color: var(--ispag-color-primary);
 }
 
 /* Boutons secondaires (Show related...) */
-.ispag-right-panel button, 
+.ispag-right-panel button,
 .ispag-button-link {
-    background: none !important; 
-    color: var(--ispag-color-text-dark) !important; 
-    border: 1px solid #ccc !important; 
-    padding: 5px 10px !important; 
-    border-radius: 4px !important; 
-    font-size: 12px !important; 
-    cursor: pointer !important; 
-    text-decoration: none !important; 
-    text-align: center !important; 
+    background: none !important;
+    color: var(--ispag-color-text-dark) !important;
+    border: 1px solid #ccc !important;
+    padding: 5px 10px !important;
+    border-radius: var(--ispag-btn-border-radius) !important;
+    font-size: 12px !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    text-align: center !important;
     transition: background-color 0.2s;
-    width: 100%; /* Remplir toute la largeur de la carte */
-    box-sizing: border-box; /* Inclure padding et border dans la largeur */
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.ispag-right-panel button:hover, 
+.ispag-right-panel button:hover,
 .ispag-button-link:hover {
-    background-color: #f0f0f0 !important; 
+    background-color: #f0f0f0 !important;
     color: #000 !important;
 }
 
@@ -412,53 +527,60 @@
     margin-bottom: 10px;
 }
 
-
-
-.ispag-transaction-item { 
-    padding: 10px 0; 
-    border-bottom: 1px solid var(--ispag-color-border-lighter); 
+.ispag-transaction-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--ispag-color-border-lighter);
 }
-.ispag-full-transaction-item { 
+
+.ispag-full-transaction-item {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    
-    padding: 10px 0; 
-    border-bottom: 1px solid var(--ispag-color-border-lighter); 
+    padding: 10px 0;
+    border-bottom: 1px solid var(--ispag-color-border-lighter);
 }
+
 .ispag-full-transaction-item:hover {
-    border-color: #d1d9e2; /* Bordure légèrement plus foncée au survol */
+    border-color: #d1d9e2;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-.ispag-transaction-item:last-child, .ispag-full-transaction-item:last-child { 
-    border-bottom: none; 
+
+.ispag-transaction-item:last-child,
+.ispag-full-transaction-item:last-child {
+    border-bottom: none;
 }
-.ispag-transaction-item h6, .ispag-full-transaction-item h6 { 
-    margin: 0 0 5px 0; 
-    font-size: 14px; 
-    color: var(--ispag-color-primary); 
-    font-weight: 600; 
-    cursor: pointer; 
+
+.ispag-transaction-item h6,
+.ispag-full-transaction-item h6 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: var(--ispag-color-primary);
+    font-weight: 600;
+    cursor: pointer;
 }
-.ispag-transaction-item p, .ispag-full-transaction-item p { 
-    margin: 0; 
-    font-size: 12px; 
-    color: var(--ispag-color-text-medium); 
-    line-height: 1.5; 
+
+.ispag-transaction-item p,
+.ispag-full-transaction-item p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ispag-color-text-medium);
+    line-height: 1.5;
 }
-.ispag-transaction-item h6 a, .ispag-full-transaction-item h6 a {
+
+.ispag-transaction-item h6 a,
+.ispag-full-transaction-item h6 a {
     color: inherit;
     text-decoration: none;
 }
-.ispag-transaction-item h6 a:hover, .ispag-full-transaction-item h6 a:hover {
+
+.ispag-transaction-item h6 a:hover,
+.ispag-full-transaction-item h6 a:hover {
     text-decoration: underline;
 }
-
 
 /* -------------------------------------------------------------------------- */
 /* --- 8. Navigation par onglets (Corrigé pour masquage forcé) --- */
 /* -------------------------------------------------------------------------- */
-
 .ispag-tabs-navigation {
     display: flex;
     border-bottom: 1px solid #e0e0e0;
@@ -489,51 +611,42 @@
     font-weight: 600;
 }
 
-.ispag-tabs-content ,.ispag-right-panel{
+.ispag-tabs-content,
+.ispag-right-panel {
     padding: 0 10px;
-    
-    /* 1. On définit une hauteur maximale */
-    /* 70vh signifie 70% de la hauteur de l'écran. 
-       Tu peux ajuster ce chiffre selon la place prise par tes headers/onglets */
-    min-height: 90vh;
-    max-height: 90vh; 
-    
-    /* 2. On active le scroll vertical uniquement */
+    min-height: 80vh;
+    max-height: 80vh;
     overflow-y: auto;
-    
-    /* 3. Optionnel : un petit rail pour que le scroll soit visible */
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
 }
 
 /* Style pour Chrome/Safari/Edge */
-.ispag-tabs-content::-webkit-scrollbar {
+.ispag-tabs-content::-webkit-scrollbar,
+.ispag-right-panel::-webkit-scrollbar {
     width: 6px;
 }
 
-.ispag-tabs-content::-webkit-scrollbar-track {
+.ispag-tabs-content::-webkit-scrollbar-track,
+.ispag-right-panel::-webkit-scrollbar-track {
     background: #f1f1f1;
 }
 
-.ispag-tabs-content::-webkit-scrollbar-thumb {
+.ispag-tabs-content::-webkit-scrollbar-thumb,
+.ispag-right-panel::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 10px;
+    border-radius: var(--ispag-card-border-radius);
 }
 
-/* 🟥 RÈGLE DE MASQUAGE FORCÉ 🟥 */
-/* Cible TOUS les .ispag-tab-pane à l'intérieur de .ispag-tabs-content */
-/* Le !important garantit que le panneau est masqué, sauf s'il est actif. */
+/* Règle de masquage forcé */
 .ispag-tabs-content .ispag-tab-pane {
-    display: none !important; 
+    display: none !important;
 }
 
-/* 🟢 RÈGLE D'AFFICHAGE FORCÉ 🟢 */
-/* Cible le panneau ACTIF à l'intérieur de .ispag-tabs-content */
-/* Le !important annule la règle de masquage ci-dessus pour le panneau sélectionné. */
+/* Règle d'affichage forcé */
 .ispag-tabs-content .ispag-tab-pane.active {
-    display: block !important; 
+    display: block !important;
 }
-
 
 /* Onglets */
 .ispag-modal-tabs {
@@ -569,31 +682,24 @@
 }
 
 #tab-add-existing {
-    /* Styles pour la barre de recherche et le bouton */
     display: flex;
     flex-direction: column;
 }
 
-
-
 /* --- RESPONSIVE CONTACT DETAIL (Smartphone & Tablette) --- */
 @media screen and (max-width: 1024px) {
-    
-    /* 1. Force l'empilement des colonnes principales (Profil vs Transactions) */
-    .ispag-container-detail { 
+    .ispag-container-detail {
         display: flex;
         flex-direction: column !important;
         padding: 10px;
     }
 
-    /* 2. Ajustement des largeurs */
-    .ispag-column-left, 
+    .ispag-column-left,
     .ispag-column-right {
         width: 100% !important;
         margin-bottom: 20px;
     }
 
-    /* 3. Optimisation du Header (Photo et Titre) */
     .ispag-contact-header {
         flex-direction: column;
         text-align: center;
@@ -609,7 +715,6 @@
         font-size: 1.5rem;
     }
 
-    /* 4. Transformation des lignes d'info en blocs scannables */
     .ispag-info-row {
         flex-direction: column;
         align-items: flex-start;
@@ -623,29 +728,26 @@
         color: #666;
     }
 
-    /* 5. Transformation du Tableau de Transactions en "Cards" */
     .ispag-transactions-list .ispag-transaction-item {
         display: block !important;
         border: 1px solid #ddd;
-        border-radius: 8px;
+        border-radius: var(--ispag-badge-border-radius);
         margin-bottom: 15px;
         padding: 15px;
         background: #fff;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
-    /* On cache les headers du tableau s'il y en a */
     .ispag-transactions-header {
         display: none !important;
     }
 
     .ispag-transaction-details {
         display: grid;
-        grid-template-columns: 1fr 1fr; /* 2 colonnes sur tablette */
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
     }
 
-    /* Sur petit smartphone, une seule colonne */
     @media (max-width: 480px) {
         .ispag-transaction-details {
             grid-template-columns: 1fr;
@@ -653,177 +755,149 @@
     }
 }
 
-
-
-
-
-
-/****************************************************************************************/
-/* --- CONTAINER PRINCIPAL --- */
+/* Style pour le conteneur principal */
 .ispag-container-detail {
     display: grid;
-    grid-template-columns: 300px 1fr 300px; /* 3 colonnes : Profil | Activité | Sidebar */
+    grid-template-columns: 300px 1fr 300px;
     gap: 20px;
     padding: 20px;
     background-color: #f5f7f9;
     align-items: start;
 }
 
-/* --- CARDS STYLE HUBSPOT --- */
-.ispag-card {
-    background: #fff;
-    border: 1px solid #eaf0f6;
-    border-radius: 8px;
+/* Style pour la page de profil */
+.ispag-profile-section {
+    margin-bottom: 30px;
+    background: var(--ispag-white);
+    border-radius: var(--ispag-badge-border-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     padding: 20px;
+}
+
+.ispag-section-title {
+    color: var(--ispag-grey-dark);
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--ispag-grey-light);
+}
+
+.ispag-subsection-title {
+    color: var(--ispag-grey-dark);
+    font-size: 1.1rem;
+    margin: 20px 0 10px;
+}
+
+.ispag-disconnection-settings {
+    margin-top: 25px;
+    padding: 15px;
+    background: var(--ispag-grey-light);
+    border-radius: var(--ispag-badge-border-radius);
+}
+
+.ispag-disconnection-option {
     margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-/* --- COLONNE GAUCHE : PROFIL --- */
-.ispag-contact-header {
-    text-align: center;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-}
-
-.ispag-contact-avatar {
-    width: 64px;
-    height: 64px;
-    background: #dfe3eb;
-    border-radius: 50%;
-    margin: 0 auto 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    color: #33475b;
-}
-
-.ispag-contact-info-top h1 {
-    font-size: 18px;
-    margin: 0;
-    color: #33475b;
-}
-
-.ispag-info-section h3 {
-    font-size: 14px;
-    text-transform: uppercase;
-    color: #7c98b6;
-    margin-bottom: 15px;
-}
-
-.ispag-info-row {
+.ispag-holiday-periods-container {
     display: flex;
     flex-direction: column;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-.ispag-info-label {
-    font-size: 12px;
-    color: #7c98b6;
+.ispag-holiday-period {
+    display: flex;
+    flex-direction: column;
+    background: var(--ispag-white);
+    padding: 10px;
+    border-radius: var(--ispag-badge-border-radius);
+    border: 1px solid var(--ispag-grey-light);
 }
 
-.ispag-info-value {
-    font-size: 14px;
-    color: #33475b;
+.ispag-holiday-period-fields {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.ispag-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ispag-input-label {
+    font-size: 0.9rem;
+    color: var(--ispag-grey-medium);
     font-weight: 500;
 }
 
-/* --- COLONNE CENTRALE : NAVIGATION ET ONGLETS --- */
-.ispag-quick-actions {
+.ispag-avatar-wrapper {
     display: flex;
+    align-items: center;
     gap: 10px;
-    margin-bottom: 20px;
 }
 
-.ispag-nav-tabs {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    border-bottom: 2px solid #cbd6e2;
+.ispag-avatar-wrapper img {
+    border-radius: 50%;
+    border: 2px solid var(--ispag-grey-light);
 }
 
-.ispag-nav-tabs li {
-    margin-right: 20px;
+/* Style pour le tableau des notifications */
+.ispag-notification-table-container {
+    margin: 20px 0;
 }
 
-.ispag-nav-tabs a {
-    display: block;
-    padding: 10px 5px;
-    text-decoration: none;
-    color: #33475b;
+.ispag-notification-table th {
+    text-align: center;
+    background: var(--ispag-grey-light);
     font-weight: 600;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s ease;
 }
 
-.ispag-nav-tabs li.active a {
-    color: #007bff;
-    border-bottom-color: #007bff;
+.ispag-notification-table td {
+    text-align: center;
+    vertical-align: middle;
 }
 
-/* .ispag-tabs-content {
-    background: #fff;
-    padding: 20px;
-    border: 1px solid #cbd6e2;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    min-height: 400px;
-} */
-
-.ispag-tab-pane {
-    display: none;
+.ispag-notification-group-header td {
+    background: var(--ispag-grey-medium) !important;
+    color: var(--ispag-white) !important;
+    text-align: left !important;
+    padding-left: 15px !important;
 }
 
-.ispag-tab-pane.active {
-    display: block;
+.ispag-notification-type-label {
+    text-align: left !important;
+    padding-left: 20px !important;
 }
 
-/* --- SIDEBAR DROITE : WIDGETS --- */
-.ispag-sidebar-item, .ispag-transaction-item-mini {
-    padding: 10px 0;
-    border-bottom: 1px solid #f0f2f7;
+/* Style pour les alertes */
+.ispag-alert {
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: var(--ispag-badge-border-radius);
+    font-size: 0.95rem;
 }
 
-.ispag-sidebar-item:last-child { border: none; }
-
-.ispag-status-badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 12px;
-    color: #fff;
-    display: inline-block;
+.ispag-alert--error {
+    background: var(--ispag-red-light);
+    border: 1px solid var(--ispag-red);
+    color: var(--ispag-red);
 }
 
-/* --- RESPONSIVE (Passage en 1 colonne) --- */
-@media (max-width: 1100px) {
-    .ispag-container-detail {
-        grid-template-columns: 1fr; /* Tout s'empile verticalement */
-    }
-    
-    .ispag-column-left, .ispag-column-right, .ispag-column-right-sidebar {
-        width: 100%;
-    }
+.ispag-alert--success {
+    background: #e8f5e9;
+    border: 1px solid #4caf50;
+    color: #2e7d32;
 }
 
-/* Animation chargement */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-
-.ispag-key-info dt {
-    font-weight: bold;
-}
-
+/* Style pour les icônes de profil */
 .ispag-company-icon-container {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: var(--ispag-grey); /* Ton fond gris */
+    background: var(--ispag-grey);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -831,11 +905,10 @@
     flex-shrink: 0;
 }
 
-/* L'image à l'intérieur */
 .ispag-avatar-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Remplit le cercle sans déformation */
+    object-fit: cover;
     display: block;
 }
 
@@ -844,4 +917,118 @@
     font-weight: bold;
     color: var(--ispag-dark);
     display: flex;
+}
+
+/* Animation de chargement */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Style pour les info-clés */
+.ispag-key-info dt {
+    font-weight: bold;
+}
+
+/* Responsive pour les petits écrans */
+@media (max-width: 1100px) {
+    .ispag-container-detail {
+        grid-template-columns: 1fr;
+    }
+
+    .ispag-column-left,
+    .ispag-column-right,
+    .ispag-column-right-sidebar {
+        width: 100%;
+    }
+}
+
+
+/* =============================================
+   NOUVEAUX STYLES POUR LE REDIMENSIONNEMENT ET MASQUAGE
+   ============================================= */
+
+/* Conteneur principal : ajustement pour le redimensionnement */
+.ispag-detail-container {
+    position: relative; /* Nécessaire pour positionner les poignées */
+    height: calc(100vh - 120px); /* Ajustez selon votre en-tête/pied de page */
+}
+
+Colonnes redimensionnables
+/* .ispag-left-panel,
+.ispag-right-panel {
+    flex: 0 0 22%; 
+    min-width: 200px;
+    max-width: 400px;
+    transition: flex 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+    position: relative;
+    padding: 25px;
+} */
+
+/* Poignées de redimensionnement */
+.resize-handle {
+    width: 8px;
+    height: 100%;
+    background-color: #ccc;
+    cursor: col-resize;
+    position: absolute;
+    top: 0;
+    z-index: 10;
+}
+
+/* Poignée pour la colonne de gauche */
+.ispag-left-panel .resize-handle.left-handle {
+    right: -4px; /* Poignée à droite de la colonne de gauche */
+}
+
+/* Poignée pour la colonne de droite */
+.ispag-right-panel .resize-handle.right-handle {
+    left: -4px; /* Poignée à gauche de la colonne de droite */
+}
+
+/* Classe pour masquer une colonne */
+.hidden {
+    flex: 0 0 0 !important;
+    width: 0 !important;
+    opacity: 0;
+    overflow: hidden;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Boutons de contrôle */
+.ispag-column-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 0 10px;
+    position: absolute;
+    top: -40px; /* Place les boutons au-dessus du conteneur */
+    left: 0;
+    z-index: 20;
+}
+
+/* Désactive la sélection de texte pendant le redimensionnement */
+body.no-select {
+    user-select: none !important;
+}
+
+/* Ajustement pour le responsive */
+@media (max-width: 992px) {
+    .ispag-detail-container {
+        height: auto; /* Désactive la hauteur fixe sur mobile */
+    }
+
+    .resize-handle {
+        display: none !important; /* Masque les poignées sur mobile */
+    }
+
+    .ispag-column-controls {
+        position: static; /* Réinitialise la position des boutons */
+        margin-bottom: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 }

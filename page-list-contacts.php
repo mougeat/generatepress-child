@@ -83,7 +83,7 @@ get_header();
         <div class="ispag-header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h1 style="margin: 0;"><?php the_title(); ?> (<?php echo $total_users; ?>)</h1>
             
-            <button type="button" id="trigger-add-contact" class="button button-primary ispag-btn-large">
+            <button type="button" class="trigger-add-contact button button-primary ispag-btn-large">
                 <span class="dashicons dashicons-plus" style="margin-top: 4px; margin-right: 5px;"></span>
                 <?php _e('Create contact', 'ispag-crm'); ?>
             </button>
@@ -290,8 +290,8 @@ get_header();
     .tablenav .page-numbers li a { text-decoration: none; padding: 5px 10px; border: 1px solid #ccd0d4; }
 </style>
 
-<?php
-ispag_get_template('ispag-create-contact-sidebar', []);
-?>
 
-<?php get_footer(); ?>
+
+<?php
+
+get_footer(); ?>

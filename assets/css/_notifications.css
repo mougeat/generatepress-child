@@ -1,0 +1,609 @@
+/* ==========================================================================
+   VARIABLES CSS
+   ========================================================================== */
+/* :root {
+  --ispag-red: #990000;
+  --ispag-dark: #333;
+  --ispag-grey: #f2f2f2;
+  --ispag-btn-grey: #a19a9a;
+  --ispag-white: #fff;
+  --ispag-green: #6ab04c;
+  --ispag-blue: #45c0e6;
+  --ispag-blue-light: #99d5df;
+  --ispag-orange: #ffc107;
+  --ispag-light-grey: #fafafa;
+  --ispag-color-primary: #990000;
+  --ispag-color-text-dark: #333;
+  --ispag-color-text-medium: #555;
+  --ispag-color-text-light: #777;
+  --ispag-color-border-light: #e0e0e0;
+  --ispag-color-border-lighter: #f0f0f0;
+  --ispag-color-background: #fff;
+  --ispag-color-profile-pic: #e0e0e0;
+  --ispag-color-profile-text: #666;
+  --ispag-success-color: #28a745;
+  --ispag-danger-color: #dc3545;
+} */
+
+/* ==========================================================================
+   1. CLOCHE DE NOTIFICATION (DANS LE MENU)
+   ========================================================================== */
+.ispag-notification-bell-container {
+    margin-left: auto;
+    display: inline-block;
+}
+
+.menu-item-notifications {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.notification-bell {
+    /* color: var(--ispag-color-text-medium); */
+    /* font-size: 16px; */
+    /* position: relative; */
+    /* padding: 10px; */
+    /* display: inline-flex;
+    align-items: center; */
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -2px;
+    background: var(--ispag-danger-color);
+    color: var(--ispag-white);
+    border-radius: 50%;
+    /* padding: 2px 6px; */
+    font-size: 8px;
+    min-width: 14px;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+}
+
+/* ==========================================================================
+   2. SIDEBAR DES NOTIFICATIONS
+   ========================================================================== */
+#ispag-notification-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99999;
+    display: none;
+}
+
+#ispag-notification-overlay.active {
+    display: block;
+}
+
+#ispag-notification-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100%;
+    background: var(--ispag-white);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#ispag-notification-sidebar.active {
+    right: 0;
+}
+
+/* En-tête de la sidebar */
+.notification-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--ispag-color-border-light);
+    background: var(--ispag-white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ispag-color-text-dark);
+}
+
+.notification-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification-settings-button,
+.close-sidebar {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--ispag-color-text-medium);
+    padding: 5px;
+}
+
+.close-sidebar {
+    font-size: 24px;
+}
+
+/* Onglets de filtrage */
+.notification-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--ispag-color-border-light);
+    background: var(--ispag-light-grey);
+}
+
+.notification-tab {
+    flex: 1;
+    padding: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--ispag-color-text-medium);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.notification-tab:hover {
+    color: var(--ispag-color-text-dark);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.notification-tab.active {
+    color: var(--ispag-color-text-dark);
+    border-bottom-color: var(--ispag-green);
+}
+
+.notification-tab-count {
+    background: var(--ispag-danger-color);
+    color: var(--ispag-white);
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+/* Liste des notifications */
+.notification-list {
+    padding: 16px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.notification-loading {
+    text-align: center;
+    color: var(--ispag-color-text-light);
+}
+
+/* Éléments de notification */
+.notification-item {
+    padding: 15px;
+    border-bottom: 1px solid var(--ispag-color-border-light);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.notification-item:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.notification-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--ispag-color-text-dark);
+}
+
+.notification-content {
+    color: var(--ispag-color-text-medium);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.notification-time {
+    font-size: 12px;
+    color: var(--ispag-color-text-light);
+    margin-top: 5px;
+}
+
+.notification-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 8px;
+}
+
+/* ==========================================================================
+   3. MODALE DE CONFIGURATION
+   ========================================================================== */
+#ispag-notification-settings-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999999;
+    justify-content: center;
+    align-items: center;
+}
+
+#ispag-notification-settings-modal.active {
+    display: flex;
+}
+
+#ispag-notification-settings-content {
+    background: var(--ispag-white);
+    max-width: 1800px;
+    width: 100%;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: var(--ispag-badge-border-radius);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Contenu de la modale (formulaire) */
+.ispag-modal-body {
+    padding: 25px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+/* ==========================================================================
+   4. FORMULAIRE DE CONFIGURATION
+   ========================================================================== */
+.ispag-notification-description {
+    margin: 0 0 20px 0;
+    color: var(--ispag-color-text-medium);
+    font-size: 14px;
+}
+
+.ispag-notification-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.ispag-notification-table th,
+.ispag-notification-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--ispag-color-border-light);
+}
+
+.ispag-notification-table th {
+    font-weight: 600;
+    background-color: var(--ispag-light-grey);
+    color: var(--ispag-color-text-dark);
+}
+
+.ispag-notification-table td {
+    text-align: center;
+}
+
+.ispag-notification-table input[type="checkbox"] {
+    margin: 0;
+}
+
+.ispag-notification-group-header {
+    background: var(--ispag-light-grey) !important;
+}
+
+.ispag-notification-group-header td {
+    font-weight: bold;
+    color: var(--ispag-color-text-dark);
+    padding: 10px 15px;
+    text-align: left;
+}
+
+.ispag-notification-type-label {
+    padding-left: 25px !important;
+    text-align: left !important;
+}
+
+.ispag-notification-submit-wrapper {
+    margin-top: 20px;
+    text-align: left;
+}
+
+
+/* ==========================================================================
+   5. FENÊTRE CONCEPTUELLE (MODALE GLOBALE)
+   ========================================================================== */
+#ispag-conceptual-window-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000000;
+    justify-content: center;
+    align-items: center;
+}
+
+#ispag-conceptual-window-modal.active {
+    display: flex;
+}
+
+.ispag-modal-content {
+    background-color: var(--ispag-white);
+    padding: 25px;
+    border-radius: var(--ispag-badge-border-radius);
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+#ispag-conceptual-window-title {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+    color: var(--ispag-color-text-dark);
+    font-weight: 700;
+}
+
+#ispag-conceptual-window-body {
+    color: var(--ispag-color-text-medium);
+    font-size: 14px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.ispag-modal-link-wrapper {
+    margin: 15px 0 0 0;
+    text-align: center;
+    display: none;
+}
+
+.ispag-modal-link {
+    color: var(--ispag-green);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   6. MESSAGES GLOBAUX (BULK MESSAGE)
+   ========================================================================== */
+.bulk_message {
+    display: block;
+    background-color: #f0fdf4;
+    color: var(--ispag-success-color);
+    border: 1px solid #bbf7d0;
+    border-radius: var(--ispag-badge-border-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    position: relative;
+    z-index: 10;
+}
+
+.ispag-bulk-header h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #15803d;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ispag-bulk-body p {
+    margin: 0 0 15px 0;
+    line-height: 1.5;
+}
+
+/* ==========================================================================
+   MODALE DE CONFIGURATION - TABLEAU AVEC EN-TÊTE FIXE
+   ========================================================================== */
+
+
+
+/* Style pour la modale active */
+#ispag-notification-settings-modal.active {
+    display: block !important;
+}
+
+.ispag-notification-table-container {
+    max-height: 50vh; /* Hauteur maximale pour activer le défilement */
+    overflow-y: auto; /* Défilement vertical si nécessaire */
+    border: 1px solid var(--ispag-color-border-light);
+    border-radius: var(--ispag-badge-border-radius);
+    margin-top: 15px;
+}
+
+.ispag-notification-table {
+    width: 100%;
+    border-collapse: separate; /* Nécessaire pour que l'en-tête reste visible */
+    border-spacing: 0;
+}
+
+.ispag-notification-table-header {
+    position: sticky;
+    top: 0; /* Fixe l'en-tête en haut du conteneur */
+    background: var(--ispag-white);
+    z-index: 10; /* Assure que l'en-tête reste au-dessus du contenu */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre légère pour séparer visuellement l'en-tête */
+}
+
+.ispag-notification-table-header th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    background-color: var(--ispag-white);
+    color: var(--ispag-color-text-dark);
+    border-bottom: 1px solid var(--ispag-color-border-light);
+    position: sticky;
+    top: 0; /* Répété pour s'assurer que les cellules restent fixées */
+}
+
+.ispag-notification-table tbody {
+    display: block; /* Permet le défilement du corps */
+    overflow-y: auto;
+}
+
+.ispag-notification-table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.ispag-notification-table td,
+.ispag-notification-table th {
+    padding: 12px;
+    text-align: left;
+}
+
+.ispag-notification-channel-header {
+    text-align: center !important;
+    position: sticky;
+    top: 0;
+    background: var(--ispag-white);
+    z-index: 10;
+}
+
+/* Style pour les lignes du tableau */
+.ispag-notification-type-row td {
+    text-align: center;
+}
+
+.ispag-notification-type-label {
+    padding-left: 25px !important;
+    text-align: left !important;
+}
+
+/* ==========================================================================
+   PRÉFÉRENCES DE DÉCONNEXION
+   ========================================================================== */
+.ispag-disconnection-settings {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: var(--ispag-badge-border-radius);
+    border: 1px solid #e2e8f0;
+}
+
+.ispag-disconnection-settings h4 {
+    margin: 0 0 15px 0;
+    color: #1e293b;
+    font-size: 16px;
+}
+
+.ispag-disconnection-option {
+    margin-bottom: 15px;
+}
+
+.ispag-disconnection-option label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.ispag-holiday-periods {
+    margin-top: 15px;
+}
+
+.ispag-holiday-periods h5 {
+    margin: 0 0 10px 0;
+    color: #334155;
+    font-size: 14px;
+}
+
+.ispag-holiday-periods .description {
+    margin: 0 0 15px 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.ispag-holiday-period {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #fff;
+    border-radius: var(--ispag-badge-border-radius);
+    border: 1px solid #e2e8f0;
+}
+
+.ispag-holiday-period-fields {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ispag-holiday-period-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.ispag-holiday-period-fields input[type="date"] {
+    padding: 6px;
+    border: 1px solid #e2e8f0;
+    border-radius: var(--ispag-badge-border-radius);
+    font-size: 13px;
+    width: 150px;
+}
+
+.ispag-remove-holiday-period {
+    margin-left: auto;
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+#ispag-add-holiday-period {
+    margin-top: 10px;
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+/* Message de bienvenue dans la modale de configuration */
+.ispag-welcome-message {
+    margin: 0 0 25px 0;
+    padding: 20px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: var(--ispag-badge-border-radius);
+    color: #166534;
+    font-size: 14px;
+    line-height: 1.5;
+
+}
+
+.ispag-welcome-message p {
+    margin: 8px 0;
+}
+
+.ispag-welcome-message ul {
+    margin: 10px 0 15px 20px;
+    padding: 0;
+}
+
+.ispag-welcome-message li {
+    margin: 5px 0;
+}
+
+.ispag-welcome-message strong {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 10px;
+}

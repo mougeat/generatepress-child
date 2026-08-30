@@ -12,7 +12,7 @@
 </div>
 
 <div id="ispag-export-modal" class="ispag-modal" style="display:none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);">
-    <div class="ispag-modal-content" style="background: #fff; margin: 10% auto; padding: 20px; width: 400px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+    <div class="ispag-modal-content" style="background: #fff; margin: 10% auto; padding: 20px; width: 400px; border-radius: var(--ispag-badge-border-radius); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
         <h3 style="margin-top:0;"><?php _e('Export Settings', 'ispag-crm'); ?></h3>
         <hr>
         <form id="ispag-export-form">

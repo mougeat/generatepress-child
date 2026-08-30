@@ -48,8 +48,8 @@ $rejection_reasons = get_ispag_rejection_reasons();
         </div>
 
         <div style="text-align:right;">
-            <button id="ispag-cancel-lost" class="button"><?php _e('Cancel', 'ispag-crm'); ?></button>
-            <button id="ispag-confirm-lost" class="button button-primary"><?php _e('Save', 'ispag-crm'); ?></button>
+            <button id="ispag-cancel-lost" class="ispag-btn"><?php _e('Cancel', 'ispag-crm'); ?></button>
+            <button id="ispag-confirm-lost" class="ispag-btn"><?php _e('Save', 'ispag-crm'); ?></button>
         </div>
     </div>
 </div>

@@ -14,6 +14,8 @@
 
 // get_header(); // CONSERVÉ : Début du thème
 
+global $user_department;
+$target_dept = $user_department; 
 // ====================================================
 // --- DÉPENDANCES ET INITIALISATION DES DONNÉES (Contrôleur dans la Vue) ---
 // ====================================================
@@ -179,7 +181,7 @@ foreach ($associated_companies_list_full as $index => $company_id) {
 
             // --- RÉCUPÉRATION DU PROPRIÉTAIRE ET FILTRAGE DES USERS ---
             $current_owner_id = 0;
-            $target_dept = 'vaulruz_ispag'; 
+            
             $key = ISPAG_Crm_Contact_Constants::USER_DEPARTMENT;
             $companies_owner_table = ISPAG_Crm_Company_Constants::TABLE_COMPANY_OWNER;
 
@@ -247,7 +249,6 @@ $closing_dates = implode(',', $closing_date_arr);
 // --- RÉCUPÉRATION DU PROPRIÉTAIRE ET FILTRAGE DES USERS ---
 $current_owner_id = 0;
 $current_owner_name = __('Not assigned', 'ispag-crm');
-$target_dept = 'vaulruz_ispag'; 
 $key = ISPAG_Crm_Contact_Constants::USER_DEPARTMENT;
 $contacts_owner_table = ISPAG_Crm_Contact_Constants::TABLE_CONTACT_OWNER;
 
@@ -331,7 +332,7 @@ $all_roles = $wp_roles->get_names();
 
 // 2. Préparer le tableau des options avec le rôle par défaut "none"
 $role_options_data = [
-    'none' => __('(No selected role)', 'ispag-crm')
+    'none' => __('(No role selected)', 'ispag-crm')
 ];
 
 // 2b. Filtrage des rôles
@@ -444,11 +445,10 @@ get_header();
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
-
-
         <div class="ispag-detail-container ispag-contact-detail" data-contact-id="<?php echo absint($user_id); ?>">
             
-            <div class="ispag-left-panel">
+            <!-- Colonne de gauche -->
+            <div class="ispag-left-panel" data-panel="left">
                 <div class="ispag-card ispag-header-card">
                     <div class="ispag-header-top-row">
                         <div class="ispag-profile-pic <?php echo ($favicon) ? 'has-favicon' : ''; ?> ispag-popover-field ispag-avatar-trigger"
@@ -706,7 +706,8 @@ get_header();
                 </div>
             </div> 
             
-            <div class="ispag-main-content">
+            <!-- Contenu principal -->
+            <div class="ispag-main-content" data-panel="main">
                 <div class="ispag-tabs-navigation">
                     <button class="ispag-tab-btn active" data-tab="about">
                         <?php esc_html_e( 'About', 'ispag-crm' ); ?>
@@ -810,153 +811,40 @@ get_header();
                 </div>
             </div> 
             
-            <div class="ispag-right-panel">
-                <div class="ispag-card ispag-company-card">
-                    <h5>
-                        <?php _e( 'Company', 'ispag-crm' ); ?> (<?php echo count($associated_companies_list_full); ?>) 
-                        <span id="open-add-company-modal"  
-                            style="font-size: 12px; color: #007bff; cursor: pointer;" 
-                            data-contact-id="<?php echo absint($user_id); ?>">
-                            + <?php _e( 'Add', 'ispag-crm' ); ?>
-                        </span>
-                    </h5>
-                    <?php 
-                    if (class_exists( 'ISPAG_Crm_Company_Repository' ) ){
-                        $company_repo = new ISPAG_Crm_Company_Repository();
+            <!-- Colonne de droite -->
+            <!-- Wrapper qui porte la largeur flex + le bouton -->
+            <div class="ispag-right-panel-wrapper" data-panel="right-wrapper">
+                                <!-- Bouton collé au bord gauche du wrapper : il suit le panneau -->
+                <button id="toggle-right-panel" class="ispag-panel-toggle-right" type="button"
+                        aria-label="<?php esc_attr_e('Display / Mask panel', 'ispag-crm'); ?>"
+                        title="<?php esc_attr_e('Mask panel', 'ispag-crm'); ?>">
+                    <img
+                        src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-hide.png'); ?>"
+                        data-icon-hide="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-hide.png'); ?>"
+                        data-icon-show="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-display.png'); ?>"
+                        alt=""
+                        class="ispag-panel-toggle-icon">
+                </button>
+                <div class="ispag-right-panel" data-panel="right">
 
-                        
-                        
-                        foreach ($associated_companies_list_full as $company_id) {
-                            
-                            $company = $company_repo->get_company_by_viag_id($company_id);
-                            $company_app_url = home_url( '/company/' . $company->viag_id . '/' );
-
-                            // 1. On récupère le domaine (assure-tu que la propriété est bien 'compagny_domain' ou 'domain')
-                            $company_domain = !empty($company->compagny_domain) ? $company->compagny_domain : '';
-                            
-                            // 2. Génération du favicon via le domaine
-                            
-                            $favicon = $company->favicon ?? null;
-                            // if (!empty($company_domain)) {
-                            //     $favicon = "https://www.google.com/s2/favicons?domain=" . esc_attr($company_domain) . "&sz=64";
-                            // }
-
-                            // // 3. Calcul des initiales si pas de favicon
-                            // $initials = '';
-                            // if (empty($favicon)) {
-                            //     $name = $company->company_name;
-                            //     $words = explode(' ', $name);
-                            //     if (count($words) >= 2) {
-                            //         $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
-                            //     } else {
-                            //         $initials = strtoupper(substr($name, 0, 2));
-                            //     }
-                            // }
-                            ?>
-                            <div class="ispag-card" style="font-size: 14px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div class="ispag-mini-profile-pic" >
-                                        <?php
-                                        if ($favicon) {
-                                        ?>
-                                            <img src="<?php echo esc_url( $favicon ); ?>" 
-                                                alt="<?php echo esc_attr( $company_name ); ?>"
-                                                class="ispag-avatar-img"
-                                                style="width:20px; height:20px;"> 
-                                            <?php
-                                            
-                                        } else {
-                                            // Afficher les deux premières lettres du nom de l'entreprise
-                                            // $initials = strtoupper( substr( $company_name, 0, 1 ) . substr( $company_name, strpos($company_name, ' ') + 1, 1 ) );
-                                            echo esc_html( $initials ); 
-                                        }
-                                        ?>
-                                        
-                                    </div>
-                                    <strong>
-                                        <a href="<?php echo esc_url($company_app_url); ?>"><?php echo $company->company_name; ?></a>
-                                    </strong>
-                                    <span 
-                                        class="ispag-remove-association" 
-                                        data-action="remove-contact-from-company"
-                                        data-contact-id="<?php echo absint($user_id); ?>"
-                                        data-company-id="<?php echo absint($company->viag_id); ?>"
-                                        title="<?php esc_attr_e( 'Remove association', 'ispag-crm' ); ?>"
-                                        style="color: #e74c3c; cursor: pointer;"
-                                    >
-                                        <span class="dashicons dashicons-trash"></span>
-                                    </span>
-                                </div>
-                                <p style="margin: 5px 0 0;"><?php _e( 'City', 'ispag-crm' ); ?>: <?php echo $company->city; ?></p>
-                                <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm' ); ?>: <?php echo $company->phone; ?></p>
-                                
-                            </div>
-                            <?php
-                        }
-                    }
-                    
-                    ?>
-                    <input type="hidden" id="hidden_company_name"  value="<?php echo $company->company_name; ?>"/>
-                </div>
-
-                <div id="ispag-modal-container"></div>
-
-                <div class="ispag-card ispag-transactions-card">
-                    <h5>
-                        <?php _e( 'Transactions', 'ispag-crm' ); ?> (<?php echo count($transactions_list_full); ?>)
-                        <span style="font-size: 12px; color: #007bff; cursor: pointer;"><a href="<?php echo $link_new_project; ?>" target="_blank">+ <?php _e( 'Add', 'ispag-crm' ); ?></a></span>
-                    </h5>
-                    <?php 
-                    // Définition de la constante si elle n'est pas déjà définie dans un fichier de configuration
-                    if ( ! defined( 'NB_TRANSACTIONS_RIGHT' ) ) {
-                        define( 'NB_TRANSACTIONS_RIGHT', 5 );
-                    }
-                    $nb_transactions = 0;
-                    foreach ( $transactions_list_full as $transaction ): 
-                        
-                        $nb_transactions++;
-    
-                        // 2. Vérifier si on a atteint la limite après l'incrémentation
-                        // Si $nb_transactions est strictement supérieur à la limite, on arrête la boucle.
-                        if ( $nb_transactions > NB_TRANSACTIONS_RIGHT ) {
-                            break; // Arrête l'exécution de la boucle foreach
-                        }
-                        $current_stage_label      = $transaction->stage_label ?? __('Non défini', 'ispag-crm');
-                        $current_stage_color      = $transaction->stage_color ?? '#cccccc';
-
-                        // CORRECTION ICI : Le repo injecte stage_label et stage_color
-                        $current_stage_label = !empty($transaction->stage_label) ? $transaction->stage_label : __('Non défini', 'ispag-crm');
-                        $current_stage_color = !empty($transaction->stage_color) ? $transaction->stage_color : '#cccccc';
-                        ?>
-                        <div class="ispag-card" style="font-size: 14px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div class="ispag-transaction-item">
-                                    <strong>
-                                        <a href="<?php echo esc_url($transaction->get_deal_detail_link()); ?>"><?php echo $transaction->project_name; ?></a>
-                                    </strong>
-                                    <p><?php _e( 'Amount', 'ispag-crm' ); ?>: <?php echo number_format( (float)$transaction->total_excl_vat, 2, '.', '\'' ) . ' CHF'; ?></p>
-                                    <p><?php _e( 'Closing date', 'ispag-crm' ); ?>: <?php echo date_i18n( get_option('date_format'), strtotime( $transaction->closing_date ) ); ?></p>
-                                    <p><?php _e( 'Transaction phase', 'ispag-crm' ); ?>: 
-                                        <span class="ispag-status-badge" style="background-color: <?php echo esc_attr($current_stage_color); ?>; color: #fff; padding: 2px 8px; border-radius: 4px; display: inline-block;">
-                                            <?php echo esc_html($current_stage_label); ?>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    <?php 
-                    
-                    endforeach; 
-                    
-                    if ( $nb_transactions > NB_TRANSACTIONS_RIGHT ) {
-                        $company_deal_url = home_url( '/deals-list/?search=user-' . $user_id );
-                        ?>
-                        <a href="<?php echo $company_deal_url; ?>" class="ispag-button-link"><?php _e( 'Show all transactions', 'ispag-crm' ); ?></a>
                     <?php
-                    }
+                    $datas['associated_companies_list_full'] = $associated_companies_list_full;
+                    $datas['user_id'] = $user_id;
+                    ispag_get_template( 'ispag-template-company-card', [ 'datas' => $datas ] ); 
                     ?>
-                </div>
-            </div> 
+
+                    <?php
+                    $datas['transactions_list_full'] = $transactions_list_full;
+                    $datas['link_new_project'] = $link_new_project;
+                    ispag_get_template( 'ispag-template-deal-card', [ 'datas' => $datas ] ); 
+                    ?>
+                    
+
+                    <div id="ispag-modal-container"></div>
+
+                    
+                </div> 
+            </div>
             
         </div>
 
@@ -1012,21 +900,38 @@ get_header();
      * @param {string} title - Titre de la modale
      * @param {string} message - Message à afficher
      */
+    // function ispag_show_modal(title, message) {
+    //     const modal = document.getElementById('ispag-crm-modal');
+    //     document.getElementById('ispag-modal-title').innerText = title;
+    //     document.getElementById('ispag-modal-message').innerText = message;
+        
+    //     modal.style.display = 'block';
+
+    //     // Fermeture (bouton X, bouton fermer, ou clic extérieur)
+    //     const closeElements = modal.querySelectorAll('.ispag-modal-close, .ispag-btn-close');
+    //     closeElements.forEach(el => {
+    //         el.onclick = () => modal.style.display = 'none';
+    //     });
+
+    //     window.onclick = (event) => {
+    //         if (event.target == modal) modal.style.display = 'none';
+    //     };
+    // }
     function ispag_show_modal(title, message) {
         const modal = document.getElementById('ispag-crm-modal');
         document.getElementById('ispag-modal-title').innerText = title;
         document.getElementById('ispag-modal-message').innerText = message;
-        
-        modal.style.display = 'block';
+
+        modal.classList.add('is-open');
 
         // Fermeture (bouton X, bouton fermer, ou clic extérieur)
         const closeElements = modal.querySelectorAll('.ispag-modal-close, .ispag-btn-close');
         closeElements.forEach(el => {
-            el.onclick = () => modal.style.display = 'none';
+            el.onclick = () => modal.classList.remove('is-open');
         });
 
         window.onclick = (event) => {
-            if (event.target == modal) modal.style.display = 'none';
+            if (event.target == modal) modal.classList.remove('is-open');
         };
     }
 </script>
@@ -1038,5 +943,8 @@ ispag_get_template( 'deal-reason-for-rejection-modal', [] );
 ispag_get_template( 'control-notif-modal', [] ); 
 ispag_get_template( 'ispag-popover-modal', [ null ] );
 ispag_get_template( 'ispag-sequence-modal', [ null ] );
+
+
+
 get_footer(); // CONSERVÉ : Fin du thème 
 ?>

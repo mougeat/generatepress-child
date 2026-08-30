@@ -1,0 +1,241 @@
+/* ==========================================================================
+   ISPAG Attachments — Modal d'upload + Dropzone réutilisable
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------- */
+/* Modal                                                                   */
+/* ---------------------------------------------------------------------- */
+
+/*
+ * NB : position/background/z-index/display:none (état fermé) de
+ * .ispag-modal-overlay sont déjà définis dans _modal.css, groupés avec
+ * .ispag-task-modal-overlay et .ispag-product-modal — on ne les redéfinit
+ * pas ici pour éviter le doublon.
+ *
+ * Ce qui manquait : la bascule d'AFFICHAGE vers l'état ouvert. _modal.css
+ * ne fixe que l'état fermé (display:none) ; rien ne repasse en display:flex
+ * quand on ajoute la classe .is-open (le JS ajoute bien la classe, mais
+ * sans cette règle le display:none de _modal.css continue de s'appliquer).
+ */
+.ispag-modal-overlay {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.ispag-modal-overlay.is-open {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+}
+
+.ispag-modal-upload {
+    background: #ffffff;
+    border-radius: var(--ispag-card-border-radius);
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 24px -4px rgba(16, 24, 40, 0.1), 0 8px 8px -4px rgba(16, 24, 40, 0.04);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.15s ease;
+}
+
+.ispag-modal-overlay.is-open .ispag-modal-upload {
+    transform: translateY(0) scale(1);
+}
+
+.ispag-modal-upload__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--ispag-border, #E4E7EC);
+}
+
+.ispag-modal__header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ispag-text-primary, #101828);
+}
+
+
+.ispag-modal__body {
+    padding: 20px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Dropzone                                                                */
+/* ---------------------------------------------------------------------- */
+
+.ispag-dropzone {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ispag-dropzone__field {
+    border: 2px dashed var(--ispag-border, #E4E7EC);
+    border-radius: 12px;
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ispag-dropzone__field:hover,
+.ispag-dropzone__field:focus-visible {
+    border-color: var(--ispag-teal, #0F6F63);
+    background: #F6FBFA;
+    outline: none;
+}
+
+.ispag-dropzone.is-dragover .ispag-dropzone__field {
+    border-color: var(--ispag-teal, #0F6F63);
+    background: #F0F8F6;
+}
+
+.ispag-dropzone__icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: var(--ispag-icon-bg, #F2F4F7);
+    color: var(--ispag-text-secondary, #667085);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.ispag-dropzone__label {
+    margin: 0 0 4px;
+    font-size: 14px;
+    color: var(--ispag-text-primary, #101828);
+}
+
+.ispag-dropzone__label span {
+    color: var(--ispag-teal, #0F6F63);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.ispag-dropzone__hint {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ispag-text-muted, #98A2B3);
+}
+
+/* Aperçu du fichier sélectionné */
+
+.ispag-dropzone__file-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--ispag-border, #E4E7EC);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.ispag-dropzone__file-icon {
+    font-size: 16px;
+    flex: 0 0 auto;
+}
+
+.ispag-dropzone__file-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ispag-text-primary, #101828);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: normal;
+}
+
+.ispag-dropzone__file-remove {
+    flex: 0 0 auto;
+    background: none;
+    border: none;
+    color: var(--ispag-text-muted, #98A2B3);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: var(--ispag-badge-border-radius);
+}
+
+.ispag-dropzone__file-remove:hover {
+    background: var(--ispag-danger-bg, #FEF3F2);
+    color: var(--ispag-danger-text, #B42318);
+}
+
+/* Sélecteur de type de document */
+
+.ispag-dropzone__doctype {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ispag-dropzone__doctype label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ispag-text-primary, #101828);
+}
+
+.ispag-dropzone__doctype-select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    border: 1px solid var(--ispag-border, #E4E7EC);
+    border-radius: var(--ispag-badge-border-radius);
+    font-size: 14px;
+    color: var(--ispag-text-primary, #101828);
+    background: #ffffff;
+}
+
+.ispag-dropzone__doctype-select:focus-visible {
+    outline: 2px solid var(--ispag-teal, #0F6F63);
+    outline-offset: 1px;
+    border-color: var(--ispag-teal, #0F6F63);
+}
+
+/* Action */
+
+.ispag-dropzone__actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+.ispag-dropzone__submit:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.ispag-dropzone__status {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ispag-text-secondary, #667085);
+    min-height: 14px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Badge ClassCss (achats_historique) dans le tableau des pièces jointes  */
+/* ---------------------------------------------------------------------- */
+.ispag-attachments-table-wrapper{
+    background-color: var(--ispag-white);
+    border-radius: var(--ispag-card-border-radius);
+    border-color: var(--ispag-border);
+}
+/* .ispag-data-table tr[class*="doc-"] td:first-of-type {
+    border-left: 3px solid var(--ispag-teal, #0F6F63);
+} */
+
+.ispag-dropzone__doctype-select optgroup {
+    font-weight: bold;
+    background-color: #f5f5f5;
+    padding: 4px 0;
+}
