@@ -186,48 +186,34 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden; /* clippe la vignette aux coins arrondis du conteneur */
 }
 
-.ispag-docu-card__icon--pdf {
-    border: 1.5px solid var(--ispag-teal);
-    font-size: 9px;
-    font-weight: 700;
-    color: var(--ispag-teal);
-    letter-spacing: 0.3px;
+/* La règle globale `a[target="_blank"]::after` (icône Font Awenome "lien
+   externe") s'applique aussi à ce lien puisqu'il ouvre en target="_blank" :
+   elle se superposait à la vignette, donnant l'impression d'un petit carré
+   blanc par-dessus l'aperçu. On la neutralise ici, seulement pour cette
+   vignette (le lien texte du nom de fichier garde son icône). */
+.ispag-docu-card__icon[target="_blank"]::after {
+    content: none !important;
+    margin-left: 0;
 }
 
-.ispag-docu-card__icon--pdf::before {
-    content: "PDF";
-}
-
-.ispag-docu-card__icon--image,
-.ispag-docu-card__icon--doc,
-.ispag-docu-card__icon--xls,
-.ispag-docu-card__icon--file {
-    background: var(--ispag-icon-bg);
-}
-
-.ispag-docu-card__icon--image::before {
-    content: "";
-    width: 18px;
-    height: 18px;
+/* Vignette réelle injectée par wp_get_attachment_image() (photo, page de
+   PDF si Imagick/Ghostscript dispo, ou icône générique WordPress en repli) */
+.ispag-docu-card__thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* évite de rogner les icônes génériques transparentes */
     display: block;
-    background-color: var(--ispag-text-secondary);
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpath d='M21 15l-5-5-9 9'/%3E%3C/svg%3E") center / contain no-repeat;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='8.5' cy='8.5' r='1.5'/%3E%3Cpath d='M21 15l-5-5-9 9'/%3E%3C/svg%3E") center / contain no-repeat;
+    border-radius: inherit;
 }
 
-.ispag-docu-card__icon--doc::before,
-.ispag-docu-card__icon--xls::before,
-.ispag-docu-card__icon--file::before {
-    content: "";
-    width: 16px;
-    height: 18px;
-    display: block;
-    background-color: var(--ispag-text-secondary);
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3C/svg%3E") center / contain no-repeat;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6'/%3E%3C/svg%3E") center / contain no-repeat;
-}
+/* Les anciennes icônes décoratives par type (::before "PDF", pictos SVG
+   pour image/doc/xls/file) ont été retirées : elles se superposaient à la
+   vraie vignette injectée par wp_get_attachment_image() dans .ispag-docu-card__thumb.
+   Le fallback visuel pour les types sans aperçu réel (doc, xls...) est
+   désormais géré nativement par WordPress via l'icône générique du mime-type. */
 
 /* ---------------------------------------------------------------------- */
 /* Meta (nom + date) et bouton supprimer                                  */

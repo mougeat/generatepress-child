@@ -281,6 +281,7 @@
     overflow: hidden;
     border: 1px solid #eee;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
 }
 
 .ispag-mini-profile-pic {
@@ -295,6 +296,39 @@
     font-weight: bold;
     color: #555;
     border: 1px solid #ddd;
+    object-fit: cover;
+}
+.ispag-kanban-mini-profile-pic {
+    width: 23px;
+    height: 23px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    overflow: hidden;
+    font-weight: bold;
+    color: #555;
+    border: 1px solid #ddd;
+    object-fit: cover;
+}
+
+
+
+.ispag-company-initials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--ispag-color-text-medium);
+    color: #fff;
+    font-size: 0.85em;
+    font-weight: 600;
+    border: 1px solid #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
 }
 
 /* Style pour le label au-dessus du nom */
@@ -1031,4 +1065,13 @@ body.no-select {
         flex-direction: row;
         flex-wrap: wrap;
     }
+}
+
+
+.contact_link{
+    font-weight: bold;
+    color: var(--ispag-blue);
+}
+.contact_link:hover{
+    text-decoration: underline;
 }

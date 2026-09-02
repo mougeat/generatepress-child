@@ -16,16 +16,18 @@
 .kanban-column {
 
     flex-shrink: 0; 
-    width: 300px; /* Ajustez selon vos besoins */
-    margin-right: 20px;
-    background-color: var(--ispag-light-grey); /* Couleur de fond de la colonne */
-    border-radius: var(--ispag-btn-border-radius);
+    width: 280px; /* Ajustez selon vos besoins */
+    margin-right: 5px;
+    background-color: var(--ispag-white); /* Couleur de fond de la colonne */
+    border-radius: var(--ispag-badge-border-radius);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
     display: flex; /* Nécessaire pour forcer le footer en bas */
     flex-direction: column;
+    overflow: hidden;
 }
 .kanban-column-body {
     /* La hauteur maximale est cruciale pour activer le défilement */
-    max-height: 50vh; /* '60vh' est un exemple, ajustez à une valeur en pixels (ex: 500px) ou en vh */
+    max-height: 52vh; /* '60vh' est un exemple, ajustez à une valeur en pixels (ex: 500px) ou en vh */
     overflow-y: auto; /* Active le défilement vertical si le contenu dépasse la max-height */
     padding: 10px;
     flex-grow: 1; /* Assure que le corps prend l'espace restant */
@@ -33,13 +35,14 @@
 
 .kanban-column-header {
     margin-bottom: 10px;
+    padding-left: 10px;
     padding-bottom: 5px;
     border-bottom: 1px solid var(--ispag-border);
 }
 
 .kanban-column-header h4 {
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1em;
     font-weight: 600;
     color: var(--ispag-color-text-dark);
 }
@@ -48,9 +51,10 @@
  */
 .kanban-column-footer {
     margin-top: 10px;
+    padding: 5px;
     padding-top: 10px;
     border-top: 1px dashed var(--ispag-border);
-    font-size: 0.9em;
+    font-size: 0.6em;
     color: var(--ispag-color-text-medium);
 }
 
@@ -74,6 +78,7 @@
     font-style: italic;
     text-align: center;
     padding: 15px 0;
+    font-size: 0.65em;
 }
 
 /** * CARTE DU DEAL
@@ -82,8 +87,9 @@
     background: var(--ispag-white);
     border-radius:var(--ispag-btn-border-radius);
     padding: 12px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
     cursor: grab; /* Indique qu'elle est déplaçable */
+    border: 1px solid #CCCCCC;
     border-left: 5px solid #ccc; /* La couleur de l'étape est définie ici par PHP */
     transition: box-shadow 0.2s, transform 0.2s;
 }
@@ -94,6 +100,7 @@
 }
 
 .deal-title a {
+    font-size: 0.8em;
     font-weight: 700;
     color: var(--ispag-blue); /* Couleur de lien WordPress standard */
     text-decoration: none;
@@ -102,13 +109,13 @@
 }
 
 .deal-info {
-    font-size: 0.9em;
+    font-size: 0.65em;
     color: var(--ispag-color-text-medium);
     margin: 2px 0;
 }
 
 .deal-owner {
-    font-size: 0.85em;
+    font-size: 0.65em;
     color: var(--ispag-color-text-medium);
     margin: 2px 0;
     margin-top: 8px;
@@ -116,10 +123,15 @@
     border-top: 1px dotted #eee;
 }
 .deal-relation {
-    font-size: 0.85em;
-    color: var(--ispag-color-text-medium);   
-    margin: 2px 0; 
+    display: flex;
+    align-items: center;
+    font-size: 0.65em;
+    color: var(--ispag-color-text-medium);
+    border-top: 1px solid #CCCCCC;
+    padding-top: 5px;
+    margin: 2px 0;
 }
+
 
 /* Styles pour le Drag & Drop (si vous utilisez une bibliothèque) */
 .dragging {

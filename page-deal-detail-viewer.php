@@ -261,7 +261,10 @@ get_header();
                                     <select class="ispag-stage-updater" 
                                             data-deal-id="<?php echo esc_attr($deal->id); ?>" 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
-                                        
+                                        <option value="" 
+                                                <?php selected($current_stage_key, $stage->stage_key); ?>>
+                                            <?php echo __('Select current stage', 'ispag-crm'); ?>
+                                        </option>
                                         <?php foreach ($all_stages as $stage) : ?>
                                             <option value="<?php echo esc_attr($stage->stage_key); ?>" 
                                                     data-label="<?php echo esc_html($stage->stage_label); ?>"

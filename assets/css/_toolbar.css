@@ -1,0 +1,58 @@
+/* Barre d'outils (style imité) */
+.ispag-toolbar {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    border: 1px solid #ccd0d4;
+    border-radius: var(--ispag-btn-border-radius);
+    background-color: #ffffff;
+    padding: 8px 10px;
+    margin-bottom: 15px;
+    /* font-size: 0.6em; */
+    color: #666;
+    user-select: none;
+    width: 90%;
+}
+
+.ispag-toolbar span, .ispag-toolbar .dashicons {
+    cursor: pointer;
+}
+.ispag-toolbar span {
+    margin-right: 10px;
+    cursor: pointer;
+    color: #555;
+    font-size: 1.1em;
+    transition: color 0.2s;
+}
+
+.ispag-toolbar span:hover {
+    color: #0073aa;
+}
+
+
+.ispag-toolbar select, 
+.ispag-toolbar input[type="text"]
+{
+    /* padding: 8px; */
+    border: 1px solid #ccc;
+    border-radius: var(--ispag-btn-border-radius);
+    /* min-width: 120px;  */
+    box-shadow: none; 
+    /* line-height: 1.2; */
+    font-size: 0.7em;
+}
+
+.ispag-board-controls {
+    display: flex;
+    align-items: center; /* Aligne verticalement au centre */
+    justify-content: space-between; /* Espace le filtre à gauche et le bouton à droite */
+    gap: 15px; /* Espace minimum entre les éléments */
+    flex-wrap: wrap; /* Permet un retour à la ligne propre sur mobile */
+}
+
+/* Optionnel : s'assure que le formulaire interne s'aligne bien en ligne aussi */
+.ispag-board-controls form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

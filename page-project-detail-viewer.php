@@ -100,8 +100,27 @@ $owner_list_source = implode(';', $owner_list_arr);
 //-----------------------------------------------------------------------
 // Création du badge prochaine étape du projet
 //-----------------------------------------------------------------------
-$bgcolor = !empty($project->next_phase->Color) ? esc_attr($project->next_phase->Color) : '#ccc';
-$next_step_badge = '<span class="ispag-state-badge" style="background-color:' . $bgcolor . ';">' . esc_html($project->next_phase->TitrePhase ?? 'Non défini') . '</span>';
+if(current_user_can('manage_order')){
+    $context = ISPAG_Project_Phase_Resolver::CONTEXT_INTERNAL;
+}
+else{
+    $context = ISPAG_Project_Phase_Resolver::CONTEXT_CLIENT;
+}
+$next = ISPAG_Project_Phase_Resolver::get_next_pending_phase($deal_id, $context);
+
+if ($next)
+{
+    $phase_title = __($next['phase']->TitrePhase, 'creation-reservoir');
+    $badge_color = $next['phase']->Color ?: '#ccc';
+}
+else
+{
+    $phase_title = __('Completed', 'creation-reservoir');
+    $badge_color = '#00C875';
+}
+
+// $bgcolor = !empty($project->next_phase->Color) ? esc_attr($project->next_phase->Color) : '#ccc';
+$next_step_badge = '<span class="ispag-next-step-badge step-badge" style="color:' . $badge_color . '; border:1px solid ' . $badge_color . ';">' . esc_html($phase_title ?? 'Non défini') . '</span>';
 
 
 //-----------------------------------------------------------------------
@@ -210,14 +229,19 @@ if (class_exists('ISPAG_Note_Manager'))
                 <div class="ispag-card ispag-project-btn-card">
 
                     <?php if ($can_manage_order): ?>
-                        <a href="<?= esc_url(home_url( '/liste-des-achats/?search=' . $deal_id . '' )) ?>" target="_blank" class="ispag-btn ispag-btn-secondary-outlined"><?= esc_html(__('To purchase', 'ispag-crm')) ?></a>
+                        <a href="<?= esc_url(home_url( '/liste-des-achats/?search=' . $deal_id . '' )) ?>" target="_blank" class="ispag-btn ispag-btn-secondary-outlined"><span class="dashicons dashicons-cart"></span> <?= esc_html(__('To purchase', 'ispag-crm')) ?></a>
+                        <br>
                     <?php endif; ?>
                     <?php
-                    echo $article_renderer->render_project_action_button($deal_id);
+                    echo $article_renderer->render_project_action_button($deal_id, $project->isQotation);
                     ?>
-                </div>
+                </div> 
 
+                 <?php
+                echo $article_renderer->bulk_selected_article($deal_id, $project->isQotation);
+                ?>
             </div>
+           
 
             <!-- Contenu principal -->
             <div class="ispag-main-content" data-panel="main">
@@ -261,12 +285,13 @@ if (class_exists('ISPAG_Note_Manager'))
                     <div id="ispag-tab-details" class="ispag-tab-pane">
                         <div class="ispag-card">
                             <?php
-                            $article_renderer->display_ispag_project_details($deal_id, 999);
+                            
+                            $article_renderer->display_ispag_project_details($deal_id, $project);
                             ?>
                         </div>
                     </div>
 
-                    <div id="ispag-tab-fallowup" class="ispag-tab-pane"></div>
+                    <div id="ispag-tab-fallowup" class="ispag-tab-pane" data-deal-id="<?php echo esc_attr($deal_id); ?>"></div>
 
                     <div id="ispag-tab-document" class="ispag-tab-pane">
                         <div class="ispag-card ispag-docu-card"

@@ -91,7 +91,7 @@ get_header();
 
         
 
-        <div class="ispag-toolbar" style="background: #f6f7f7; padding: 15px; border: 1px solid #ccd0d4; margin-bottom: 20px;">
+        <div class="ispag-toolbar">
             <form method="get" class="ispag-contact-filter-form" action="<?php echo esc_url( $current_url ); ?>">
                 <div class="filter-group">
                     <input type="search" name="search" value="<?php echo esc_attr( $search ); ?>" placeholder="<?php esc_attr_e('Name or Email', 'ispag-crm'); ?>" />

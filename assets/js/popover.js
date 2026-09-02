@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentTarget = null;
     let itiPopover = null;
 
-    console.log("🚀 ISPAG : Script popover.js chargé");
+// console.log("🚀 ISPAG : Script popover.js chargé");
 
     // --- NOUVEAU : CHARGEMENT FORCÉ DES UTILS ---
     function ensureIntlUtils() {
@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof intlTelInputUtils !== 'undefined') {
                 resolve(true);
             } else {
-                console.log("⏳ ISPAG : Chargement manuel de utils.js...");
+// console.log("⏳ ISPAG : Chargement manuel de utils.js...");
                 const script = document.createElement('script');
                 script.src = ispag_params.utils_url;
                 script.onload = () => {
-                    console.log("✅ ISPAG : utils.js chargé avec succès.");
+// console.log("✅ ISPAG : utils.js chargé avec succès.");
                     resolve(true);
                 };
                 script.onerror = () => {
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         try {
                             const formatted = intlTelInputUtils.formatNumber(rawValue, "CH", intlTelInputUtils.numberFormat.INTERNATIONAL);
                             displaySpan.innerText = formatted;
-                            console.log("✨ Formatage appliqué :", formatted);
+// console.log("✨ Formatage appliqué :", formatted);
                             observer.unobserve(field);
                         } catch (e) {
                             console.error("❌ Erreur formatage:", e);
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function initPhoneObservation() {
         const fields = document.querySelectorAll('.ispag-popover-field[data-field-type="phone"]');
         if (fields.length > 0) {
-            console.log(`📡 ISPAG : Observation lancée sur ${fields.length} champ(s)`);
+// console.log(`📡 ISPAG : Observation lancée sur ${fields.length} champ(s)`);
             fields.forEach(field => phoneObserver.observe(field));
         }
     }
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 2. GESTION DU CLIC (Conservation de ta logique existante)
     document.querySelectorAll('.ispag-popover-field').forEach(field => {
         field.addEventListener('click', function(e) {
-            console.log("🖱️ Clic sur champ:", this.dataset.name);
+// console.log("🖱️ Clic sur champ:", this.dataset.name);
             currentTarget = this;
             const type = this.dataset.fieldType;
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; // On ne montre pas le popover classique pour l'avatar
             }
 
-            console.log("🖱️ Clic sur champ:", this.dataset.name);
+// console.log("🖱️ Clic sur champ:", this.dataset.name);
             const value = this.dataset.value || '';
             const optionsString = this.dataset.options || '';
 
@@ -155,10 +155,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const contactId = (currentTarget.dataset.contactId && currentTarget.dataset.contactId !== "undefined") ? currentTarget.dataset.contactId : null;
         const companyId = (currentTarget.dataset.companyId && currentTarget.dataset.companyId !== "undefined") ? currentTarget.dataset.companyId : null;
 
-        console.log('ID Check:', { contactId, companyId, fieldName });
+// console.log('ID Check:', { contactId, companyId, fieldName });
         
         if (!contactId && !companyId) {
-            console.log('ERRREUR AUCUN ID DE DEFINI');
+// console.log('ERRREUR AUCUN ID DE DEFINI');
             popover.style.display = 'none';
             return;
         }
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function saveField(fieldName, value, contactId, companyId) {
         console.group(`💾 ISPAG SAVE: ${fieldName}`);
-        console.log('received datas', fieldName, value, contactId, companyId);
+// console.log('received datas', fieldName, value, contactId, companyId);
         const saveBtn = popover.querySelector('.popover-save');
         const originalBtnText = saveBtn.innerText;
         saveBtn.innerText = '...'; 
@@ -190,13 +190,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData();
         if (companyId) {
-            console.log('IN save_company_field');
+// console.log('IN save_company_field');
             formData.append('action', 'save_company_field');
             formData.append('company_id', companyId);
         } 
         // Sinon, si on a un ID de contact
         else if (contactId) {
-            console.log('IN save_contact_field');
+// console.log('IN save_contact_field');
             formData.append('action', 'save_contact_field');
             formData.append('contact_id', contactId);
         } 
@@ -282,11 +282,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // LOGIQUE D'AIGUILLAGE
         if (companyId && companyId !== "undefined" && companyId !== "") {
-            console.log("🏢 Sauvegarde Favicon Entreprise ID:", companyId);
+// console.log("🏢 Sauvegarde Favicon Entreprise ID:", companyId);
             formData.append('action', 'save_company_favicon');
             formData.append('company_id', companyId);
         } else {
-            console.log("👤 Sauvegarde Avatar Contact ID:", contactId);
+// console.log("👤 Sauvegarde Avatar Contact ID:", contactId);
             formData.append('action', 'save_contact_avatar');
             formData.append('contact_id', contactId);
         }

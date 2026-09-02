@@ -107,7 +107,7 @@ get_header();
             </h1>
         </header>
 
-        <div class="ispag-toolbar" style="background: #f6f7f7; padding: 15px; border: 1px solid #ccd0d4; margin-bottom: 20px;">
+        <div class="ispag-toolbar">
             <form method="get" class="ispag-search-form">
                 <input type="hidden" name="orderby" value="<?php echo esc_attr($orderby); ?>" />
                 <input type="hidden" name="order" value="<?php echo esc_attr($order); ?>" />

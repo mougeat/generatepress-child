@@ -218,6 +218,7 @@
 .ispag-dropzone__status {
     margin: 0;
     font-size: 12px;
+    padding-left: 10px;
     color: var(--ispag-text-secondary, #667085);
     min-height: 14px;
 }

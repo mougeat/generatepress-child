@@ -37,9 +37,9 @@ $deal_id                        = $datas['deal_id']    ?? '';
         ?>
         <div class="ispag-card" style="font-size: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div class="ispag-mini-profile-pic">
+                <div>
                     <?php if ($contact->avatar_url) : ?>
-                        <img src="<?php echo $contact->avatar_url; ?>" alt="<?php echo esc_attr($contact->display_name); ?>" style="width:20px; height:20px;">
+                        <img src="<?php echo $contact->avatar_url; ?>" alt="<?php echo esc_attr($contact->display_name); ?>" class="ispag-mini-profile-pic">
                     <?php else :
                         $initials = strtoupper(substr($contact->display_name, 0, 1) . substr($contact->display_name, strpos($contact->display_name, ' ') + 1, 1)); ?>
                         <span style="font-size: 12px;"><?php echo esc_html($initials); ?></span>
@@ -60,8 +60,8 @@ $deal_id                        = $datas['deal_id']    ?? '';
             </div>
             <p style="margin: 5px 0 0;"><?php _e('Function', 'ispag-crm'); ?>: <?php echo esc_html($contact->lead_function ?? ''); ?></p>
             <p style="margin: 5px 0 0;"><?php _e('Last Contact', 'ispag-crm'); ?>: <?php echo date_i18n(get_option('date_format'), strtotime($contact->last_contact_date)); ?></p>
-            <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm'); ?>: <?php echo esc_html( $contact->phone ); ?></p>
-            <p style="margin: 5px 0 0;"><?php _e( 'Email', 'ispag-crm'); ?>: <?php echo esc_html( $contact->email ); ?></p>
+            <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm'); ?>: <a href="tel:<?php echo esc_html( $contact->phone ); ?>" class="contact_link ispag-phone-display"><?php echo esc_html( $contact->phone ); ?></a></p>
+            <p style="margin: 5px 0 0;"><?php _e( 'Email', 'ispag-crm'); ?>: <a href="mailto:<?php echo esc_html( $contact->email ); ?>" class="contact_link"><?php echo esc_html( $contact->email ); ?></a></p>
         </div>
     <?php
     endforeach;

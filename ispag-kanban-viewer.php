@@ -124,18 +124,18 @@ if ( $deal_repo && $stage_repo ) {
                     <?php 
                     the_title( '<h1 class="entry-title">', '</h1>' ); 
                     ?>
-                    <p class="ispag-board-controls">
+                    <div class="ispag-board-controls">
                         
                         <?php 
                             // Appelle le template et lui passe les données
                             ispag_get_template( 'deal-search', [ 'kanban_filters' => $kanban_filters ] ); 
                         ?>
-
-                        <a href="<?php echo home_url('/deals-list/'); ?>" class="button ispag-btn-secondary-outlined">
+ 
+                        <a href="<?php echo home_url('/deals-list/'); ?>" class="ispag-btn small ispag-btn-secondary-outlined">
                             <span class="dashicons dashicons-list-view"></span> <?php _e('Table view', 'ispag-crm'); ?>
                         </a>
                         
-                        </p>
+                    </div>
                 </header>
                 
                 <div class="entry-content ispag-kanban-content">
@@ -185,16 +185,14 @@ if ( $deal_repo && $stage_repo ) {
                                                      style="border-left-color: <?php echo $stage_color; ?>;"
                                                      draggable="true"
                                                 >
-                                                    <p class="deal-title">
-                                                        <strong>
+                                                    <div class="deal-title">
                                                             <a href="<?php echo $deal->get_deal_detail_link(); ?>" class="ispag-deal-title-link">
                                                                 <?php echo esc_html( $deal->project_name ); ?>
                                                                 <?php if (isset($deal->is_copie) && $deal->is_copie == 1) : ?>
                                                                     <span class="dashicons dashicons-admin-page ispag-copy-icon"></span>
                                                                 <?php endif; ?>
                                                             </a>
-                                                        </strong>
-                                                    </p>
+                                                    </div>
                                                     <p class="deal-info amount">
                                                         <?php _e('Total amount', 'ispag-crm'); ?>: <?php echo number_format( (float) $deal->total_excl_vat, 0, '.', '\'' ); ?> CHF
                                                     </p>
@@ -204,16 +202,37 @@ if ( $deal_repo && $stage_repo ) {
                                                     <p class="deal-info last-contact-date">
                                                         <?php _e('Last contact', 'ispag-crm'); ?>: <?php echo $last_activity_date; ?>
                                                     </p>
-                                                    <p class="deal-owner"></p> 
-                                                    <p class="deal-relation"><?php _e('Company', 'ispag-crm'); ?>: <?php echo $deal->associated_company_name; ?></p>
-                                                    <p class="deal-relation"><?php _e('Contact', 'ispag-crm'); ?>: <?php echo $deal->associated_contact_names; ?></p>
+
+                                                    <div class="deal-relation">
+                                                        <?php if ( ! empty( $deal->associated_company_favicon ) ) : ?>
+                                                            <img 
+                                                                src="<?php echo esc_url( $deal->associated_company_favicon ); ?>"
+                                                                alt="<?php echo esc_attr( $deal->associated_company_name ); ?>"
+                                                                title="<?php echo esc_attr( $deal->associated_company_name ); ?>"
+                                                                class="ispag-kanban-mini-profile-pic" >
+                                                        <?php else : ?>
+                                                            <span class="ispag-company-initials"><?php echo esc_html( $deal->associated_company_initials ); ?></span>
+                                                        <?php endif; ?>
+                                                        <?php if ( ! empty( $deal->associated_contacts ) ) : ?>
+                                                            <!-- <div class="ispag-contact-avatars"> -->
+                                                                <?php foreach ( $deal->associated_contacts as $contact ) : ?>
+                                                                    <img
+                                                                        src="<?php echo esc_url( $contact['avatar_url'] ); ?>"
+                                                                        alt="<?php echo esc_attr( $contact['name'] ); ?>"
+                                                                        title="<?php echo esc_attr( $contact['name'] ); ?>"
+                                                                        class="ispag-kanban-mini-profile-pic"
+                                                                    >
+                                                                <?php endforeach; ?>
+                                                            <!-- </div> -->
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </div>
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <p class="no-deals-message"><?php echo __( 'No deal', 'ispag-crm' ); ?></p>
                                         <?php endif; ?>
                                     </div>
-                                    
+                                     
                                     <div class="kanban-column-footer">
                                         <p class="total-amount"><?php _e('Total amount', 'ispag-crm'); ?>: **<?php echo number_format( $total_amount, 0, '.', '\'' ); ?> CHF**</p>
                                         <p class="weighted-amount">(<?php echo $stage_model->probability; ?>%) <?php _e('Weighted amount', 'ispag-crm'); ?>: **<?php echo number_format( $weighted_amount, 0, '.', '\'' ); ?> CHF**</p>

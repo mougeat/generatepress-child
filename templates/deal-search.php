@@ -5,7 +5,7 @@
  */
 ?>
 
-<div class="ispag-toolbar" style="background: #f6f7f7; padding: 15px; border: 1px solid #ccd0d4; margin-bottom: 20px;">
+<div class="ispag-toolbar">
     <input type="text" id="ispag-kanban-search" 
             placeholder="<?php _e('Search Project, Ref or Company...', 'ispag-crm'); ?>"
             class="ispag-search-field" 
@@ -78,7 +78,7 @@
         </select>
     </span>
 
-    <button id="ispag-clear-filters-btn" class="ispag-btn ispag-btn-secondary-outlined">
+    <button id="ispag-clear-filters-btn" class="ispag-btn small ispag-btn-secondary-outlined">
         <?php _e('Clear Filters', 'ispag-crm'); ?>
     </button>
 </div>

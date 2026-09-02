@@ -10,6 +10,10 @@
   border: none;
 }
 
+.ispag-btn .small{
+    font-size: 0.6em;
+}
+
 .ispag-btn:hover { background-color: var(--ispag-color-primary-hover); color:var(--ispag-white); }
 .ispag-btn:active { background-color: var(--ispag-color-primary-hover); color:var(--ispag-white); }
 
@@ -304,4 +308,11 @@
     background-color: var(--ispag-icon-bg) !important;
     color: var(--ispag-text-primary) !important;
     border-color: var(--ispag-border) !important;
+}
+
+.ispag-btn-spinner-icon.dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
 }
