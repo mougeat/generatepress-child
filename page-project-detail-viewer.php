@@ -5,6 +5,34 @@
  * Description: Affiche la vue détaillée d'un project (Deal/Projet) ISPAG.
  */
 
+// 1. Récupération de l'URL exacte en cours (avec les arguments de requête s'il y en a)
+global $wp;
+$current_url = home_url( add_query_arg( $_GET, $wp->request ) );
+
+// 2. Si l'utilisateur n'est pas connecté, redirection vers le login avec l'URL de retour
+if ( ! is_user_logged_in() ) {
+    wp_safe_redirect( wp_login_url( $current_url ) );
+    exit;
+}
+
+if ( ! current_user_can( 'read_orders' ) ) {
+    get_header();
+    ?>
+    <div id="primary" class="content-area">
+        <main id="main" class="site-main">
+            <div class="ispag-alert ispag-alert-danger" style="margin: 50px auto; max-width: 600px; padding: 20px;">
+                <span class="dashicons dashicons-lock"></span>
+                <strong><?php esc_html_e('Restricted access', 'ispag-crm'); ?> :</strong>
+                <?php esc_html_e('You do not have the necessary rights to view this order.', 'ispag-crm'); ?>
+            </div>
+        </main>
+    </div>
+    <?php
+    get_footer();
+    exit; // Utiliser exit pour stopper définitivement le script PHP
+}
+
+// 2. Si la permission est OK, on charge le header et le reste du code
 get_header();
 
 $deal_id = get_query_var('deal_id');
@@ -157,12 +185,17 @@ if (class_exists('ISPAG_Note_Manager'))
         $notes_list_full = "Aucune activité trouvée.";
     }
 }
+
+
+$can_manage_order = current_user_can('manage_order');
+$edit_content = current_user_can('manage_order') ? 'true' : 'false';
+
 ?>
+
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
         <div class="ispag-detail-container ispag-company-detail">
-
 
             <!-- Colonne de gauche -->
             <div class="ispag-left-panel" data-panel="left">
@@ -172,7 +205,7 @@ if (class_exists('ISPAG_Note_Manager'))
                             <h4
                                 id="editable-project-title"
                                 
-                                contenteditable="true"
+                                contenteditable="<?php echo esc_attr($edit_content); ?>"
                                 spellcheck="false"
                                 data-name="ObjetCommande"
                                 data-value="<?php echo esc_html(stripslashes($project->ObjetCommande)); ?>"
@@ -184,6 +217,7 @@ if (class_exists('ISPAG_Note_Manager'))
                                 <?php echo esc_html($project->ObjetCommande); ?>
                             </h4>
                             <div  class="fields-prices">
+                            <p><?php _e('version', 'creation-reservoir'); ?> <?php echo esc_html($project->version); ?></p>
                             <p>
                                 <?php echo __('Amount', 'ispag-crm'); ?> : <?php echo number_format_i18n($project_revenue['revenu'], 2) . ' CHF'; ?>
                             </p>
@@ -278,14 +312,15 @@ if (class_exists('ISPAG_Note_Manager'))
                     <?php if ($can_manage_order): ?>
                         <div id="ispag-tab-activity" class="ispag-tab-pane">
 
-                            <?php echo $notes_list_full; ?>
+                            <?php
+                            echo $notes_list_full;
+                            ?>
                         </div>
                     <?php endif; ?>
 
                     <div id="ispag-tab-details" class="ispag-tab-pane">
                         <div class="ispag-card">
                             <?php
-                            
                             $article_renderer->display_ispag_project_details($deal_id, $project);
                             ?>
                         </div>

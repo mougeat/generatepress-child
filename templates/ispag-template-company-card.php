@@ -15,8 +15,8 @@ $initials                           = $datas['initials']    ?? '';
 <div class="ispag-card ispag-company-card">
     <h5>
         <?php _e( 'Company', 'ispag-crm' ); ?> (<?php echo count($associated_companies_list_full); ?>) 
-        <span id="open-add-company-modal"  
-            style="font-size: 12px; color: #007bff; cursor: pointer;" 
+        <span id="open-add-company-modal" class="add_relation-btn"
+            
             data-contact-id="<?php echo absint($user_id); ?>">
             + <?php _e( 'Add', 'ispag-crm' ); ?>
         </span>

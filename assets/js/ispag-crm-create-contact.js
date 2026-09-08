@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const triggerBtn    = document.querySelector('.trigger-add-contact');
     const closeBtns     = document.querySelectorAll('.ispag-modal-close');
     const department    = document.getElementById('user_departement');
+    const $sidebar = $('#ispag-contact-sidebar-modal');
+    const $sidebarContent = $sidebar.find('.ispag-sidebar-content');
+    const SIDEBAR_WIDTH = '500px'; // ou la largeur souhaitée
 
     // Sécurité : On ne continue l'initialisation que si on est sur une page avec le formulaire/sidebar
     if (!sidebar || !form) return;
@@ -37,19 +40,36 @@ document.addEventListener('DOMContentLoaded', function() {
         phoneInput.style.width = "100%";
     }
 
-    // 3. Ouverture / Fermeture
-    if (triggerBtn) {
-        triggerBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            sidebar.classList.add('active');
-            document.body.classList.add('sidebar-open');
-        });
-    }
+    // // 3. Ouverture / Fermeture 
+    // if (triggerBtn) {
+    //     triggerBtn.addEventListener('click', (e) => {
+    //         e.preventDefault();
+    //         sidebar.classList.add('active');
+    //         document.body.classList.add('sidebar-open');
+    //     });
+    // }
 
-    closeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            document.body.classList.remove('sidebar-open');
+    // closeBtns.forEach(btn => {
+    //     btn.addEventListener('click', () => {
+    //         sidebar.classList.remove('active');
+    //         document.body.classList.remove('sidebar-open');
+    //     });
+    // });
+    // Ouverture via délégation d'événement (fonctionne même si le bouton est créé dynamiquement)
+    $(document).on('click', '.trigger-add-contact', function(e) {
+        e.preventDefault();
+        $('body').addClass('sidebar-open');
+        $sidebar.fadeIn(200, function() {
+            $sidebarContent.animate({ right: '0' }, 300);
+        });
+    });
+
+    // Fermeture
+    $(document).on('click', '.ispag-modal-close', function() {
+        $sidebarContent.animate({ right: '-' + SIDEBAR_WIDTH }, 300, function() {
+            $sidebar.fadeOut(200, function() {
+                $('body').removeClass('sidebar-open');
+            });
         });
     });
 

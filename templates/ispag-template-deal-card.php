@@ -14,7 +14,7 @@ $user_id                    = $datas['user_id']    ?? '';
 <div class="ispag-card ispag-transactions-card">
     <h5>
         <?php _e( 'Transactions', 'ispag-crm' ); ?> (<?php echo count($transactions_list_full); ?>)
-        <span style="font-size: 12px; color: #007bff; cursor: pointer;"><a href="<?php echo $link_new_project; ?>" target="_blank">+ <?php _e( 'Add', 'ispag-crm' ); ?></a></span>
+        <!-- <span style="font-size: 12px; color: #007bff; cursor: pointer;"><a href="<?php echo $link_new_project; ?>" target="_blank">+ <?php _e( 'Add', 'ispag-crm' ); ?></a></span> -->
     </h5>
     <?php 
     // Définition de la constante si elle n'est pas déjà définie dans un fichier de configuration

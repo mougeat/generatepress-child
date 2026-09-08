@@ -19,8 +19,7 @@
   --ispag-color-profile-pic: #e0e0e0;
   --ispag-color-profile-text: #666;
   
-  --ispag-teal: #0F6F63;
-  --ispag-teal-hover: #0C5A50;
+
   --ispag-border: #E4E7EC;
   --ispag-text-primary: #101828;
   --ispag-text-secondary: #667085;
@@ -75,8 +74,13 @@
   --ispag-danger-text: #B42318;
   --ispag-danger-color: #dc3545;
 
+  --ispag-teal: #1b3936;
+  --ispag-teal-hover: #149887;
+
   /* Dimensions */
-  --ispag-sidebar-width: 350px;
+  --ispag-sidebar-width: 23%;
+  --ispag-sidebar-max-width: 350px;
+  --ispag-sidebar-min-width: 245px;
   --ispag-badge-border-radius: 6px;
   --ispag-btn-border-radius: 4px;
   --ispag-card-border-radius: 16px;

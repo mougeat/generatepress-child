@@ -60,7 +60,7 @@ $repo_args = array(
 );
 
 $results = $contacts_repo->get_contacts_list_optimized( $repo_args );
-error_log(print_r($results, true));
+// error_log(print_r($results, true));
 $contacts    = $results['contacts'];
 $total_users = $results['total'];
 $total_pages = ceil( $total_users / $limit );
@@ -117,33 +117,29 @@ get_header();
             </form>
         </div>
 
-        <form method="post" id="ispag-bulk-actions-form">
-            <?php wp_nonce_field('ispag_bulk_contact_action', 'ispag_bulk_nonce'); ?>
-
-            <div class="tablenav top">
-                <div class="alignleft actions bulkactions">
-                    <select name="ispag_bulk_action" id="bulk-action-selector-top">
-                        <option value="-1"><?php esc_html_e('Bulk actions', 'ispag-crm'); ?></option>
-                        <option value="set_owner"><?php esc_html_e('Assign owner', 'ispag-crm'); ?></option>
-                        <option value="set_company"><?php esc_html_e('Associate with company', 'ispag-crm'); ?></option>
-                        <option value="set_priority"><?php esc_html_e('Set priority', 'ispag-crm'); ?></option>
-                        <option value="delete"><?php esc_html_e('Delete', 'ispag-crm'); ?></option>
-                    </select>
-                    
-                    <span id="bulk-extra-fields" style="display:inline-block; margin-left: 10px;"></span>
-
-                    <input type="submit" id="doaction" class="button action" value="<?php esc_attr_e('Apply', 'ispag-crm'); ?>">
-                </div>
-            </div>
-
-            <table class="ispag-contact-list-table widefat fixed striped">
-                <?php /* Le contenu de votre table reste ici */ ?>
-            </table>
-        </form>
+       
 
         <?php if ( empty( $contacts ) ) : ?>
             <p class="ispag-no-results"><?php esc_html_e( 'No contacts found.', 'ispag-crm' ); ?></p>
         <?php else : ?>
+
+        <?php if ( $total_pages > 1 ) : ?>
+        <div class="tablenav bottom">
+            <div class="tablenav-pages">
+                <ul class="page-numbers">
+                <?php 
+                $links = paginate_links( array(
+                    'base'    => add_query_arg( 'paged', '%#%' ),
+                    'total'   => $total_pages,
+                    'current' => $paged,
+                    'type'    => 'array'
+                ) );
+                if ( $links ) foreach ( $links as $link ) echo '<li>' . $link . '</li>'; 
+                ?>
+                </ul>
+            </div>
+        </div>
+        <?php endif; ?>
 
         <table class="ispag-contact-list-table widefat fixed striped">
             <thead>
@@ -202,27 +198,27 @@ get_header();
 
                     $owner_display_name = !empty($contact->$owner_key) ? get_the_author_meta( 'display_name', $contact->$owner_key ) : __('Non assigné', 'ispag-crm');
                     $last_contact_date  = $contact->last_contact_date ? date_i18n( 'd.m.Y', strtotime( $contact->last_contact_date ) ) : __('N/A', 'ispag-crm');   
-                    $avatar_url         = $contact->avatar_url;
+                    // $avatar_url         = $contact->avatar_url;
                     
-                    $company_name = '—';
-                    if ( ! empty( $contact->$comp_id_key ) ) {
-                        $company = $company_repo->get_company_by_viag_id( $contact->$comp_id_key );
-                        if ( $company ) $company_name = $company->company_name;
-                    }
+                    // $company_name = '—';
+                    // if ( ! empty( $contact->$comp_id_key ) ) {
+                    //     $company = $company_repo->get_company_by_viag_id( $contact->$comp_id_key );
+                    //     if ( $company ) $company_name = $company->company_name;
+                    // }
                 ?> 
                 <tr>
                     <th class="check-column"><input type="checkbox" name="contact_id[]" value="<?php echo $contact->ID; ?>" /></th>
                     <td>
                         <div style="display: flex; align-items: center; gap: 10px;">
-                            <div class="ispag-company-icon-container <?php echo ($avatar_url) ? 'has-favicon' : 'no-favicon'; ?>">
+                            <div class="ispag-company-icon-container <?php echo ($contact->avatar_url) ? 'has-favicon' : 'no-favicon'; ?>">
                                 <span class="current-value">
-                                    <?php if ($avatar_url) : ?>
-                                        <img src="<?php echo esc_url( $avatar_url ); ?>" 
+                                    <?php if ($contact->avatar_url) : ?>
+                                        <img src="<?php echo esc_url( $contact->avatar_url ); ?>" 
                                             alt="<?php echo esc_attr( $contact->display_name ); ?>"
                                             class="ispag-avatar-img"> 
                                     <?php else : 
                                         // Calcul des initiales si pas d'image
-                                        $words = explode(' ', trim($contact_name));
+                                        $words = explode(' ', trim($contact->display_name));
                                         $initials = strtoupper(substr($words[0], 0, 1));
                                         if (isset($words[1])) {
                                             $initials .= strtoupper(substr($words[1], 0, 1));
@@ -230,6 +226,8 @@ get_header();
                                         ?>
                                         <span class="ispag-initials"><?php echo esc_html($initials); ?></span>
                                     <?php endif; ?>
+                                    
+                                    
                                 </span>
                             </div>
                             <strong>
@@ -241,7 +239,28 @@ get_header();
                     </td>
                     <td><?php echo esc_html( $contact->$lead_function ?? '—' ); ?></td>
                     <td><?php echo esc_html( $contact->priority_level ?? '—' ); ?></td>
-                    <td><?php echo esc_html( $company_name ); ?></td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="ispag-company-icon-container <?php echo ($contact->company_favicon) ? 'has-favicon' : 'no-favicon'; ?>">
+                                <span class="current-value">
+                                    <?php
+                                    //Favicon de l'entreprise
+                                    if($contact->company_favicon): ?>
+                                    
+                                        
+                                        <img src="<?php echo esc_url( $contact->company_favicon ); ?>" 
+                                            alt="<?php echo esc_attr( $contact->company_name ); ?>"
+                                            class="ispag-avatar-img"> 
+                                        
+                                    <?php else: ?>
+                                        <img src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/img/company.svg' ); ?>" 
+                                                alt="<?php echo esc_attr( $contact->company_name ); ?>"
+                                                class="ispag-avatar-img"> 
+                                    <?php endif; ?>
+                                </span>
+                            </div>
+                            <?php echo esc_html( $contact->company_name ); ?></td>
+                        </div>
                     <td title="<?php esc_attr_e( $contact->status_description, 'ispag-crm' ); ?>"><?php echo $contacts_repo->get_lead_status_badge( $contact->$status_key ); ?></td>
                     <td title="<?php esc_attr_e( $contact->lifecycle_description, 'ispag-crm' ); ?>"><?php echo $contacts_repo->get_lifecycle_phase_badge( $contact->$lifecycle_key ); ?></td>
                     <td><?php echo esc_html( $last_contact_date ); ?></td> 

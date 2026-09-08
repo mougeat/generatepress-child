@@ -50,11 +50,29 @@
                         <div style="font-size: 0.85em; color: #666;"><?php echo esc_html($ref); ?></div>
                     </td>
                     <td>
-                        <div class="company-name" style="font-weight: 600;"><?php echo esc_html($company_name); ?></div>
+                        <div class="company-name" style="font-weight: 600;">
+                        <?php if ( ! empty( $transaction->associated_company_favicon ) ) : ?>
+                            <img 
+                                src="<?php echo esc_url( $transaction->associated_company_favicon ); ?>"
+                                alt="<?php echo esc_attr( $transaction->associated_company_name ); ?>"
+                                title="<?php echo esc_attr( $transaction->associated_company_name ); ?>"
+                                class="ispag-kanban-mini-profile-pic" >
+                        <?php else : ?>
+                            <span class="ispag-company-initials"><?php echo esc_html( $transaction->associated_company_initials ); ?></span>
+                        <?php endif; ?>
+                        <?php echo esc_html($company_name); ?></div>
                         <?php if ( ! empty( $contact_name ) ) : ?>
                             <div class="contact-person" style="font-size: 0.85em; color: #0073aa;">
-                                <span class="dashicons dashicons-admin-users" style="font-size: 14px; width: 14px; height: 14px; vertical-align: middle;"></span>
-                                <?php echo esc_html($contact_name); ?>
+                                
+                                <?php foreach ( $transaction->associated_contacts as $contact ) : ?>
+                                    <img
+                                        src="<?php echo esc_url( $contact['avatar_url'] ); ?>"
+                                        alt="<?php echo esc_attr( $contact['name'] ); ?>"
+                                        title="<?php echo esc_attr( $contact['name'] ); ?>"
+                                        class="ispag-kanban-mini-profile-pic"
+                                    >
+                                    <?php echo esc_attr( $contact['name'] ); ?>
+                                <?php endforeach; ?>
                             </div>
                         <?php endif; ?>
                     </td>

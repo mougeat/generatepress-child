@@ -69,7 +69,7 @@ $all_ispag_users = $contact_manager->get_ispag_owners_options(); // Récupère t
                 <!-- <button class="ispag-btn ispag-btn-secondary ispag-modal-cancel"><?php _e( 'Cancel', 'ispag-crm' ); ?></button>
                 <button type="submit" id="btn-submit-contact" class="ispag-btn ispag-btn-primary" ><?php _e( 'Save', 'ispag-crm' ); ?></button> -->
 
-                <button class="ispag-btn ispag-btn-secondary ispag-modal-cancel"><?php _e( 'Cancel', 'ispag-crm' ); ?></button>
+                <button class="ispag-btn ispag-btn-secondary ispag-modal-close"><?php _e( 'Cancel', 'ispag-crm' ); ?></button>
                 <button class="ispag-btn ispag-btn-primary" type="submit" id="btn-submit-contact" ><?php _e( 'Save', 'ispag-crm' ); ?></button>
             </div>
         </form>

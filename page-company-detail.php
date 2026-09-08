@@ -21,14 +21,20 @@ if (!class_exists('ISPAG_Crm_Company_Repository')) {
 
 
 // Options pour le type d'entreprise
-$company_types_options = [
-    'Prospect' => __('Prospect', 'ispag-crm'),
-    'Partner'  => __('Partner', 'ispag-crm'),
-    'Reseller' => __('Reseller', 'ispag-crm'),
-    'Vendor'   => __('Vendor', 'ispag-crm'),
-    'Engineer' => __('Engineer', 'ispag-crm'),
-    'Other'    => __('Other', 'ispag-crm'),
-];
+if(class_exists('ISPAG_Crm_Lifecycle_Manager')){
+    $lifecycle_manager = new ISPAG_Crm_Lifecycle_Manager();
+    $company_types_options = $lifecycle_manager->get_standard_lifecycle();
+
+}else{
+    $company_types_options = [
+        'Prospect' => __('Prospect', 'ispag-crm'),
+        'Partner'  => __('Partner', 'ispag-crm'),
+        'Reseller' => __('Reseller', 'ispag-crm'),
+        'Vendor'   => __('Vendor', 'ispag-crm'),
+        'Engineer' => __('Engineer', 'ispag-crm'),
+        'Other'    => __('Other', 'ispag-crm'),
+    ];
+}
 
 // Transformation en format "Prospect:Prospect;Partner:Partner;..."
 $options_string = [];
@@ -371,7 +377,7 @@ get_header();
                 </div>
 
                 <div class="ispag-card ispag-key-info">
-                    <h5><?php _e('Key Information', 'ispag-crm'); ?></h5>
+                    <h5><?php _e( 'Key information', 'ispag-crm' ); ?></h5>
                     <dl class="ispag-key-info-list">
                         <dt><?php _e('Company Status', 'ispag-crm'); ?></dt>
                         <dd
@@ -415,7 +421,7 @@ get_header();
                             data-company-id="<?php echo $company_viag_id; ?>"
                             data-name="<?php echo ISPAG_Crm_Company_Constants::COMPANY_TYPE; ?>"
                             data-options='<?php echo $type_source_options; ?>'>
-                            <?php echo $company_type; ?>
+                            <?php _e($company_type, 'ispag-crm'); ?>
                             <span class="edit-icon">✏️</span>
                         </dd>
 
@@ -470,41 +476,44 @@ get_header();
 
                         <!-- Menus déroulants pour le type de rabais et le coefficient -->
                         <dt><?php _e('Discount', 'ispag-crm'); ?></dt>
-                        <dd>
-                            <select
-                                class="ispag-discount-select"
-                                data-field-name="rabais"
-                                data-company-id="<?php echo absint($company_id); ?>"
-                                >
-                                <option value="" <?php echo empty($discount_value) ? 'selected' : ''; ?>>
-                                    <?php _e('Select a discount for submission', 'ispag-crm'); ?>
-                                </option>
+                        <?php 
+                        $discount_options_arr = ['0:' . __('Select...', 'ispag-crm')];
+                        foreach ($discount_values as $key => $value) :
+                            $discount_options_arr[] = $value . ':' . $value . '%';
+                        endforeach;
+                        $discount_options = implode(';', $discount_options_arr);
 
-                                <?php foreach ($discount_values as $key => $value) : ?>
-                                    <option value="<?php echo esc_attr($value); ?>" <?php echo (floatval($discount_value) == floatval($value)) ? 'selected' : ''; ?>>
-                                        <?php echo esc_html($value) . '%'; ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+
+                         ?>
+                        <!-- Pour le Rabais -->
+                        <dd class="ispag-editable-field"
+                            data-type="select"
+                            data-department-id="<?php echo esc_attr($user_department); ?>"
+                            data-company-id="<?php echo esc_attr($company_viag_id); ?>"
+                            data-name="rabais"
+                            data-value="<?php echo esc_attr($discount_value); ?>"
+                            data-options="<?php echo esc_attr($discount_options); ?>">
+                            <?php echo floatval($discount_value); ?> %
                             <span class="edit-icon">✏️</span>
                         </dd>
 
                         <dt><?php _e('Sales Coefficient', 'ispag-crm'); ?></dt>
-                        <dd>
-                            <select
-                                class="ispag-discount-select"
-                                data-field-name="coef_vente"
-                                data-company-id="<?php echo absint($company_id); ?>"
-                                >
-                                <option value="" <?php echo empty($coef_value) ? 'selected' : ''; ?>>
-                                    <?php _e('Select a coefficient', 'ispag-crm'); ?>
-                                </option>
-                                <?php foreach ($sales_coef_options as $key => $value) : ?>
-                                    <option value="<?php echo esc_attr($value); ?>" <?php echo (floatval($coef_value) == floatval($value)) ? 'selected' : ''; ?>>
-                                        <?php echo esc_html($value); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                        <?php 
+                        $coef_options_arr = ['0:' . __('Select...', 'ispag-crm')];                        
+                        foreach ($sales_coef_options as $key => $value) :
+                            $coef_options_arr[] = $value . ':' . $value;
+                         endforeach;
+                         $coef_options = implode(';', $coef_options_arr);
+                         ?>
+                        <!-- Pour le Coefficient -->
+                        <dd class="ispag-editable-field"
+                            data-type="select"
+                            data-department-id="<?php echo esc_attr($user_department); ?>"
+                            data-company-id="<?php echo absint($company_viag_id); ?>"
+                            data-name="coef_vente"
+                            data-value="<?php echo esc_attr($coef_value); ?>"
+                            data-options="<?php echo esc_attr($coef_options); ?>">
+                            <?php echo floatval($coef_value); ?>
                             <span class="edit-icon">✏️</span>
                         </dd>
                     </dl>

@@ -9,6 +9,7 @@ $company_id                     = $datas['company_id']    ?? '';
 $company_viag_id                = $datas['company_viag_id']    ?? '';
 $user_id                        = $datas['user_id']    ?? '';
 $deal_id                        = $datas['deal_id']    ?? '';
+$deal_group_ref                 = $datas['deal_group_ref']    ?? '';
 
 
 ?>
@@ -16,9 +17,11 @@ $deal_id                        = $datas['deal_id']    ?? '';
 <div class="ispag-card ispag-company-card">
     <h5>
         <?php _e('Contacts', 'ispag-crm'); ?> (<?php echo count($associated_contacts_list_full); ?>)
-        <span id="open-add-contact-modal"
-            style="font-size: 12px; color: #007bff; cursor: pointer;"
-            data-company-id="<?php echo absint($company_id); ?>">
+        <span id="open-add-contact-modal" class="add_relation-btn"
+            
+            data-company-id="<?php echo absint($company_viag_id); ?>"
+            data-deal-group-ref="<?php echo esc_attr($deal_group_ref); ?>"
+            data-deal-id="<?php echo absint($deal_id); ?>">
             + <?php _e('Add', 'ispag-crm'); ?>
         </span>
     </h5>

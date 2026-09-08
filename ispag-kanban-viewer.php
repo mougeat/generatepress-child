@@ -178,7 +178,12 @@ if ( $deal_repo && $stage_repo ) {
                                         <?php if ( ! empty( $deals_in_stage ) ) : ?>
                                             <?php foreach ( $deals_in_stage as $deal ) : 
                                                 // $deal est un objet ISPAG_Crm_Deal_Model chargé
-                                                $last_activity_date       = $deal->last_activity_date ? date_i18n( 'd.m.Y', strtotime( $deal->last_activity_date ) ) : __('N/A', 'ispag-crm');
+                                                // $last_activity_date       = $deal->last_activity_date ? date_i18n( 'd.m.Y', strtotime( $deal->last_activity_date ) ) : __('N/A', 'ispag-crm');
+                                                
+                                                // Éviter de recalculer strtotime/date_i18n si vous avez déjà un format propre ou formatez de manière brute :
+                                                $last_activity_date = !empty($deal->last_activity_date) ? date('d.m.Y', strtotime($deal->last_activity_date)) : __('N/A', 'ispag-crm');
+                                                $closing_date       = !empty($deal->closing_date) ? date_i18n( 'd.m.Y', strtotime( $deal->closing_date )) : '';
+                                                
                                                 ?>
                                                 <div class="kanban-deal-card" 
                                                      data-deal-id="<?php echo absint( $deal->id ); ?>"
@@ -197,7 +202,7 @@ if ( $deal_repo && $stage_repo ) {
                                                         <?php _e('Total amount', 'ispag-crm'); ?>: <?php echo number_format( (float) $deal->total_excl_vat, 0, '.', '\'' ); ?> CHF
                                                     </p>
                                                     <p class="deal-info close-date">
-                                                        <?php _e('Closing date', 'ispag-crm'); ?>: <?php echo date_i18n( 'd.m.Y', strtotime( $deal->closing_date ) ); ?>
+                                                        <?php _e('Closing date', 'ispag-crm'); ?>: <?php echo $closing_date; ?>
                                                     </p>
                                                     <p class="deal-info last-contact-date">
                                                         <?php _e('Last contact', 'ispag-crm'); ?>: <?php echo $last_activity_date; ?>

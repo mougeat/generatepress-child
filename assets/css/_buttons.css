@@ -316,3 +316,19 @@
     height: 16px;
     line-height: 1;
 }
+
+
+.add_relation-btn{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--ispag-teal);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--ispag-btn-border-radius);
+
+}

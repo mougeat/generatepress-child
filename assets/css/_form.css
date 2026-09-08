@@ -1,0 +1,21 @@
+/* Inputs & Selects modernes */
+input[type="text"],
+input[type="search"],
+input[type="date"],
+input[type="select"],
+input[type="time"] {
+    width: 80%;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: var(--ispag-btn-border-radius);
+    background-color: #fcfcfd;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ispag-modal-body input:focus, 
+#note-text-area:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}

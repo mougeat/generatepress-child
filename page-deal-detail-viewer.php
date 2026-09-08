@@ -307,66 +307,66 @@ get_header();
                 
                 
                 
-                <div class="ispag-card ispag-header-card">
-                    <div class="ispag-header-info">
-                        <h4><?php echo __('About this deal', 'ispag-crm'); ?></h4>
-                        <dl class="ispag-key-info-list">
+                <div class="ispag-card ispag-key-info">
+                    <h5><?php _e( 'Key information', 'ispag-crm' ); ?></h5>
+                    
+                    <dl class="ispag-key-info-list">
+                        
+                        <!-- <dt><?php _e( 'Automation', 'ispag-crm' ); ?></dt>
+                        <dd>
+                            <?php 
+                            // On récupère le contact principal s'il existe pour l'enrôlement par défaut
+                            $primary_contact_id = !empty($contact_ids_arr) ? $contact_ids_arr[0] : 0;
+                            $primary_contact_name = !empty($contact_names_arr) ? $contact_names_arr[0] : '';
+                            ?>
+                            <button type="button" 
+                                    class="button button-small open-sequence-modal" 
+                                    data-deal-id="<?php echo absint($deal->id); ?>" 
+                                    data-contact-id="<?php echo absint($primary_contact_id); ?>" 
+                                    data-contact-name="<?php echo esc_attr($primary_contact_name); ?>"
+                                    >
+                                ⚡ <?php _e( 'Enroll in Sequence', 'ispag-crm' ); ?>
+                            </button>
+                        </dd>                -->
+                        <dt><?php _e( 'Deal owner', 'ispag-crm' ); ?></dt>
+                        <dd 
+                            class="ispag-editable-field" 
+                            data-id="<?php echo $deal->id; ?>" 
+                            data-name="deal_owner" 
+                            data-value="<?php echo esc_attr($deal->deal_owner); ?>"
+                            title="<?php _e('Click to edit', 'ispag-crm'); ?>"
+                            data-type="select"
+                            data-options='<?php echo esc_attr($owner_options_json); ?>'
+                        >
+                            <?php echo $deal->get_deal_owner_display_name(); ?>
+                            <span class="edit-icon">✏️</span>
+                        </dd>
+                    </dl>
+
+                    <dl class="ispag-key-info-list">
+                        <dt><?php _e( 'Last contacted', 'ispag-crm' ); ?></dt>
+                        <dd>
                             
-                            <!-- <dt><?php _e( 'Automation', 'ispag-crm' ); ?></dt>
-                            <dd>
-                                <?php 
-                                // On récupère le contact principal s'il existe pour l'enrôlement par défaut
-                                $primary_contact_id = !empty($contact_ids_arr) ? $contact_ids_arr[0] : 0;
-                                $primary_contact_name = !empty($contact_names_arr) ? $contact_names_arr[0] : '';
-                                ?>
-                                <button type="button" 
-                                        class="button button-small open-sequence-modal" 
-                                        data-deal-id="<?php echo absint($deal->id); ?>" 
-                                        data-contact-id="<?php echo absint($primary_contact_id); ?>" 
-                                        data-contact-name="<?php echo esc_attr($primary_contact_name); ?>"
-                                        >
-                                    ⚡ <?php _e( 'Enroll in Sequence', 'ispag-crm' ); ?>
-                                </button>
-                            </dd>                -->
-                            <dt><?php _e( 'Deal owner', 'ispag-crm' ); ?></dt>
-                            <dd 
-                                class="ispag-editable-field" 
-                                data-id="<?php echo $deal->id; ?>" 
-                                data-name="deal_owner" 
-                                data-value="<?php echo esc_attr($deal->deal_owner); ?>"
-                                title="<?php _e('Click to edit', 'ispag-crm'); ?>"
-                                data-type="select"
-                                data-options='<?php echo esc_attr($owner_options_json); ?>'
-                            >
-                                <?php echo $deal->get_deal_owner_display_name(); ?>
-                                <span class="edit-icon">✏️</span>
-                            </dd>
-                        </dl>
+                            <?php echo $last_activity_date; ?>
+                        </dd>
+                    </dl>
 
-                        <dl class="ispag-key-info-list">
-                            <dt><?php _e( 'Last contacted', 'ispag-crm' ); ?></dt>
-                            <dd>
-                                
-                                <?php echo $last_activity_date; ?>
-                            </dd>
-                        </dl>
-
-                        <dl class="ispag-key-info-list">
-                            <dt><?php _e( 'Record source', 'ispag-crm' ); ?></dt>
-                            <dd>
-                                <?php echo $deal->record_source; ?>
-                            </dd>
-                        </dl>
-                    </div>
+                    <dl class="ispag-key-info-list">
+                        <dt><?php _e( 'Record source', 'ispag-crm' ); ?></dt>
+                        <dd>
+                            <?php echo $deal->record_source; ?>
+                        </dd>
+                    </dl>
+                    
                 </div>
 
-                <?php if ( $hubspot_deal_id ) : ?>
+                <!-- <?php if ( $hubspot_deal_id ) : ?>
                 <div class="ispag-card ispag-project-btn-card">
                     <?php
                     // echo $article_renderer->render_project_action_button($hubspot_deal_id);
                     ?>
                 </div>
-                <?php endif; ?>
+                <?php endif; ?> -->
             </div>
         
 
@@ -473,14 +473,14 @@ get_header();
                 
                     <?php
                     $datas['associated_companies_list_full'] = $associated_companies_list_full;
-                    $datas['deal_id'] = $deal_id;
+                    $datas['deal_id'] = $deal->deal_group_ref;
                     ispag_get_template( 'ispag-template-company-card', [ 'datas' => $datas ] ); 
                     ?>
 
                     <?php
                     $datas['associated_contacts_list_full'] = $associated_contacts_list;
                     $datas['company_id'] = $company_id;
-                    $datas['deal_id'] = $deal_id;
+                    $datas['deal_group_ref'] = $deal->deal_group_ref;
                     ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
                     ?>
 
