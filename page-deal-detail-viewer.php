@@ -297,7 +297,7 @@ get_header();
                                                     
 
                             // Appelle le template et lui passe les données
-                            ispag_get_template( 'action-bar', [ 'actions' => $actions ] ); 
+                            echo ispag_get_template( 'action-bar', [ 'actions' => $actions ] ); 
                         ?>
                         
                     </div>
@@ -432,10 +432,17 @@ get_header();
                     </div>
                     
                     
-                    <div id="ispag-tab-activity" class="ispag-tab-pane">
-                        <div class="ispag-card">    
-                            <?php echo $notes_list_full; ?>
-                        </div>
+                    <!-- <div id="ispag-tab-activity" class="ispag-tab-pane">
+                        <div class="ispag-card">     -->
+                            <?php 
+                            // echo $notes_list_full; ?>
+                        <!-- </div>
+                    </div> -->
+                    <div id="ispag-tab-activity" class="ispag-tab-pane" data-deal-id="<?php echo esc_attr($hubspot_deal_id); ?>">
+
+                        <?php
+                        echo ispag_get_template( 'ispag-activity-squeleton', [] );
+                        ?>
                     </div>
                     <?php if ( $hubspot_deal_id ) : ?>
 
@@ -446,7 +453,7 @@ get_header();
                         <?php
                         $datas['deal_id'] = $hubspot_deal_id;
                         $datas['can_view_prices'] = $can_view_prices;
-                        ispag_get_template( 'ispag-project-articles', [ 'datas' => $datas ] );  
+                        echo ispag_get_template( 'ispag-project-articles', [ 'datas' => $datas ] );  
                         ?>
                         
                     </div>
@@ -474,14 +481,14 @@ get_header();
                     <?php
                     $datas['associated_companies_list_full'] = $associated_companies_list_full;
                     $datas['deal_id'] = $deal->deal_group_ref;
-                    ispag_get_template( 'ispag-template-company-card', [ 'datas' => $datas ] ); 
+                    echo ispag_get_template( 'ispag-template-company-card', [ 'datas' => $datas ] ); 
                     ?>
 
                     <?php
                     $datas['associated_contacts_list_full'] = $associated_contacts_list;
                     $datas['company_id'] = $company_id;
                     $datas['deal_group_ref'] = $deal->deal_group_ref;
-                    ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
+                    echo ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
                     ?>
 
                     
@@ -513,8 +520,8 @@ else :
 <?php 
 endif; // FIN de la condition A (extérieure)
 
-ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
-ispag_get_template( 'ispag-sequence-modal', [ null ] );
+echo ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
+echo ispag_get_template( 'ispag-sequence-modal', [ null ] );
 
 
 get_footer();

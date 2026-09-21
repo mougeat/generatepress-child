@@ -1,0 +1,47 @@
+/* Animation de pulsation du chargement */
+@keyframes ispag-pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+
+.ispag-skeleton-wrapper {
+    animation: ispag-pulse 1.5s infinite ease-in-out;
+    padding: 5px;
+}
+
+.ispag-skeleton-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.ispag-skeleton-circle {
+    width: 32px;
+    height: 32px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+}
+
+.ispag-skeleton-line {
+    height: 14px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* Classes utilitaires pour la largeur des lignes */
+.ispag-w-20 { width: 20%; }
+.ispag-w-40 { width: 40%; }
+.ispag-w-60 { width: 60%; }
+.ispag-w-80 { width: 80%; }
+.ispag-w-90 { width: 90%; }
+
+
+/* Pour éviter que les conteneurs flex n'écrasent la largeur des lignes */
+.ispag-activity-title,
+.ispag-activity-meta,
+.ispag-activity-content {
+    width: 100%;
+}

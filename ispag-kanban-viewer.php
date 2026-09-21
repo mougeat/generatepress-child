@@ -128,7 +128,7 @@ if ( $deal_repo && $stage_repo ) {
                         
                         <?php 
                             // Appelle le template et lui passe les données
-                            ispag_get_template( 'deal-search', [ 'kanban_filters' => $kanban_filters ] ); 
+                            echo ispag_get_template( 'deal-search', [ 'kanban_filters' => $kanban_filters ] ); 
                         ?>
  
                         <a href="<?php echo home_url('/deals-list/'); ?>" class="ispag-btn small ispag-btn-secondary-outlined">

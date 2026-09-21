@@ -175,7 +175,7 @@
 
 /* Liste des notifications */
 .notification-list {
-    padding: 16px;
+    /* padding: 16px; */
     max-height: calc(100vh - 200px);
     overflow-y: auto;
 }
@@ -185,8 +185,13 @@
     color: var(--ispag-color-text-light);
 }
 
+a.no-external-icon[target="_blank"]::after {
+    content: none !important;
+    display: none !important;
+}
+
 /* Éléments de notification */
-.notification-item {
+/* .notification-item {
     padding: 15px;
     border-bottom: 1px solid var(--ispag-color-border-light);
     cursor: pointer;
@@ -219,6 +224,113 @@
     margin-top: 8px;
     display: flex;
     gap: 8px;
+}
+     */
+     .notification-item {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f2;
+    transition: background-color 0.2s ease;
+    background: #fff;
+    font-size: 13px;
+    color: #33475b; /* Couleur de texte type HubSpot */
+}
+
+.notification-item:hover {
+    background-color: #f5f8fa;
+}
+
+/* Pastille pour les non-lu */
+.notification-item.unread .notification-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #ff7a59; /* Orange HubSpot */
+    border-radius: 50%;
+    margin-top: 5px;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.notification-item.read .notification-indicator {
+    width: 8px;
+    height: 8px;
+    margin-right: 12px;
+    flex-shrink: 0; /* Alésage transparent pour garder l'alignement */
+}
+
+.notification-body {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.notification-header-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2px;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: #33475b;
+    font-size: 14px;
+}
+
+.notification-time {
+    font-size: 11px;
+    color: #7c98b6;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+.notification-content {
+    color: #516f90;
+    font-size: 13px;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Tronque proprement si c'est trop long */
+}
+
+/* Actions masquées par défaut, visibles au survol (effet épuré) */
+.notification-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+.notification-item:hover .notification-actions {
+    opacity: 1;
+}
+
+.notification-action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #7c98b6;
+    padding: 4px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.notification-action-btn:hover {
+    background-color: #eaf0f6;
+    color: #0091ae;
+}
+
+.notification-action-btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
 }
 
 /* ==========================================================================

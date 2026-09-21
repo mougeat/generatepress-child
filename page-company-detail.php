@@ -145,8 +145,8 @@ $last_activity_date = $company->last_contact_date ? date_i18n('d.m.Y', strtotime
 $coef_value = $company->coef_value ?? null;
 $discount_value = $company->discount_value ?? null;
 
-error_log('Coef de vente : ' . $coef_value);
-error_log('Rabais : ' . $discount_value);
+// error_log('Coef de vente : ' . $coef_value);
+// error_log('Rabais : ' . $discount_value);
 
 // Chargement des transactions
 if (class_exists('ISPAG_Crm_Deals_Repository')) {
@@ -371,7 +371,7 @@ get_header();
                         $actions['deal_names'] = $deal_names;
                         $actions['user_department'] = $user_department;
 
-                        ispag_get_template('action-bar', ['actions' => $actions]);
+                        echo ispag_get_template('action-bar', ['actions' => $actions]);
                         ?>
                     </div>
                 </div>
@@ -577,7 +577,7 @@ get_header();
                             class="ispag-ai-placeholder"
                             data-contact-id="<?php echo absint(get_current_user_id()); ?>"
                             data-company-id="<?php echo absint($company_viag_id); ?>">
-                            <?php ispag_get_template('ai-loader', [null]); ?>
+                            <?php echo ispag_get_template('ai-loader', [null]); ?>
                         </div>
                     </div>
 
@@ -587,7 +587,7 @@ get_header();
 
                     <div id="ispag-tab-deal" class="ispag-tab-pane">
                         <h5><?php esc_html_e('Transaction Information', 'ispag-crm'); ?></h5>
-                        <?php ispag_get_template('deal-table', ['transactions' => $transactions_list_full]); ?>
+                        <?php echo ispag_get_template('deal-table', ['transactions' => $transactions_list_full]); ?>
                     </div>
 
                     <div id="ispag-tab-intelligence" class="ispag-tab-pane">
@@ -596,7 +596,7 @@ get_header();
                             class="ispag-ai-profil-placeholder"
                             data-contact-id="<?php echo absint(get_current_user_id()); ?>"
                             data-company-id="<?php echo absint($company_viag_id); ?>">
-                            <?php ispag_get_template('ai-loader', [null]); ?>
+                            <?php echo ispag_get_template('ai-loader', [null]); ?>
                         </div>
 
                         <div
@@ -604,7 +604,7 @@ get_header();
                             class="ispag-ai-actions-placeholder"
                             data-contact-id="<?php echo absint(get_current_user_id()); ?>"
                             data-company-id="<?php echo absint($company_viag_id); ?>">
-                            <?php ispag_get_template('ai-loader', [null]); ?>
+                            <?php echo ispag_get_template('ai-loader', [null]); ?>
                         </div>
                     </div>
                 </div>
@@ -631,14 +631,14 @@ get_header();
                     $datas['associated_contacts_list_full'] = $associated_contacts_list_full;
                     $datas['company_id'] = $company_id;
                     $datas['company_viag_id'] = $company_viag_id;
-                    ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
+                    echo ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
                     ?>
                     
 
                     <?php
                     $datas['transactions_list_full'] = $transactions_list_full;
                     $datas['link_new_project'] = $link_new_project;
-                    ispag_get_template( 'ispag-template-deal-card', [ 'datas' => $datas ] ); 
+                    echo ispag_get_template( 'ispag-template-deal-card', [ 'datas' => $datas ] ); 
                     ?>
                     <div id="ispag-modal-container"></div>
 
@@ -650,8 +650,8 @@ get_header();
 
 
 <?php
-ispag_get_template('deal-reason-for-rejection-modal', []);
-ispag_get_template('ispag-popover-modal', [null]);
+echo ispag_get_template('deal-reason-for-rejection-modal', []);
+echo ispag_get_template('ispag-popover-modal', [null]);
 
 
 get_footer();

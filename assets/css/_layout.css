@@ -658,8 +658,8 @@
 .ispag-tabs-content,
 .ispag-right-panel {
     padding: 0 10px;
-    min-height: 80vh;
-    max-height: 80vh;
+    min-height: 30vh;
+    max-height: 70vh;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;

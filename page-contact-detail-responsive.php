@@ -402,7 +402,7 @@ extract( $template_args );
                         $actions['closing_dates']     = $closing_dates;
                         $actions['total_excl_vats']   = $total_excl_vats;
 
-                        ispag_get_template( 'action-bar', [ 'actions' => $actions ] );  
+                        echo ispag_get_template( 'action-bar', [ 'actions' => $actions ] );  
                     ?>
                 </div>
 
@@ -435,7 +435,7 @@ extract( $template_args );
                     </div>
 
                     <div id="ispag-tab-deal" class="ispag-tab-pane">
-                        <?php ispag_get_template( 'deal-table', [ 'transactions' => $transactions_list_full ] ); ?>
+                        <?php echo ispag_get_template( 'deal-table', [ 'transactions' => $transactions_list_full ] ); ?>
                     </div>
 
                     <div id="ispag-tab-intelligence" class="ispag-tab-pane">

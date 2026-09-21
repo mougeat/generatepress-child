@@ -1,10 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var searchInput = document.getElementById('ispag-kanban-search');
+
+    console.log('✅ JS Deal List Select chargé !');
+
+
+    var searchInput = document.getElementById('ispag-kanban-search') || document.getElementById('ispag-projects-search');
     var ownerFilter = document.getElementById('ispag-kanban-owner-filter');
     var closingDateFilter = document.getElementById('ispag-kanban-closing-date-filter'); 
     var createDateFilter = document.getElementById('ispag-kanban-create-date-filter'); 
-    var clearFiltersBtn = document.getElementById('ispag-clear-filters-btn'); // NOUVEAU
+    var clearFiltersBtn = document.getElementById('ispag-clear-filters-btn');
 
+    // Attach du bouton de réinitialisation indépendamment des autres champs
+    if (clearFiltersBtn) {
+        clearFiltersBtn.addEventListener('click', clearFilters);
+    }
+
+    // Si aucun champ de recherche n'existe, on s'arrête ici pour les écouteurs de recherche
     if (!searchInput) {
         return;
     }
@@ -47,21 +57,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // NOUVEAU: Fonction pour effacer tous les filtres (y compris les filtres par chemin)
     function clearFilters() {
         var pathname = window.location.pathname;
+        const searchInput = document.getElementById('ispag-projects-search');
         
         // Supprime les segments de chemin dynamiques : /company/ID ou /contact/ID
         // On suppose que la base est le slug de la page deals
-        var cleanedPathname = pathname.replace(/\/(company|contact)\/\d+$/, ''); 
+        var cleanedPathname = pathname.replace(/\/(company|contact|search)\/\d+$/, ''); 
 
         // Rediriger vers l'URL canonique sans aucun paramètre de requête
         var targetUrl = window.location.origin + cleanedPathname;
         
         // On redirige seulement s'il y a des filtres actifs (query ou path)
         if (window.location.search || pathname !== cleanedPathname) {
+            alert('IN if (window.location.search || pathname !== cleanedPathname) ');
             window.location.href = targetUrl;
         } else if (searchInput.value.trim() !== '') {
             // Si le champ de recherche n'est pas vide mais les paramètres d'URL sont clairs
+            alert('IN else if (searchInput.value.trim() !== ');
             window.location.href = targetUrl;
+            // searchInput.val();
         }
+        // else{
+        //     alert('in else');
+            
+        // }
     }
     
     if (clearFiltersBtn) {

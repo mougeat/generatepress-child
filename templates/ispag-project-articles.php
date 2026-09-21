@@ -10,7 +10,7 @@ $can_view_prices    = $datas['can_view_prices']    ?? false;
 
 $article_renderer = new ISPAG_Project_views_Renderer();
 
-$article_renderer->render_project_stat($deal_id, $can_view_prices);
+// $article_renderer->render_project_stat($deal_id, $can_view_prices);
 ?>
 
 

@@ -12,7 +12,7 @@ $initials                           = $datas['initials']    ?? '';
 
 ?>
 
-<div class="ispag-card ispag-company-card">
+<div class="ispag-card ispag-company-card" data-deal-id="">
     <h5>
         <?php _e( 'Company', 'ispag-crm' ); ?> (<?php echo count($associated_companies_list_full); ?>) 
         <span id="open-add-company-modal" class="add_relation-btn"

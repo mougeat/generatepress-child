@@ -70,45 +70,8 @@ if (!class_exists('ISPAG_Projet_Repository')) {
     return;
 }
 
-$deal_repo = new ISPAG_Projet_Repository();
-$deal_detail_repo = new ISPAG_Project_Details_Repository();
-$project = $deal_repo->get_project_detail_by_hubspot_deal_id($deal_id);
-$project_revenue = $deal_detail_repo->get_project_profitability($deal_id);
-$article_renderer = new ISPAG_Project_views_Renderer();
-
-//-----------------------------------------------------------
-// Création de la liste des entreprises liées au projet
-//-----------------------------------------------------------
-$companies = array();
-$associated_companies_list_full = array();
-if (!empty($project->AssociatedCompanyID) && class_exists('ISPAG_Crm_Company_Repository')) {
-    $company_repo = new ISPAG_Crm_Company_Repository();
-    $company_ids = explode(',', $project->AssociatedCompanyID);
-    $company_ids = array_filter(array_map('trim', $company_ids));
-    foreach ($company_ids as $company_id) {
-        $company_id = absint($company_id);
-        $associated_companies_list_full[] = $company_id;
-        if ($company_id > 0) {
-            $companies[] = $company_repo->get_company_by_viag_id($company_id);
-        }
-    }
-}
-
-//-----------------------------------------------------------
-// Création de la liste des contacts liés au projet
-//-----------------------------------------------------------
-$contacts = [];
-if (!empty($project->AssociatedContactIDs) && class_exists('ISPAG_Crm_Contacts_Repository')) {
-    $contact_repo = new ISPAG_Crm_Contacts_Repository();
-    $contact_ids = explode(',', $project->AssociatedContactIDs);
-    $contact_ids = array_filter(array_map('trim', $contact_ids));
-    foreach ($contact_ids as $contact_id) {
-        $contact_id = absint($contact_id);
-        if ($contact_id > 0) {
-            $contacts[] = $contact_repo->get_contact_by_id($contact_id);
-        }
-    }
-}
+$can_manage_order = current_user_can('manage_order');
+$edit_content = current_user_can('manage_order') ? 'true' : 'false';
 
 //-----------------------------------------------------------------------
 // Création de la liste owner possible pour le departement en cours
@@ -126,69 +89,12 @@ if(class_exists('ISPAG_Contact_Ajax_Handler')){
 $owner_list_source = implode(';', $owner_list_arr);
 
 //-----------------------------------------------------------------------
-// Création du badge prochaine étape du projet
+//On créé les datas minimale pour le projet
 //-----------------------------------------------------------------------
-if(current_user_can('manage_order')){
-    $context = ISPAG_Project_Phase_Resolver::CONTEXT_INTERNAL;
+if(class_exists('ISPAG_Projet_Repository')){
+    $project_repo = new ISPAG_Projet_Repository();
+    $project = $project_repo->get_minimal_project_detail_by_hubspot_deal_id($deal_id);
 }
-else{
-    $context = ISPAG_Project_Phase_Resolver::CONTEXT_CLIENT;
-}
-$next = ISPAG_Project_Phase_Resolver::get_next_pending_phase($deal_id, $context);
-
-if ($next)
-{
-    $phase_title = __($next['phase']->TitrePhase, 'creation-reservoir');
-    $badge_color = $next['phase']->Color ?: '#ccc';
-}
-else
-{
-    $phase_title = __('Completed', 'creation-reservoir');
-    $badge_color = '#00C875';
-}
-
-// $bgcolor = !empty($project->next_phase->Color) ? esc_attr($project->next_phase->Color) : '#ccc';
-$next_step_badge = '<span class="ispag-next-step-badge step-badge" style="color:' . $badge_color . '; border:1px solid ' . $badge_color . ';">' . esc_html($phase_title ?? 'Non défini') . '</span>';
-
-
-//-----------------------------------------------------------------------
-// Création de la liste des activités (notes)
-//-----------------------------------------------------------------------
-$notes_list_full = '<p>' . __('No registered activity', 'ispag-crm') . '</p>';
-if (class_exists('ISPAG_Note_Manager'))
-{
-    $note_repository = new ISPAG_Note_Repository();
-    $note_renderer = new ISPAG_Note_Renderer();
-    $deal_repo = new ISPAG_Crm_Deals_Repository();
-
-    $deal = $deal_repo->get_project_by_project_num($project->NumCommande);
-    
-
-    $all_deal_identifiers = [];
-    if (!empty($deal_id))
-    {
-        $all_deal_identifiers[] = $deal_id;
-    }
-    if ($deal && isset($deal->deal_group_ref))
-    {
-        $all_deal_identifiers[] = $deal->deal_group_ref;
-    }
-
-    if (!empty($all_deal_identifiers))
-    {
-        $activity_detail = $note_repository->get_activities_for_entity('deal', $all_deal_identifiers);
-        $notes_list_full = $note_renderer->render_activities_list($activity_detail);
-        
-    }
-    else
-    {
-        $notes_list_full = "Aucune activité trouvée.";
-    }
-}
-
-
-$can_manage_order = current_user_can('manage_order');
-$edit_content = current_user_can('manage_order') ? 'true' : 'false';
 
 ?>
 
@@ -217,13 +123,15 @@ $edit_content = current_user_can('manage_order') ? 'true' : 'false';
                                 <?php echo esc_html($project->ObjetCommande); ?>
                             </h4>
                             <div  class="fields-prices">
-                            <p><?php _e('version', 'creation-reservoir'); ?> <?php echo esc_html($project->version); ?></p>
+                            
+                            <p><?php _e('version', 'creation-reservoir'); ?> <?php echo esc_attr($project->version); ?></p>
+                            
                             <p>
-                                <?php echo __('Amount', 'ispag-crm'); ?> : <?php echo number_format_i18n($project_revenue['revenu'], 2) . ' CHF'; ?>
+                                <?php echo __('Amount', 'ispag-crm'); ?> :  <span class="ispag-skeleton-wrapper ispag-skeleton-line ispag-w-40" id="ispag_project_amount" data-deal-id="<?php echo esc_attr($deal_id); ?>"></span>
                             </p>
                             </div>
                             <p>
-                                <?php echo __('Creation date', 'ispag-crm'); ?> : <?php echo date_i18n( 'd.m.Y', strtotime( $project->date_creation ) ); ?> 
+                                <?php echo __('Creation date', 'ispag-crm'); ?> :  <?php echo esc_html(date_i18n(get_option('date_format'), strtotime($project->date_creation))); ?>
                             </p>
                             <?php 
                             $pm = get_userdata($project->project_manager);
@@ -244,15 +152,15 @@ $edit_content = current_user_can('manage_order') ? 'true' : 'false';
                                 </span>
                             </p>
                             <p>
-                                <?php echo __('Next step', 'ispag-crm'); ?> : <?php echo $next_step_badge; ?>
+                                <?php echo __('Next step', 'ispag-crm'); ?> :  <span class="ispag-next-step-badge step-badge"><span class="ispag-skeleton-wrapper ispag-skeleton-line ispag-w-80" id="ispag_project_next_step"></span></span>
                             </p>
                             <?php if ($can_manage_order): ?>
                                 <p>
                                     <button id="ispag-force-show-prices" class="button button-primary">
-                                        👁️ <?php _e('Force price display', 'creation-reservoir'); ?>
+                                        👁️ <?php _e('Force price display', 'ispag-crm'); ?>
                                     </button>
                                     <button id="ispag-force-hide-prices" class="button button-secondary">
-                                        🔒 <?php _e('Hide prices', 'creation-reservoir'); ?>
+                                        🔒 <?php _e('Hide prices', 'ispag-crm'); ?>
                                     </button>
                                 </p>
                             <?php endif; ?>
@@ -260,19 +168,23 @@ $edit_content = current_user_can('manage_order') ? 'true' : 'false';
                     </div>
                 </div>
 
-                <div class="ispag-card ispag-project-btn-card">
+                <div class="ispag-card ispag-project-btn-card"  data-deal-id="<?php echo esc_attr($deal_id); ?>">
 
                     <?php if ($can_manage_order): ?>
                         <a href="<?= esc_url(home_url( '/liste-des-achats/?search=' . $deal_id . '' )) ?>" target="_blank" class="ispag-btn ispag-btn-secondary-outlined"><span class="dashicons dashicons-cart"></span> <?= esc_html(__('To purchase', 'ispag-crm')) ?></a>
                         <br>
                     <?php endif; ?>
                     <?php
-                    echo $article_renderer->render_project_action_button($deal_id, $project->isQotation);
+                    // echo $article_renderer->render_project_action_button($deal_id, $project->isQotation);
                     ?>
                 </div> 
 
+                <div class="ispag-card ispag-bulk-actions"  data-deal-id="<?php echo esc_attr($deal_id); ?>">
+
+                </div>
+
                  <?php
-                echo $article_renderer->bulk_selected_article($deal_id, $project->isQotation);
+                // echo $article_renderer->bulk_selected_article($deal_id, $project->isQotation);
                 ?>
             </div>
            
@@ -302,47 +214,142 @@ $edit_content = current_user_can('manage_order') ? 'true' : 'false';
 
                 <div class="ispag-tabs-content">
                     <div id="ispag-tab-overview" class="ispag-tab-pane active">
+
                         <?php
-                        $datas['deal_id'] = $deal_id;
-                        $datas['can_view_prices'] = $can_view_prices;
-                        ispag_get_template( 'ispag-project-articles', [ 'datas' => $datas ] );  
+                        //Affichage des statistiques du projet
+                        if (current_user_can('manage_order')){
+                            ?>
+                            <div id="ispag-bloc-stat-projet" class="fields-prices prices-visible">
+                                <div id="ispag_project_stat" class="ispag-stats-container ispag-skeleton-wrapper">
+                                    <h4 class="ispag-stats-title"><?php echo esc_html__('Project Dashboard', 'creation-reservoir'); ?></h4>
+                                    <div class="ispag-stats-grid">
+                                        <div class="ispag-stat-card">
+                                            <span class="stat-label ispag-skeleton-line ispag-w-80"></span>
+                                            <span class="stat-value ispag-skeleton-line ispag-w-80"></span>
+                                        </div>
+
+                                        <div class="ispag-stat-card">
+                                            <span class="stat-label ispag-skeleton-line ispag-w-80"></span>
+                                            <span class="stat-value ispag-skeleton-line ispag-w-80"></span>
+                                        </div>
+
+                                        <div class="ispag-stat-card">
+                                            <span class="stat-label ispag-skeleton-line ispag-w-80"></span>
+                                            <span class="stat-value ispag-skeleton-line ispag-w-80"></span>
+                                        </div>
+
+                                        <div class="ispag-stat-card">
+                                            <span class="stat-label ispag-skeleton-line ispag-w-80"></span>
+                                            <span class="stat-value ispag-skeleton-line ispag-w-80"></span>
+                                        </div>
+
+                                        <div class="ispag-stat-card">
+                                            <span class="stat-label ispag-skeleton-line ispag-w-80"></span>
+                                            <span class="stat-value ispag-skeleton-line ispag-w-80"></span>
+                                        </div>
+
+                                        <div class="ispag-stat-card">
+                                            <span class="stat-label ispag-skeleton-line ispag-w-80"></span>
+                                            <span class="stat-value ispag-skeleton-line ispag-w-80"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="ispag-coef-notice" data-deal-id="<?php echo esc_attr($deal_id); ?>" class="fields-prices prices-visible">
+
+                                
+                            </div>
+
+                        <?php
+                        }
+                        ?>
+                        <!--    ------------------------------ -->
+                        <div id="display_article_page">
+                            <div class="ispag-article-header-global" style="margin-bottom: 1rem;">
+                                <input type="checkbox" id="select-all-articles" class="ispag-article-checkbox">
+                                <label for="select-all-articles"><?php _e('Select all', 'creation-reservoir'); ?></label>
+                            </div>
+                            <div class="ispag-articles-content" id="display_ispag_article_list">
+                                <div class="ispag-articles-list" data-deal-id="<?php echo esc_attr($deal_id); ?>">
+                                    <?php
+                                    echo ispag_get_template( 'ispag-render-article-block-skeleton', [ ] );  
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <!--    ------------------------------ -->
+                        <?php
+                        // $datas['deal_id'] = $deal_id;
+                        // $datas['can_view_prices'] = $can_view_prices;
+                        // echo ispag_get_template( 'ispag-project-articles', [ 'datas' => $datas ] );  
                         ?>
                     </div>
 
                     <?php if ($can_manage_order): ?>
-                        <div id="ispag-tab-activity" class="ispag-tab-pane">
-
+                        <div id="ispag-tab-activity" class="ispag-tab-pane" data-deal-id="<?php echo esc_attr($deal_id); ?>">
                             <?php
-                            echo $notes_list_full;
+                            echo ispag_get_template( 'ispag-activity-squeleton', [] );
                             ?>
                         </div>
                     <?php endif; ?>
 
-                    <div id="ispag-tab-details" class="ispag-tab-pane">
-                        <div class="ispag-card">
-                            <?php
-                            $article_renderer->display_ispag_project_details($deal_id, $project);
-                            ?>
+                    <div id="ispag-tab-details" class="ispag-tab-pane" data-deal-id="<?php echo esc_attr($deal_id); ?>">
+                        <div class="ispag-detail-section">
+                            <div class="ispag-box ispag-skeleton-wrapper">
+                               <div class="ispag-skeleton-header">
+                                    <div class="ispag-skeleton-circle"></div>
+                                    <div class="ispag-skeleton-line ispag-w-40"></div>
+                                </div>
+                                <div class="ispag-skeleton-line ispag-w-80"></div>
+                                <div class="ispag-skeleton-line ispag-w-90"></div>
+                                <div class="ispag-skeleton-line ispag-w-60"></div>
+                            </div>
+
+                            <div class="ispag-box ispag-skeleton-wrapper">
+                               <div class="ispag-skeleton-header">
+                                    <div class="ispag-skeleton-circle"></div>
+                                    <div class="ispag-skeleton-line ispag-w-40"></div>
+                                </div>
+                                <div class="ispag-skeleton-line ispag-w-80"></div>
+                                <div class="ispag-skeleton-line ispag-w-90"></div>
+                                <div class="ispag-skeleton-line ispag-w-60"></div>
+                            </div>
+
+                            <div class="ispag-box ispag-skeleton-wrapper">
+                               <div class="ispag-skeleton-header">
+                                    <div class="ispag-skeleton-circle"></div>
+                                    <div class="ispag-skeleton-line ispag-w-40"></div>
+                                </div>
+                                <div class="ispag-skeleton-line ispag-w-80"></div>
+                                <div class="ispag-skeleton-line ispag-w-90"></div>
+                                <div class="ispag-skeleton-line ispag-w-60"></div>
+                            </div>
                         </div>
                     </div>
 
                     <div id="ispag-tab-fallowup" class="ispag-tab-pane" data-deal-id="<?php echo esc_attr($deal_id); ?>"></div>
 
                     <div id="ispag-tab-document" class="ispag-tab-pane">
+                        
                         <div class="ispag-card ispag-docu-card"
                             data-view="list"
                             data-entity-type="project"
                             data-entity-id="<?php echo esc_attr($deal_id); ?>">
+
+                            <?php
+                                echo ispag_get_template( 'ispag-activity-squeleton', [] );
+                            ?>
                             <!-- ----------Affichage des documents ------->
                             <?php
-                            if(class_exists('ISPAG_Attachments_Repository') AND class_exists('ISPAG_Attachments_Card_Renderer')){
-                                $repository = new ISPAG_Attachments_Repository($wpdb);
-                                $renderer   = new ISPAG_Attachments_Card_Renderer($repository);
+                            // if(class_exists('ISPAG_Attachments_Repository') AND class_exists('ISPAG_Attachments_Card_Renderer')){
+                            //     $repository = new ISPAG_Attachments_Repository($wpdb);
+                            //     $renderer   = new ISPAG_Attachments_Card_Renderer($repository);
 
-                                // --- Sur une fiche Deal / Projet ---
+                            //     // --- Sur une fiche Deal / Projet ---
 
-                                echo $renderer->render_doc_list('project', $deal_id, -1, true);
-                            }
+                            //     echo $renderer->render_doc_list('project', $deal_id, -1, true);
+                            // }
                             ?>
                         </div>
 
@@ -365,18 +372,52 @@ $edit_content = current_user_can('manage_order') ? 'true' : 'false';
                         class="ispag-panel-toggle-icon">
                 </button>
                 <div class="ispag-right-panel" data-panel="right">
+
+                    <div class="ispag-card ispag-company-card" data-deal-id="<?php echo absint($deal_id); ?>">
+                        <h5>
+                            <?php _e( 'Company', 'ispag-crm' ); ?> 
+                        </h5>
+
+                        <!-- Contenu squelette affiché par défaut avant l'AJAX -->
+                        <div class="ispag-skeleton-wrapper ispag-card">
+                            <div class="ispag-skeleton-header">
+                                <div class="ispag-skeleton-circle"></div>
+                                <div class="ispag-skeleton-line ispag-w-40"></div>
+                            </div>
+                            <div class="ispag-skeleton-line ispag-w-80"></div>
+                            <div class="ispag-skeleton-line ispag-w-90"></div>
+                            <div class="ispag-skeleton-line ispag-w-60"></div>
+                        </div>
+                        
+                    </div>
                     
                     <?php
-                    $datas['associated_companies_list_full'] = $associated_companies_list_full;
-                    $datas['deal_id'] = $deal_id;
-                    ispag_get_template( 'ispag-template-company-card', [ 'datas' => $datas ] ); 
-                    ?>
+                    // $datas['associated_companies_list_full'] = $associated_companies_list_full;
+                    // $datas['deal_id'] = $deal_id;
+                    // ispag_get_template( 'ispag-template-company-card', [ 'datas' => $datas ] ); 
+                    ?> 
 
+
+                    <div class="ispag-card ispag-contact-card" data-deal-id="<?php echo absint($deal_id); ?>">
+                        <h5>
+                            <?php _e('Contacts', 'ispag-crm'); ?>
+                        </h5>
+                        <!-- Contenu squelette affiché par défaut avant l'AJAX -->
+                        <div class="ispag-skeleton-wrapper ispag-card"> 
+                            <div class="ispag-skeleton-header">
+                                <div class="ispag-skeleton-circle"></div>
+                                <div class="ispag-skeleton-line ispag-w-40"></div>
+                            </div>
+                            <div class="ispag-skeleton-line ispag-w-80"></div>
+                            <div class="ispag-skeleton-line ispag-w-90"></div>
+                            <div class="ispag-skeleton-line ispag-w-60"></div>
+                        </div>
+                    </div>
                     <?php
-                    $datas['associated_contacts_list_full'] = $contacts;
-                    $datas['company_id'] = $company_id;
-                    $datas['deal_id'] = $deal_id;
-                    ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
+                    // $datas['associated_contacts_list_full'] = $contacts;
+                    // $datas['company_id'] = $company_id;
+                    // $datas['deal_id'] = $deal_id;
+                    // ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
                     ?>
 
 

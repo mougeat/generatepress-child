@@ -1,132 +1,139 @@
-.user_profile > a,
-.menu-icon-crm > a,
-.menu-icon-contact > a,
-.menu-icon-ajout-contact > a,
-.menu-icon-tache > a,
-.menu-icon-company > a,
-.menu-icon-modeles-messages > a,
-.menu-icon-achat > a,
-.menu-icon-offre > a,
-.menu-icon-projet > a,
-.menu-icon-bell > a
- {
-    font-size: 0;
-    padding-left: 50px;
-}
+/* Ces règles ne s'appliquent qu'aux écrans de 1024px de largeur et plus (PC) */
+@media (min-width: 1024px) {
 
-/* Insère l'icône SVG à la place du texte */
-.menu-icon-crm > a::before, .menu-icon-contact > a::before {
-    content: "";
-    display: inline-block;
-    width: 24px; /* Taille de l'icône */
-    height: 24px;
-    background-image: url('../img/ios-contact.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-/* Insère l'icône SVG à la place du texte */
-.menu-icon-ajout-contact > a::before {
-    content: "";
-    display: inline-block;
-    width: 24px; /* Taille de l'icône */
-    height: 24px;
-    background-image: url('../img/ios-new-contact.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.menu-icon-tache > a::before {
-    content: "";
-    display: inline-block;
-    width: 24px; /* Taille de l'icône */
-    height: 24px;
-    background-image: url('../img/ios-checklist.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-/* Insère l'icône SVG à la place du texte */
-.menu-icon-company > a::before {
-    content: "";
-    display: inline-block;
-    width: 24px; /* Taille de l'icône */
-    height: 24px;
-    background-image: url('../img/ios-company.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.menu-icon-modeles-messages > a::before {
-    content: "";
-    display: inline-block;
-    width: 24px; /* Taille de l'icône */
-    height: 24px;
-    background-image: url('../img/ios-templates.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
+    .user_profile > a,
+    .menu-icon-crm > a,
+    .menu-icon-contact > a,
+    .menu-icon-ajout-contact > a,
+    .menu-icon-tache > a,
+    .menu-icon-company > a,
+    .menu-icon-modeles-messages > a,
+    .menu-icon-achat > a,
+    .menu-icon-offre > a,
+    .menu-icon-projet > a,
+    .menu-icon-bell > a
+    {
+        font-size: 0;
+        padding-left: 50px;
+    }
 
-.user_profile > a::before {
-    content: "";
-    display: inline-block;
-    width: 24px;  /* Largeur de votre icône */
-    height: 24px; /* Hauteur de votre icône */
-    background-image: url('../img/ios-profile.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
+    /* Insère l'icône à la place du texte sur PC */
+    .menu-icon-crm > a::before, .menu-icon-contact > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/ios-contact.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 
-.menu-icon-achat > a::before {
-    content: "";
-    display: inline-block;
-    width: 24px;  /* Largeur de votre icône */
-    height: 24px; /* Hauteur de votre icône */
-    background-image: url('../img/ios-cart.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.menu-icon-offre > a::before {
-    content: "";
-    display: inline-block;
-    width: 24px;  /* Largeur de votre icône */
-    height: 24px; /* Hauteur de votre icône */
-    background-image: url('../img/ios-product.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.menu-icon-projet > a::before {
-    content: "";
-    display: inline-block;
-    width: 24px;  /* Largeur de votre icône */
-    height: 24px; /* Hauteur de votre icône */
-    background-image: url('../img/ios-handshake.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-/* 1. Positionnement relatif indispensable pour positionner le badge par rapport à l'icône */
-.menu-icon-bell > a,
-#ispag-notification-bell {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
+    .menu-icon-ajout-contact > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/ios-new-contact.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 
-/* 2. Injection de l'image de la cloche via ::before */
-.menu-icon-bell > a::before,
-#ispag-notification-bell::before {
-    content: "";
-    display: inline-block;
-    width: 24px; 
-    height: 24px;
-    background-image: url('../img/ios-bell.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    .menu-icon-tache > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/ios-checklist.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .menu-icon-company > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/ios-company.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .menu-icon-modeles-messages > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/ios-templates.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .user_profile > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/ios-profile.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .menu-icon-achat > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/ios-cart.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .menu-icon-offre > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/ios-product.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .menu-icon-projet > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/ios-handshake.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .menu-icon-bell > a,
+    #ispag-notification-bell {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .menu-icon-bell > a::before,
+    #ispag-notification-bell::before {
+        content: "";
+        display: inline-block;
+        width: 24px; 
+        height: 24px;
+        background-image: url('../img/ios-bell.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 }

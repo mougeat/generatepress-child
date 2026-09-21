@@ -540,17 +540,17 @@ get_header();
                                                     
     
                             // Appelle le template et lui passe les données
-                            ispag_get_template( 'action-bar', [ 'actions' => $actions ] ); 
+                            echo ispag_get_template( 'action-bar', [ 'actions' => $actions ] ); 
                         ?>
                     </div>  
-                    <div class="ispag-field-group">
-                        <input type="button" 
+                    <!-- <div class="ispag-field-group"> -->
+                        <!-- <input type="button" 
                             id="meeting-preparation" 
-                            class="button button-secondary btn-meeting-prep" 
+                            class="ispag-btn ispag-btn-secondary-outlined btn-meeting-prep" 
                             name="meeting_preparation" 
                             data-contact-id="<?php echo $user_id; ?>"
-                            value="<?php esc_attr_e( 'Prepare meeting', 'ispag-crm' ); ?>">
-                    </div> 
+                            value="<?php esc_attr_e( 'Prepare meeting', 'ispag-crm' ); ?>"> -->
+                    <!-- </div>  -->
                     
                 </div>
                 
@@ -559,7 +559,7 @@ get_header();
                     <dl class="ispag-key-info-list">
                         
  
-                        <dt><?php _e( 'Ignore health reminder', 'ispag-crm' ); ?></dt>
+                        <!-- <dt><?php _e( 'Ignore health reminder', 'ispag-crm' ); ?></dt>
                         <dd 
                             class="ispag-editable-field" 
                             data-type="checkbox" 
@@ -569,7 +569,7 @@ get_header();
                         >
                             <?php echo esc_html( $status_text ); ?>
                             <span class="edit-icon">✏️</span>
-                        </dd>
+                        </dd> -->
 
                         <dt><?php _e( 'Phone number', 'ispag-crm' ); ?></dt>
                         <dd 
@@ -582,31 +582,6 @@ get_header();
                             <span class="current-value"><?php echo $contact_phone ?: '—'; ?></span>
                             
                         </dd>
-
-
-                        <dt><?php _e( 'Birthday', 'ispag-crm' ); ?></dt>
-                        <dd 
-                            class="ispag-popover-field" 
-                            data-field-type="date" 
-                            data-contact-id="<?php echo absint($user_id); ?>"
-                            data-name="billing_birthdate" 
-                            data-value="<?php echo esc_attr( get_user_meta( $user_id, 'billing_birthdate', true ) ); ?>"
-                        >
-                            <span class="current-value">
-                                <?php 
-                                if ( ! empty( $contact->birthday ) && $contact->birthday !== 'Non renseignée' ) {
-                                    echo esc_html( $contact->birthday );
-                                    if ( ! empty( $contact->age ) ) {
-                                        echo ' <span style="color: #666; font-size: 0.9em;">(' . esc_html( $contact->age ) . ')</span>';
-                                    }
-                                } else {
-                                    echo '<span style="color: #999; font-style: italic;">' . __( 'Non renseignée', 'ispag-crm' ) . '</span>';
-                                }
-                                ?>
-                            </span>
-                        </dd>
-
-                        
 
                         <dt><?php _e( 'Role', 'ispag-crm' ); ?></dt>
                         <dd 
@@ -668,11 +643,31 @@ get_header();
                             
                         </dd>
 
+                        <dt><?php _e( 'Birthday', 'ispag-crm' ); ?></dt>
+                        <dd 
+                            class="ispag-popover-field" 
+                            data-field-type="date" 
+                            data-contact-id="<?php echo absint($user_id); ?>"
+                            data-name="billing_birthdate" 
+                            data-value="<?php echo esc_attr( get_user_meta( $user_id, 'billing_birthdate', true ) ); ?>"
+                        >
+                            <span class="current-value">
+                                <?php 
+                                if ( ! empty( $contact->birthday ) && $contact->birthday !== 'Non renseignée' ) {
+                                    echo esc_html( $contact->birthday );
+                                    if ( ! empty( $contact->age ) ) {
+                                        echo ' <span style="color: #666; font-size: 0.9em;">(' . esc_html( $contact->age ) . ')</span>';
+                                    }
+                                } else {
+                                    echo '<span style="color: #999; font-style: italic;">' . __( 'Non renseignée', 'ispag-crm' ) . '</span>';
+                                }
+                                ?>
+                            </span>
+                        </dd>
+
                         <dt>
                             <?php _e( 'Linkedin page', 'ispag-crm' ); ?>
-                            
                         </dt>
-                        
                         <dd 
                             class="ispag-popover-field" 
                             data-field-type="text" 
@@ -767,7 +762,7 @@ get_header();
                             class="ispag-ai-placeholder"
                             data-contact-id="<?php echo absint($user_id); ?>"
                         >
-                            <?php ispag_get_template( 'ai-loader', [ null ] ); ?>
+                            <?php echo ispag_get_template( 'ai-loader', [ null ] ); ?>
                         </div>
                         
                         
@@ -786,7 +781,7 @@ get_header();
 
                         <?php 
                             // Appelle le template et lui passe les données
-                            ispag_get_template( 'deal-table', [ 'transactions' => $transactions_list_full ] ); 
+                            echo ispag_get_template( 'deal-table', [ 'transactions' => $transactions_list_full ] ); 
                         ?>
                     </div>
                     
@@ -796,7 +791,7 @@ get_header();
                         class="ispag-ai-profil-placeholder"
                         data-contact-id="<?php echo absint($user_id); ?>"
                         >
-                            <?php ispag_get_template( 'ai-loader', [ null ] ); ?>
+                            <?php echo ispag_get_template( 'ai-loader', [ null ] ); ?>
                         </div>
                         
                         <div 
@@ -804,7 +799,7 @@ get_header();
                         class="ispag-ai-actions-placeholder"
                         data-contact-id="<?php echo absint($user_id); ?>"
                         >
-                            <?php ispag_get_template( 'ai-loader', [ null ] ); ?>
+                            <?php echo ispag_get_template( 'ai-loader', [ null ] ); ?>
                         </div>
                     </div>
                     
@@ -830,13 +825,13 @@ get_header();
                     <?php
                     $datas['associated_companies_list_full'] = $associated_companies_list_full;
                     $datas['user_id'] = $user_id;
-                    ispag_get_template( 'ispag-template-company-card', [ 'datas' => $datas ] ); 
+                    echo ispag_get_template( 'ispag-template-company-card', [ 'datas' => $datas ] ); 
                     ?>
 
                     <?php
                     $datas['transactions_list_full'] = $transactions_list_full;
                     $datas['link_new_project'] = $link_new_project;
-                    ispag_get_template( 'ispag-template-deal-card', [ 'datas' => $datas ] ); 
+                    echo ispag_get_template( 'ispag-template-deal-card', [ 'datas' => $datas ] ); 
                     ?>
                     
 
@@ -939,10 +934,10 @@ get_header();
 
 
 <?php 
-ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
-ispag_get_template( 'control-notif-modal', [] ); 
-ispag_get_template( 'ispag-popover-modal', [ null ] );
-ispag_get_template( 'ispag-sequence-modal', [ null ] );
+echo ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
+echo ispag_get_template( 'control-notif-modal', [] ); 
+echo ispag_get_template( 'ispag-popover-modal', [ null ] );
+echo ispag_get_template( 'ispag-sequence-modal', [ null ] );
 
 
 

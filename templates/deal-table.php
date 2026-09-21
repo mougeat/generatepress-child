@@ -5,9 +5,9 @@
  */
 ?> 
 
-<?php ispag_get_template( 'deal-bulk-edit', [] );  ?>
+<?php echo ispag_get_template( 'deal-bulk-edit', [] );  ?>
 
-<?php ispag_get_template( 'deal-export-btn', [] );  ?>
+<?php echo ispag_get_template( 'deal-export-btn', [] );  ?>
 
 
 <table class="ispag-crm-table">

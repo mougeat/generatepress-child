@@ -10,7 +10,8 @@ wp_enqueue_style('ispag-qr-style', get_stylesheet_directory_uri() . '/assets/css
 
 global $wpdb;
 $target_table = ISPAG_Crm_Deal_Constants::TABLE_NAME; 
-$serial = isset($_GET['serial']) ? sanitize_text_field($_GET['serial']) : null;
+// $serial = isset($_GET['serial']) ? sanitize_text_field($_GET['serial']) : null; 
+$serial = get_query_var('serial') ?: ($_GET['serial'] ?? '');
 
 $product = null;
 $project = null;

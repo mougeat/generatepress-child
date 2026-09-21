@@ -106,7 +106,7 @@ get_header();
                 <div class="ispag-board-controls">
                     <?php 
                         // Appelle le template et lui passe les données
-                        ispag_get_template( 'deal-search', [ 'kanban_filters' => $kanban_filters ] ); 
+                        echo ispag_get_template( 'deal-search', [ 'kanban_filters' => $kanban_filters ] ); 
                     ?>
                     
                     
@@ -120,7 +120,7 @@ get_header();
                 <div class="ispag-table-container">
                     <?php 
                         // Appelle le template et lui passe les données
-                        ispag_get_template( 'deal-table', [ 'transactions' => $deals_list ] ); 
+                        echo ispag_get_template( 'deal-table', [ 'transactions' => $deals_list ] ); 
                     ?>
                     
                 </div>
@@ -169,6 +169,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php 
-ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
+echo ispag_get_template( 'deal-reason-for-rejection-modal', [] ); 
 
 get_footer(); ?>

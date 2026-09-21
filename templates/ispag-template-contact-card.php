@@ -14,7 +14,7 @@ $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
 
 ?>
 
-<div class="ispag-card ispag-company-card">
+<div class="ispag-card ispag-contact-card">
     <h5>
         <?php _e('Contacts', 'ispag-crm'); ?> (<?php echo count($associated_contacts_list_full); ?>)
         <span id="open-add-contact-modal" class="add_relation-btn"

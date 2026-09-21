@@ -29,7 +29,7 @@ function theme_enqueue_styles() {
     wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
 
     // Dépendances communes CRM
-    $crm_deps = array( 'jquery', 'ispag-crm-js' );
+    $crm_deps = array( 'jquery');
 
     // 2. Librairies tiers (Intl-Tel-Input)
     wp_enqueue_style( 'intl-tel-input-css', 'https://cdn.jsdelivr.net/npm/intl-tel-input@20.0.5/build/css/intlTelInput.css', array(), '20.0.5' );
@@ -41,10 +41,10 @@ function theme_enqueue_styles() {
 
     // 4. Scripts CRM spécifiques
     wp_enqueue_script( 'ispag-crm-bulk', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-bulk-actions.js', array( 'jquery' ), '1.0.0', true );
-    wp_enqueue_script( 'ispag-crm-contact-bulk', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-contact-bulk-actions.js', array( 'jquery', 'ispag-crm-bulk', 'ispag-crm-js' ), '1.0.1', true );
+    wp_enqueue_script( 'ispag-crm-contact-bulk', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-contact-bulk-actions.js', array( 'jquery', 'ispag-crm-bulk' ), '1.0.1', true );
     wp_enqueue_script( 'ispag-crm-create-contact', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-create-contact.js', array( 'jquery', 'intl-tel-input-js' ), '1.0.1', true );
     wp_enqueue_script( 'ispag-crm-popover', get_stylesheet_directory_uri() . '/assets/js/popover.js', array( 'jquery', 'intl-tel-input-js' ), '1.0.1', true );
-    wp_enqueue_script( 'ispag-crm-deal-select', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-deal-list-select.js', $crm_deps, '1.0.0', true );
+    wp_enqueue_script( 'ispag-crm-deal-select', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-deal-list-select.js', array( 'jquery' ), '1.0.0', true );
 
     // Localisation AJAX pour la création de contact
     wp_localize_script( 'ispag-crm-create-contact', 'ispag_params', array(
@@ -86,8 +86,12 @@ function ispag_get_template( $template_name, $args = [] ) {
     }
 
     if ( file_exists( $template ) ) {
+        ob_start();
         include( $template );
+        return ob_get_clean(); // <-- On capture et on retourne le contenu du template
     }
+
+    return ''; // On retourne une chaîne vide si le fichier n'existe pas
 }
 
 
@@ -253,7 +257,7 @@ add_action( 'template_redirect', 'ispag_init_user_department', 1 );
 
 function ispag_add_global_contact_sidebar() {
     global $user_department;
-    ispag_get_template( 'ispag-create-contact-sidebar', [] );
+    echo ispag_get_template( 'ispag-create-contact-sidebar', [] );
     echo '<input type="hidden" name="user_departement" id="user_departement" value="' . esc_attr( $user_department ) . '">';
 }
 add_action( 'wp_footer', 'ispag_add_global_contact_sidebar' );
@@ -267,7 +271,7 @@ function ispag_register_crm_sidebar() {
     register_sidebar( array(
         'name'          => __( 'CRM Sidebar', 'ispag-crm' ),
         'id'            => 'ispag-crm-widgt-sidebar',
-        'description'   => __( 'Zone de widgets dédiée au CRM.', 'ispag-crm' ),
+        'description'   => __( 'Widget area dedicated to the CRM.', 'ispag-crm' ),
         'before_widget' => '<div id="%1$s" class="widget %2$s">',
         'after_widget'  => '</div>',
         'before_title'  => '<h3 class="widget-title">',
