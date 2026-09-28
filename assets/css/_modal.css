@@ -163,15 +163,26 @@ Fichier _modal.css
 
 .ispag-modal-grid:last-of-type { margin-bottom: 0; }
 
-.ispag-modal-left, .ispag-modal-right {
-    flex: 1 1 45%;
+/* Styles communs aux deux colonnes */
+.ispag-modal-left, 
+.ispag-modal-right {
     background: var(--ispag-light-grey); 
-    /* border-color: var(--ispag-color-text-dark); */
     border-color: red;
     border-radius: var(--ispag-badge-border-radius);
     padding: 20px;
-    min-width: 300px;
     box-sizing: border-box;
+}
+
+/* Colonne de gauche : 25% */
+.ispag-modal-left {
+    flex: 0 0 25%;
+    /* ou simplement : width: 25%; */
+}
+
+/* Colonne de droite : 70% */
+.ispag-modal-right {
+    flex: 0 0 70%;
+    /* ou simplement : width: 70%; */
 }
 
 /* IMAGE ET SVG */
@@ -181,15 +192,24 @@ Fichier _modal.css
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 400px; /* Place pour le chauffe-eau */
+    min-height: 250px; /* Place pour le chauffe-eau */
 }
 
-.image-wrapper { width: 100%; display: flex; justify-content: center; }
+.image-wrapper { 
+    width: 100%; 
+    height: 100%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}
 
+/* Remplissage de l'image ou du SVG */
 .responsive-svg {
-    width: 100% !important;
-    height: auto !important;
-    max-height: 500px;
+    width: 100% !important;      /* Occupe toute la largeur disponible */
+    max-width: 100%;             /* S'assure de ne pas dépasser */
+    height: auto !important;     /* Conserve le ratio largeur/hauteur */
+    max-height: 400px;           /* Ajustez selon la hauteur maximale souhaitée */
+    object-fit: contain;         /* Garantit que l'image ne soit pas déformée */
     display: block;
     margin: auto;
 }

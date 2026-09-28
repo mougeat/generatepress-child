@@ -288,12 +288,12 @@ get_header();
                             $actions['contact_names']     = $contact_names;
                             $actions['contact_emails']    = $contact_emails;
                             $actions['contact_phones']    = $contact_phones;
-                            $actions['deal_ids']          = $deal_id;
+                            $actions['deal_ids']          = $deal->deal_group_ref;
                             $actions['deal_names']        = $deal->project_name;
                             $actions['offer_num']         = $deal->deal_group_ref;
                             $actions['project_nums']      = $project_nums;
                             $actions['closing_date']      = $deal->closing_date;
-                            $actions['total_excl_vat']    = $deal->total_excl_vat;
+                            $actions['total_excl_vat']    = $deal->total_excl_vat; 
                                                     
 
                             // Appelle le template et lui passe les données
