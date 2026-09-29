@@ -190,43 +190,7 @@ function handle_ispag_quote_submission() {
 
 
 /* ==========================================================================
-   6. MULTILINGUISME (POLYLANG) & LOGOS
-   ========================================================================== */
-
-add_filter( 'generate_logo', 'ispag_multilingual_logo_url' );
-add_filter( 'generate_mobile_header_logo', 'ispag_multilingual_logo_url' ); 
-
-function ispag_multilingual_logo_url( $logo_url ) {
-    if ( function_exists( 'pll_current_language' ) ) {
-        $lang = pll_current_language( 'slug' );
-
-        $logo_fr = home_url() . '/wp-content/uploads/2024/06/Logo_ISPAG_CMYK_F_web.png';
-        $logo_de = home_url() . '/wp-content/uploads/2026/07/Logo_ISPAG_RGB_D.png';
-
-        if ( strpos( $lang, 'de' ) !== false ) {
-            return $logo_de;
-        } elseif ( strpos( $lang, 'fr' ) !== false ) {
-            return $logo_fr;
-        }
-    }
-    return $logo_url;
-}
-
-add_filter( 'wp_get_attachment_image_attributes', 'ispag_fix_logo_srcset', 10, 3 );
-
-function ispag_fix_logo_srcset( $attr, $attachment, $size ) {
-    if ( function_exists( 'pll_current_language' ) && isset( $attr['class'] ) && strpos( $attr['class'], 'is-logo-image' ) !== false ) {
-        $lang = pll_current_language( 'slug' );
-        if ( strpos( $lang, 'de' ) !== false ) {
-            unset( $attr['srcset'] );
-        }
-    }
-    return $attr;
-}
-
-
-/* ==========================================================================
-   7. GESTION DES DÉPARTEMENTS UTILISATEUR & SIDEBARS GLOBALES
+   6. GESTION DES DÉPARTEMENTS UTILISATEUR & SIDEBARS GLOBALES
    ========================================================================== */
 
 function ispag_init_user_department() {
@@ -280,7 +244,7 @@ add_action( 'wp_footer', 'ispag_add_global_contact_sidebar' );
 
 
 /* ==========================================================================
-   8. ENREGISTREMENT DES ZONES DE WIDGETS
+   7. ENREGISTREMENT DES ZONES DE WIDGETS
    ========================================================================== */
 
 function ispag_register_crm_sidebar() {
