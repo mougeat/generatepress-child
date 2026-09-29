@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (res.success && res.data.exists) {
                 emailInput.style.borderColor = "#de350b"; 
                 if (errorMsg) {
-                    errorMsg.innerHTML = `Ce contact existe déjà : <a href="${res.data.view_url}">${res.data.name}</a>`;
+                    errorMsg.innerHTML = `This contact already exists: <a href="${res.data.view_url}">${res.data.name}</a>`;
                     errorMsg.style.display = "block";
                 }
                 submitBtn.disabled = true;

@@ -174,22 +174,22 @@ function handle_ispag_quote_submission() {
 
     $message = "
     <div style='font-family: sans-serif; color: #333; max-width: 600px; border: 1px solid #eee; padding: 20px;'>
-        <h2 style='color: #E11D48;'>Nouvelle demande de réservoir</h2>
+        <h2 style='color: #E11D48;'>New tank request</h2>
         <p><strong>Client:</strong> {$company}</p>
         <p><strong>Email:</strong> {$email}</p>
         <p><strong>Projet:</strong> {$project}</p>
-        <p><strong>Téléphone:</strong> {$phone}</p>
+        <p><strong>Phone:</strong> {$phone}</p>
         <hr style='border: 0; border-top: 1px solid #eee;'>
-        <h3>Spécifications Techniques</h3>
+        <h3>Technical Specifications</h3>
         <ul>
             <li>Dimensions: Ø {$dia}mm x H {$height}mm</li>
             <li>Volume: {$vol} Litres</li>
             <li>Pression: {$pressure} bar</li>
-            <li>Matière: {$material}</li>
+            <li>Material: {$material}</li>
             <li>Isolation: {$insulation}</li>
             <li>Soudure sur site: {$site_w}</li>
         </ul>
-        <p style='font-size: 10px; color: #999;'>Envoyé depuis le configurateur en ligne ISPAG.</p>
+        <p style='font-size: 10px; color: #999;'>Sent from the ISPAG online configurator.</p>
     </div>";
 
     wp_mail( $to, $subject, $message, $headers );
