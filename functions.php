@@ -8,6 +8,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /* ==========================================================================
+   0. MISE À JOUR DEPUIS UNE BRANCHE GITHUB
+   Inactif sauf si wp-config.php définit ISPAG_GITHUB_TOKEN et ISPAG_UPDATE_BRANCH.
+   ========================================================================== */
+require_once get_stylesheet_directory() . '/inc/class-ispag-github-updater.php';
+ISPAG_GitHub_Updater::theme( get_stylesheet(), 'mougeat/generatepress-child' );
+
+/* ==========================================================================
    1. CHARGEMENT DES TRADUCTIONS (TEXTDOMAIN)
    ========================================================================== */
 
