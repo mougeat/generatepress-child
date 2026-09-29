@@ -196,7 +196,7 @@ get_header();
                     $lead_function  = ISPAG_Crm_Contact_Constants::META_LEAD_FUNCTION;
                     $priority_level  = ISPAG_Crm_Contact_Constants::PRIORITY_LEVEL;
 
-                    $owner_display_name = !empty($contact->$owner_key) ? get_the_author_meta( 'display_name', $contact->$owner_key ) : __('Non assigné', 'ispag-crm');
+                    $owner_display_name = !empty($contact->$owner_key) ? get_the_author_meta( 'display_name', $contact->$owner_key ) : __('Unassigned', 'ispag-crm');
                     $last_contact_date  = $contact->last_contact_date ? date_i18n( 'd.m.Y', strtotime( $contact->last_contact_date ) ) : __('N/A', 'ispag-crm');   
                     // $avatar_url         = $contact->avatar_url;
                     

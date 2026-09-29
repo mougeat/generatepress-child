@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let valToSave = '';
         if (type === 'phone') {
             if (!itiPopover.isValidNumber()) {
-                alert("Numéro de téléphone invalide");
+                alert("Invalid phone number");
                 return;
             }
             valToSave = itiPopover.getNumber(); 
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const frame = wp.media({
-            title: 'Sélectionner une image',
+            title: 'Select an image',
             button: { text: 'Utiliser cette image' },
             multiple: false
         });

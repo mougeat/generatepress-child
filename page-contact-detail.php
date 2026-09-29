@@ -399,7 +399,7 @@ $last_system_note = $wpdb->get_var($wpdb->prepare(
 ));
 
 // Message par défaut si aucune note n'est trouvée
-$explanation_lifecycle = $last_system_note ? strip_tags($last_system_note) : __("Aucune donnée d'automatisation disponible.", "creation-reservoir");
+$explanation_lifecycle = $last_system_note ? strip_tags($last_system_note) : __("No automation data available.", "creation-reservoir");
 
 // ----------------------------------------------------
 // 7. Création et Extraction des variables
@@ -455,7 +455,7 @@ get_header();
                             data-field-type="avatar"  
                             data-contact-id="<?php echo absint($user_id); ?>"
                             style="cursor: pointer;"
-                            title="<?php _e('Modifier l\'avatar', 'ispag-crm'); ?>">
+                            title="<?php _e('Edit avatar', 'ispag-crm'); ?>">
                             <span class="current-value">
                                 <?php 
                                 if ( $avatar_url ){ ?>
@@ -482,9 +482,9 @@ get_header();
                                     data-name="first_name" 
                                     data-contact-ids="<?php echo absint($user_id); ?>"
                                     data-value="<?php echo esc_attr( $contact->first_name ?? '' ); ?>"
-                                    placeholder="<?php _e('Prénom', 'ispag-crm'); ?>"
+                                    placeholder="<?php _e('First name', 'ispag-crm'); ?>"
                                 >
-                                    <?php echo !empty($contact->first_name) ? esc_html($contact->first_name) : '<span class="ispag-placeholder">Prénom</span>'; ?>
+                                    <?php echo !empty($contact->first_name) ? esc_html($contact->first_name) : '<span class="ispag-placeholder">First name</span>'; ?>
                                 </span>
 
                                 <span 
@@ -493,7 +493,7 @@ get_header();
                                     data-name="last_name" 
                                     data-contact-ids="<?php echo absint($user_id); ?>"
                                     data-value="<?php echo esc_attr( $contact->last_name ?? '' ); ?>"
-                                    placeholder="<?php _e('Nom', 'ispag-crm'); ?>"
+                                    placeholder="<?php _e('Last name', 'ispag-crm'); ?>"
                                 >
                                     <?php echo !empty($contact->last_name) ? esc_html($contact->last_name) : '<span class="ispag-placeholder">Nom</span>'; ?>
                                 </span>
@@ -653,13 +653,13 @@ get_header();
                         >
                             <span class="current-value">
                                 <?php 
-                                if ( ! empty( $contact->birthday ) && $contact->birthday !== 'Non renseignée' ) {
+                                if ( ! empty( $contact->birthday ) && $contact->birthday !== 'Not provided' ) {
                                     echo esc_html( $contact->birthday );
                                     if ( ! empty( $contact->age ) ) {
                                         echo ' <span style="color: #666; font-size: 0.9em;">(' . esc_html( $contact->age ) . ')</span>';
                                     }
                                 } else {
-                                    echo '<span style="color: #999; font-style: italic;">' . __( 'Non renseignée', 'ispag-crm' ) . '</span>';
+                                    echo '<span style="color: #999; font-style: italic;">' . __( 'Not provided', 'ispag-crm' ) . '</span>';
                                 }
                                 ?>
                             </span>

@@ -22,5 +22,5 @@ return [
     ['key' => 'message_templates', 'slug' => 'message-templates', 'title' => 'Message templates', 'template' => 'page-template-table.php', 'group' => 'message_templates'],
     ['key' => 'task_dashboard', 'slug' => 'task-dashboard', 'title' => 'Task dashboard', 'template' => 'page-task-dashboard.php', 'group' => 'task_dashboard'],
     ['key' => 'profile', 'slug' => 'profile', 'title' => 'Profile', 'template' => 'page-user-profil.php', 'group' => 'profile'],
-    ['key' => 'project_viewer', 'slug' => 'project', 'title' => 'Détail du projet', 'template' => 'page-project-detail-viewer.php', 'group' => 'project_viewer'],
+    ['key' => 'project_viewer', 'slug' => 'project', 'title' => 'Project detail', 'template' => 'page-project-detail-viewer.php', 'group' => 'project_viewer'],
 ];

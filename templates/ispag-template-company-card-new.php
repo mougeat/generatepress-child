@@ -84,7 +84,7 @@ $deal_id                         = $datas['deal_id']                         ?? 
             <?php
         }
     } else {
-        echo '<p class="ispag-no-company">' . __( 'Aucune entreprise associée.', 'ispag-crm' ) . '</p>';
+        echo '<p class="ispag-no-company">' . __( 'No associated company.', 'ispag-crm' ) . '</p>';
     }
     ?>
     

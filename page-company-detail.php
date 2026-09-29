@@ -309,7 +309,7 @@ get_header();
                             data-field-type="avatar"
                             data-company-id="<?php echo absint($company_id); ?>"
                             style="cursor: pointer;"
-                            title="<?php _e('Modifier l\'icône', 'ispag-crm'); ?>">
+                            title="<?php _e('Edit icon', 'ispag-crm'); ?>">
                             <span class="current-value">
                                 <?php
                                 if ($favicon) {
@@ -343,7 +343,7 @@ get_header();
                                 data-company-id="<?php echo $company_id; ?>"
                                 data-name="compagny_domain"
                                 data-value="<?php echo esc_attr($company_domain); ?>">
-                                <?php echo $company_domain ?? 'pas de domaine défini'; ?>
+                                <?php echo $company_domain ?? 'no domain defined'; ?>
                             </p>
                             <p
                                 class="ispag-popover-field"

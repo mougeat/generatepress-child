@@ -31,11 +31,11 @@ $user_id                    = $datas['user_id']    ?? '';
         if ( $nb_transactions > NB_TRANSACTIONS_RIGHT ) {
             break; // Arrête l'exécution de la boucle foreach
         }
-        $current_stage_label      = $transaction->stage_label ?? __('Non défini', 'ispag-crm');
+        $current_stage_label      = $transaction->stage_label ?? __('Not defined', 'ispag-crm');
         $current_stage_color      = $transaction->stage_color ?? '#cccccc';
 
         // CORRECTION ICI : Le repo injecte stage_label et stage_color
-        $current_stage_label = !empty($transaction->stage_label) ? $transaction->stage_label : __('Non défini', 'ispag-crm');
+        $current_stage_label = !empty($transaction->stage_label) ? $transaction->stage_label : __('Not defined', 'ispag-crm');
         $current_stage_color = !empty($transaction->stage_color) ? $transaction->stage_color : '#cccccc';
         ?>
         <div class="ispag-card" style="font-size: 14px;">

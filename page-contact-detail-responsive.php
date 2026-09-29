@@ -297,7 +297,7 @@ $last_system_note = $wpdb->get_var($wpdb->prepare(
 ));
 
 // Message par défaut si aucune note n'est trouvée
-$explanation_lifecycle = $last_system_note ? strip_tags($last_system_note) : __("Aucune donnée d'automatisation disponible.", "creation-reservoir");
+$explanation_lifecycle = $last_system_note ? strip_tags($last_system_note) : __("No automation data available.", "creation-reservoir");
 
 // ----------------------------------------------------
 // 7. Création et Extraction des variables
@@ -478,7 +478,7 @@ extract( $template_args );
                         $nb_trans = 0;
                         foreach ( $transactions_list_full as $transaction ): 
                             if ( ++$nb_trans > 5 ) break;
-                            $current_stage_label = !empty($transaction->stage_label) ? $transaction->stage_label : __('Non défini', 'ispag-crm');
+                            $current_stage_label = !empty($transaction->stage_label) ? $transaction->stage_label : __('Not defined', 'ispag-crm');
                             $current_stage_color = !empty($transaction->stage_color) ? $transaction->stage_color : '#cccccc';
                         ?>
                             <div class="ispag-transaction-item-mini">

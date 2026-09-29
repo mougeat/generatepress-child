@@ -67,7 +67,7 @@ get_header();
                                 ?>
                                 <tr id="task-<?php echo $task->id; ?>" class="task-row <?php echo $is_overdue ? 'row-overdue' : ''; ?>">
 
-                                    <td class="col-check" data-label="Terminé ?">
+                                    <td class="col-check" data-label="Done?">
                                         <div class="custom-checkbox">
                                             <input type="checkbox" id="check-<?php echo $task->id; ?>" class="complete-task-btn" data-activity-id="<?php echo esc_attr( $task->id ); ?>">
                                             <label for="check-<?php echo $task->id; ?>"></label>

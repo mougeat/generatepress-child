@@ -110,7 +110,7 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
         
         
         // Stage actuel (Doit être rempli dans le constructeur/méthode de chargement du modèle)
-        $current_stage_label      = $deal->stage_label ?? __('Non défini', 'ispag-crm');
+        $current_stage_label      = $deal->stage_label ?? __('Not defined', 'ispag-crm');
         $current_stage_color      = $deal->stage_color ?? '#cccccc';
         
         // Date de dernière activité. Assurez-vous que last_activity_date est rempli dans $deal

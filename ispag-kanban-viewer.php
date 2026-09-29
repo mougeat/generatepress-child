@@ -106,7 +106,7 @@ if ( $deal_repo && $stage_repo ) {
     // Si les classes ne sont pas trouvées, on affiche un message d'erreur.
     $stages_list = [];
     $deals_by_stage = [];
-    echo '<p class="ispag-error">Erreur: Les composants du CRM (Repositories) sont indisponibles. Assurez-vous que les classes sont chargées.</p>';
+    echo '<p class="ispag-error">Error: The CRM components (Repositories) are unavailable. Make sure the classes are loaded.</p>';
 }
 
 ?>
