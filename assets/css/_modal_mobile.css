@@ -122,11 +122,22 @@ body.modal-open {
    - le corps défile, le pied reste collé en bas, boutons pleine largeur
    ========================================================================== */
 @media (max-width: 1024px) {
-    #ispag-modal-product,
-    #ispag-modal-product .ispag-modal-content {
+    #ispag-modal-product {
+        top: 0 !important;
         height: 100vh !important;
         height: 100dvh !important;
-        max-height: 100dvh !important;
+        height: var(--ispag-vh, 100dvh) !important;
+        max-height: var(--ispag-vh, 100dvh) !important;
+    }
+    /* Barre d'admin WordPress (46 px sur mobile) : la modale commence dessous */
+    .admin-bar #ispag-modal-product {
+        top: 46px !important;
+        height: calc(var(--ispag-vh, 100dvh) - 46px) !important;
+        max-height: calc(var(--ispag-vh, 100dvh) - 46px) !important;
+    }
+    #ispag-modal-product .ispag-modal-content {
+        height: 100% !important;
+        max-height: 100% !important;
     }
 
     #ispag-modal-product #ispag-product-modal-content {

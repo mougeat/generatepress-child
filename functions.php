@@ -302,3 +302,21 @@ function ispag_register_crm_sidebar() {
     ) );
 }
 add_action( 'widgets_init', 'ispag_register_crm_sidebar' );
+
+// Hauteur réellement visible sur mobile (barres du navigateur) -> variable CSS --ispag-vh, utilisée par les modales
+add_action( 'wp_footer', function () {
+    ?>
+    <script>
+    (function () {
+        function setVh() {
+            var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+            document.documentElement.style.setProperty('--ispag-vh', Math.round(h) + 'px');
+        }
+        setVh();
+        window.addEventListener('resize', setVh);
+        window.addEventListener('orientationchange', setVh);
+        if (window.visualViewport) { window.visualViewport.addEventListener('resize', setVh); }
+    })();
+    </script>
+    <?php
+}, 5 );
