@@ -16,6 +16,9 @@
  *   onDone    (function(data))  appelé après injection, reçoit response.data
  *   onError   (function(err))   appelé en cas d'échec
  *
+ * Après injection, l'événement jQuery 'ispag:loaded' est déclenché sur la cible (il remonte jusqu'à document) :
+ * les scripts historiques qui s'attachaient à DOMContentLoaded peuvent s'y rebrancher pour le contenu injecté.
+ *
  * Réponse serveur attendue (wp_send_json_success) : { html: '...', ...extra }
  * Retourne une Promise résolue avec response.data.
  * Une nouvelle requête sur la même cible annule la précédente (pas de réponse obsolète).
@@ -94,6 +97,7 @@
                     $skeleton.remove();
                     $target.append(data.html || '');
                 }
+                $target.trigger('ispag:loaded', [data]);
                 if (typeof options.onDone === 'function') options.onDone(data);
                 deferred.resolve(data);
             } else {
