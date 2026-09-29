@@ -35,6 +35,10 @@ function theme_enqueue_styles() {
     wp_enqueue_style( 'intl-tel-input-css', 'https://cdn.jsdelivr.net/npm/intl-tel-input@20.0.5/build/css/intlTelInput.css', array(), '20.0.5' );
     wp_enqueue_script( 'intl-tel-input-js', 'https://cdn.jsdelivr.net/npm/intl-tel-input@20.0.5/build/js/intlTelInput.min.js', array(), '20.0.5', true );
 
+    // 3a. Socle skeleton + chargement AJAX partagé (ISPAGSkeleton / ISPAGLoad)
+    wp_enqueue_script( 'ispag-skeleton', get_stylesheet_directory_uri() . '/assets/js/ispag-skeleton.js', array( 'jquery' ), wp_get_theme()->get( 'Version' ), true );
+    wp_localize_script( 'ispag-skeleton', 'ispagSkeletonVars', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+
     // 3. Scripts de navigation et utilitaires
     wp_enqueue_script( 'ispag-navigation-script', get_stylesheet_directory_uri() . '/assets/js/navigation-script.js', array( 'jquery' ), wp_get_theme()->get( 'Version' ), true );
     wp_enqueue_script( 'ispag-select2-script', get_stylesheet_directory_uri() . '/assets/js/select2.min.js', array( 'jquery' ), wp_get_theme()->get( 'Version' ), true );

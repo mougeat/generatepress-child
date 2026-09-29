@@ -45,3 +45,54 @@
 .ispag-activity-content {
     width: 100%;
 }
+
+/* ==========================================================================
+   SKELETON — socle commun ISPAG (utilisé par ISPAGSkeleton / ISPAGLoad)
+   ========================================================================== */
+
+/* Largeurs supplémentaires (complète .ispag-w-20/40/60/80/90 ci-dessus) */
+.ispag-w-10  { width: 10%; }
+.ispag-w-30  { width: 30%; }
+.ispag-w-50  { width: 50%; }
+.ispag-w-70  { width: 70%; }
+.ispag-w-100 { width: 100%; }
+
+/* Bloc "pulse" générique : à poser sur n'importe quel élément */
+.ispag-skeleton {
+    display: block;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    min-height: 14px;
+    animation: ispag-pulse 1.5s infinite ease-in-out;
+}
+.ispag-skeleton-title { height: 22px; width: 40%; margin-bottom: 14px; }
+.ispag-skeleton-btn   { height: 34px; width: 110px; border-radius: 6px; }
+.ispag-skeleton-card  {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 12px;
+    animation: ispag-pulse 1.5s infinite ease-in-out;
+}
+
+/* Ligne de tableau skeleton : la cellule garde la hauteur d'une vraie ligne */
+tr.ispag-skeleton-row td { padding-top: 14px; padding-bottom: 14px; }
+tr.ispag-skeleton-row .ispag-skeleton-line { margin-bottom: 0; }
+
+/* Conteneur en cours de chargement (ajouté/retiré par ISPAGLoad) */
+.ispag-is-loading { pointer-events: none; }
+[aria-busy="true"].ispag-is-loading { cursor: progress; }
+
+@media (prefers-color-scheme: dark) {
+    .ispag-skeleton,
+    .ispag-skeleton-line,
+    .ispag-skeleton-circle { background-color: #3a3a3a; }
+    .ispag-skeleton-card   { border-color: #3a3a3a; }
+}
+
+/* Accessibilité : pas d'animation si l'utilisateur la refuse */
+@media (prefers-reduced-motion: reduce) {
+    .ispag-skeleton-wrapper,
+    .ispag-skeleton,
+    .ispag-skeleton-card { animation: none; }
+}
