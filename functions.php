@@ -14,6 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once get_stylesheet_directory() . '/inc/class-ispag-github-updater.php';
 ISPAG_GitHub_Updater::theme( get_stylesheet(), 'mougeat/generatepress-child' );
 
+// Pages basées sur les modèles du thème : créées à l'activation du thème ou via Outils → Pages ISPAG (jamais automatiquement)
+require_once get_stylesheet_directory() . '/inc/class-ispag-page-installer.php';
+ISPAG_Page_Installer::register( 'Thème ISPAG', require get_stylesheet_directory() . '/install/pages.php' );
+add_action( 'after_switch_theme', function () { ISPAG_Page_Installer::on_activation( 'Thème ISPAG' ); } );
+
 /* ==========================================================================
    1. CHARGEMENT DES TRADUCTIONS (TEXTDOMAIN)
    ========================================================================== */
