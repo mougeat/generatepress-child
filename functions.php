@@ -62,6 +62,21 @@ function theme_enqueue_styles() {
     wp_enqueue_script( 'ispag-crm-popover', get_stylesheet_directory_uri() . '/assets/js/popover.js', array( 'jquery', 'intl-tel-input-js' ), '1.0.1', true );
     wp_enqueue_script( 'ispag-crm-deal-select', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-deal-list-select.js', array( 'jquery' ), '1.0.0', true );
 
+    // Création d'entreprise depuis la page publique : script chargé seulement pour les utilisateurs autorisés
+    if ( class_exists( 'ISPAG_Crm_Company_Creator' ) && ISPAG_Crm_Company_Creator::can_create() ) {
+        wp_enqueue_script( 'ispag-crm-create-company', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-create-company.js', array( 'jquery' ), '1.0.0', true );
+        wp_localize_script( 'ispag-crm-create-company', 'ispag_company_params', array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'nonce'    => wp_create_nonce( ISPAG_Crm_Company_Creator::NONCE_ACTION ),
+            'i18n'     => array(
+                'name_required' => __( 'The company name is required.', 'ispag-crm' ),
+                'creating'      => __( 'Creating...', 'ispag-crm' ),
+                'error'         => __( 'An error occurred. Please try again.', 'ispag-crm' ),
+                'open_existing' => __( 'Open the existing company', 'ispag-crm' ),
+            ),
+        ) );
+    }
+
     // Localisation AJAX pour la création de contact
     wp_localize_script( 'ispag-crm-create-contact', 'ispag_params', array(
         'ajax_url'  => admin_url( 'admin-ajax.php' ),
@@ -241,6 +256,14 @@ function ispag_add_global_contact_sidebar() {
     echo '<input type="hidden" name="user_departement" id="user_departement" value="' . esc_attr( $user_department ) . '">';
 }
 add_action( 'wp_footer', 'ispag_add_global_contact_sidebar' );
+
+// Panneau « Créer une entreprise » : uniquement pour les utilisateurs autorisés (voir ISPAG_Crm_Company_Creator::can_create)
+function ispag_add_global_company_sidebar() {
+    if ( class_exists( 'ISPAG_Crm_Company_Creator' ) && ISPAG_Crm_Company_Creator::can_create() ) {
+        echo ispag_get_template( 'ispag-create-company-sidebar', [] );
+    }
+}
+add_action( 'wp_footer', 'ispag_add_global_company_sidebar' );
 
 
 /* ==========================================================================
