@@ -205,6 +205,26 @@ function handle_ispag_quote_submission() {
 
 
 /* ==========================================================================
+   5b. DÉTAIL D'UN PROJET : VUE « 3 COLONNES » POUR TOUS
+   ==========================================================================
+   Les pages « details-du-projet » (FR) et « projektdetails » (DE) affichaient l'ancienne vue (shortcode [ispag_detail]).
+   Elles utilisent maintenant le modèle « ISPAG Project Detail Viewer » (page-project-detail-viewer.php, 3 colonnes),
+   quel que soit le chemin d'accès : /project-detail/<id>, /details-du-projet/?deal_id=<id>, liste, notifications…
+   Pour revenir à l'ancienne vue : add_filter( 'ispag_project_detail_three_columns', '__return_false' );
+   ========================================================================== */
+add_filter( 'template_include', function ( $template ) {
+    if ( ! is_page( array( 'details-du-projet', 'projektdetails' ) ) ) {
+        return $template;
+    }
+    if ( ! apply_filters( 'ispag_project_detail_three_columns', true ) ) {
+        return $template;
+    }
+    $three_columns = locate_template( 'page-project-detail-viewer.php' );
+    return $three_columns ? $three_columns : $template;
+}, 20 );
+
+
+/* ==========================================================================
    6. GESTION DES DÉPARTEMENTS UTILISATEUR & SIDEBARS GLOBALES
    ========================================================================== */
 
