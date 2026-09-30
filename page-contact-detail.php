@@ -42,16 +42,14 @@ if ( class_exists( 'ISPAG_Revenue_Stats' ) ) {
 }
 
 CONST NB_TRANSACTIONS_RIGHT = 5;
-// 3. Récupération de l'ID VIAG de l'URL
+// 3. Récupération de l'Id du contact depuis l'URL
 // NOTE: Vous devez avoir une règle de réécriture qui mappe l'ID de l'URL (/company/46390/)
-// à une variable de requête personnalisée comme 'ispag_viag_id' (ou 'viag_id').
-// Si 'viag_id' fonctionne, utilisez 'viag_id'.
 $user_id = get_query_var( 'user_id' ); 
 
 // Fallback pour tester ou si le query_var n'est pas enregistré
 if ( empty( $user_id ) ) {
     global $wp_query;
-    // Essaie d'utiliser 'viag_id' qui est souvent le nom donné dans les rewrite rules
+    // Variable de requête définie par la règle de réécriture
     $user_id = $wp_query->query_vars['user_id'] ?? 0;
 }
 

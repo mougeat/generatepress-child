@@ -202,7 +202,7 @@ get_header();
                     
                     // $company_name = '—';
                     // if ( ! empty( $contact->$comp_id_key ) ) {
-                    //     $company = $company_repo->get_company_by_viag_id( $contact->$comp_id_key );
+                    //     $company = $company_repo->get_company_by_id( $contact->$comp_id_key );
                     //     if ( $company ) $company_name = $company->company_name;
                     // }
                 ?> 

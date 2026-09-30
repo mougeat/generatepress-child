@@ -120,7 +120,6 @@ if (empty($company)) {
 // Préparation des variables
 $company_id = absint($company->Id);
 $company_name = esc_html($company->company_name ?? '');
-$company_viag_id = esc_html($company->viag_id ?? '');
 $company_type = esc_html($company->type ?? '');
 $isIngenieur = esc_html($company->isIngenieur ?? '');
 $is_active = esc_html($company->is_active ?? '');
@@ -248,7 +247,6 @@ $template_args = compact(
     'company',
     'company_id',
     'company_name',
-    'company_viag_id',
     'company_type',
     'isIngenieur',
     'is_active',
@@ -344,16 +342,6 @@ get_header();
                                 data-name="compagny_domain"
                                 data-value="<?php echo esc_attr($company_domain); ?>">
                                 <?php echo $company_domain ?? 'no domain defined'; ?>
-                            </p>
-                            <p
-                                class="ispag-popover-field"
-                                data-field-type="text"
-                                data-department-id="<?php echo $user_department; ?>"
-                                data-company-id="<?php echo $company_id; ?>"
-                                data-name="viag_id"
-                                data-value="<?php echo esc_attr($company_viag_id); ?>">
-                                <?php echo $company_viag_id; ?>
-                                <span class="edit-icon">✏️</span>
                             </p>
                         </div>
                     </div>
@@ -637,7 +625,6 @@ get_header();
                     <?php
                     $datas['associated_contacts_list_full'] = $associated_contacts_list_full;
                     $datas['company_id'] = $company_id;
-                    $datas['company_viag_id'] = $company_id;
                     echo ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
                     ?>
                     
