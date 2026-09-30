@@ -311,6 +311,9 @@ add_action( 'wp_footer', function () {
         function setVh() {
             var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
             document.documentElement.style.setProperty('--ispag-vh', Math.round(h) + 'px');
+            var bar = document.getElementById('wpadminbar');
+            var barH = (bar && getComputedStyle(bar).position === 'fixed') ? bar.offsetHeight : 0;
+            document.documentElement.style.setProperty('--ispag-adminbar', barH + 'px');
         }
         setVh();
         window.addEventListener('resize', setVh);
