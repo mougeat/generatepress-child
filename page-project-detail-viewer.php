@@ -101,7 +101,7 @@ if(class_exists('ISPAG_Projet_Repository')){
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
-        <div class="ispag-detail-container ispag-company-detail">
+        <div class="ispag-detail-container ispag-company-detail ispag-project-view">
 
             <!-- Colonne de gauche -->
             <div class="ispag-left-panel" data-panel="left">
