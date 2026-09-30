@@ -409,6 +409,7 @@ get_header();
                             data-department-id="<?php echo $user_department; ?>"
                             data-company-id="<?php echo $company_id; ?>"
                             data-field-type="phone"
+                            data-name="phone"
                             data-value="<?php echo esc_attr($company_phone); ?>">
                             <?php echo $company_phone; ?>
                         </dd>
@@ -420,7 +421,8 @@ get_header();
                             data-department-id="<?php echo $user_department; ?>"
                             data-company-id="<?php echo $company_id; ?>"
                             data-name="<?php echo ISPAG_Crm_Company_Constants::COMPANY_TYPE; ?>"
-                            data-options='<?php echo $type_source_options; ?>'>
+                            data-value="<?php echo esc_attr($company->type_key ?? ''); ?>"
+                            data-options="<?php echo esc_attr($type_source_options); ?>">
                             <?php _e($company_type, 'ispag-crm'); ?>
                             <span class="edit-icon">✏️</span>
                         </dd>
