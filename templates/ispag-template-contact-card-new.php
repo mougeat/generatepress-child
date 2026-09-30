@@ -6,7 +6,7 @@
 
 $contacts        = $datas['contacts'] ?? array();
 $associated_ids  = $datas['associated_ids'] ?? array();
-$company_viag_id = $datas['company_viag_id'] ?? '';
+$company_id_ref = $datas['company_id'] ?? '';
 $deal_id         = $datas['deal_id'] ?? '';
 $deal_group_ref  = $datas['deal_group_ref'] ?? '';
 
@@ -20,7 +20,7 @@ $total_contacts = count($contacts);
 <h5>
     <?php _e('Contacts', 'ispag-crm'); ?> (<?php echo $total_contacts; ?>)
     <span id="open-add-contact-modal" class="add_relation-btn"
-        data-company-id="<?php echo absint($company_viag_id); ?>"
+        data-company-id="<?php echo absint($company_id_ref); ?>"
         data-deal-group-ref="<?php echo esc_attr($deal_group_ref); ?>"
         data-deal-id="<?php echo absint($deal_id); ?>">
         + <?php _e('Add', 'ispag-crm'); ?>
@@ -66,7 +66,7 @@ foreach ($contacts as $contact) :
                 class="ispag-remove-association"
                 data-action="remove-contact-from-company"
                 data-contact-id="<?php echo absint($contact_id); ?>"
-                data-company-id="<?php echo absint($company_viag_id); ?>"
+                data-company-id="<?php echo absint($company_id_ref); ?>"
                 title="<?php esc_attr_e('Remove association', 'ispag-crm'); ?>"
                 style="color: #e74c3c; cursor: pointer;">
                 <span class="dashicons dashicons-trash"></span>
@@ -82,7 +82,7 @@ endforeach;
 
 // Affichage du bouton "Voir tout" si le nombre total dépasse la limite
 if ($total_contacts > NB_TRANSACTIONS_RIGHT) :
-    $company_url = home_url('/listes-des-contacts/?filter_company=' . $company_viag_id . '/');
+    $company_url = home_url('/listes-des-contacts/?filter_company=' . $company_id_ref . '/');
     ?>
     <a href="<?php echo esc_url($company_url); ?>" class="ispag-button-link"><?php _e('Show all contacts', 'ispag-crm'); ?></a>
 <?php endif; ?>

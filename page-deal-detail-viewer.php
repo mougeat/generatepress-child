@@ -92,7 +92,7 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
         $associated_companies_list = $deal->get_associated_company_list();
         $associated_companies_list_full = array();
         foreach ($associated_companies_list as $companies) {
-            $associated_companies_list_full[] = $companies->viag_id;
+            $associated_companies_list_full[] = $companies->Id;
         }
         // error_log(print_r($associated_companies_list, true));
 

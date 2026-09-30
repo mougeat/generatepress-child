@@ -235,7 +235,7 @@ get_header();
             <tbody>
                 <?php if ( ! empty( $companies ) ) : ?>
                     <?php foreach ( $companies as $company ) : 
-                        $company_app_url = home_url( '/company/' . $company->viag_id . '/' );
+                        $company_app_url = home_url( '/company/' . $company->Id . '/' );
                         $c_name = $company->company_name;
                         $words = explode(' ', trim($c_name));
                         $initials = (count($words) > 1) 

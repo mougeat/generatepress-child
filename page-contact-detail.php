@@ -122,7 +122,7 @@ $transactions_list_full  = []; // Liste complète des transactions (devrait êtr
 // Extraction de tous les IDs d'entreprises associés
 if ( ! empty( $contact->companies ) && is_array( $contact->companies ) ) {
     // wp_list_pluck extrait uniquement la colonne 'Id' de votre tableau d'objets
-    $associated_companies_list_full = wp_list_pluck( $contact->companies, 'viag_id' );
+    $associated_companies_list_full = wp_list_pluck( $contact->companies, 'Id' );
 
 } else {
     // Sécurité : si aucune entreprise n'est trouvée
@@ -169,7 +169,7 @@ $primary_company_priority = '';
 $primary_company_owner = __('Not assigned', 'ispag-crm');
 
 foreach ($associated_companies_list_full as $index => $company_id) {
-    $company = $company_repo->get_company_by_viag_id($company_id);
+    $company = $company_repo->get_company_by_id($company_id);
     
     if ( $company && !empty($company->company_name) ) {
         $company_ids_arr[]   = $company_id;
@@ -208,7 +208,7 @@ foreach ($associated_companies_list_full as $index => $company_id) {
             }
 
             $company_repo = new ISPAG_Crm_Company_Repository();
-            $company = $company_repo->get_company_by_viag_id($company_id);
+            $company = $company_repo->get_company_by_id($company_id);
 
             //Adresse de l'entreprise principale
             $company_address         = esc_html( $company->address ?? '' );

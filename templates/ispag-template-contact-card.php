@@ -6,7 +6,7 @@
 
 $associated_contacts_list_full  = $datas['associated_contacts_list_full']    ?? '';
 $company_id                     = $datas['company_id']    ?? '';
-$company_viag_id                = $datas['company_viag_id']    ?? '';
+$company_id_ref                = $datas['company_id']    ?? '';
 $user_id                        = $datas['user_id']    ?? '';
 $deal_id                        = $datas['deal_id']    ?? '';
 $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
@@ -19,7 +19,7 @@ $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
         <?php _e('Contacts', 'ispag-crm'); ?> (<?php echo count($associated_contacts_list_full); ?>)
         <span id="open-add-contact-modal" class="add_relation-btn"
             
-            data-company-id="<?php echo absint($company_viag_id); ?>"
+            data-company-id="<?php echo absint($company_id_ref); ?>"
             data-deal-group-ref="<?php echo esc_attr($deal_group_ref); ?>"
             data-deal-id="<?php echo absint($deal_id); ?>">
             + <?php _e('Add', 'ispag-crm'); ?>
@@ -55,7 +55,7 @@ $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
                     class="ispag-remove-association"
                     data-action="remove-contact-from-company"
                     data-contact-id="<?php echo absint($contact->ID); ?>"
-                    data-company-id="<?php echo absint($company_viag_id); ?>"
+                    data-company-id="<?php echo absint($company_id_ref); ?>"
                     title="<?php esc_attr_e('Remove association', 'ispag-crm'); ?>"
                     style="color: #e74c3c; cursor: pointer;">
                     <span class="dashicons dashicons-trash"></span>
@@ -70,7 +70,7 @@ $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
     endforeach;
 
     if ($nb_contact > NB_TRANSACTIONS_RIGHT) {
-        $company_url = home_url('/listes-des-contacts/?filter_company=' . $company_viag_id . '/');
+        $company_url = home_url('/listes-des-contacts/?filter_company=' . $company_id_ref . '/');
         ?>
         <a href="<?php echo $company_url; ?>" class="ispag-button-link"><?php _e('Show all contacts', 'ispag-crm'); ?></a>
     <?php

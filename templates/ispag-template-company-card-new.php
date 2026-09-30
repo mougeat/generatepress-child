@@ -23,7 +23,7 @@ $deal_id                         = $datas['deal_id']                         ?? 
         foreach ($companies as $company) {
             if (!$company) continue;
 
-            $company_app_url = home_url( '/company/' . $company->viag_id . '/' );
+            $company_app_url = home_url( '/company/' . $company->Id . '/' );
             $company_name    = $company->company_name ?? '';
             $favicon         = $company->favicon ?? null;
 
@@ -56,7 +56,7 @@ $deal_id                         = $datas['deal_id']                         ?? 
                         class="ispag-remove-association" 
                         data-action="remove-contact-from-company"
                         data-contact-id="<?php echo absint($user_id); ?>"
-                        data-company-id="<?php echo absint($company->viag_id); ?>"
+                        data-company-id="<?php echo absint($company->Id); ?>"
                         data-deal-id="<?php echo absint($deal_id); ?>"
                         title="<?php esc_attr_e( 'Remove association', 'ispag-crm' ); ?>"
                         style="color: #e74c3c; cursor: pointer;"

@@ -157,7 +157,7 @@ $company_names_arr = [];
 $company_repo = new ISPAG_Crm_Company_Repository();
 
 foreach ($associated_companies_list_full as $company_id) {
-    $company = $company_repo->get_company_by_viag_id($company_id);
+    $company = $company_repo->get_company_by_id($company_id);
     
     if ( $company && !empty($company->company_name) ) {
         $company_ids_arr[]   = $company_id;
@@ -456,9 +456,9 @@ extract( $template_args );
                     if (class_exists( 'ISPAG_Crm_Company_Repository' ) ){
                         $company_repo = new ISPAG_Crm_Company_Repository();
                         foreach ($associated_companies_list_full as $company_id) {
-                            $company = $company_repo->get_company_by_viag_id($company_id);
+                            $company = $company_repo->get_company_by_id($company_id);
                             if($company) {
-                                $company_app_url = home_url( '/company/' . $company->viag_id . '/' );
+                                $company_app_url = home_url( '/company/' . $company->Id . '/' );
                                 ?>
                                 <div class="ispag-sidebar-item">
                                     <strong><a href="<?php echo esc_url($company_app_url); ?>"><?php echo $company->company_name; ?></a></strong>

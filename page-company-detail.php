@@ -51,15 +51,15 @@ if (class_exists('ISPAG_Revenue_Stats')) {
 
 define('NB_TRANSACTIONS_RIGHT', 5);
 
-// Récupération de l'ID VIAG de l'URL
-$company_viag_id = get_query_var('company_id');
-if (empty($company_viag_id)) {
+// Récupération de l'Id de l'entreprise dans l'URL (/company/<Id>/)
+$company_url_id = get_query_var('company_id');
+if (empty($company_url_id)) {
     global $wp_query;
-    $company_viag_id = $wp_query->query_vars['company_id'] ?? 0;
+    $company_url_id = $wp_query->query_vars['company_id'] ?? 0;
 }
 
 // Chargement des données de l'entreprise
-$company = $repository->get_company_by_viag_id($company_viag_id);
+$company = $repository->get_company_by_id($company_url_id);
 
 // // Récupération des options de coefficients (wpcb_sales_coef*)
 // $sales_coef_options = [];
@@ -105,8 +105,8 @@ if (empty($company)) {
             <div class="ispag-error-message">
                 <?php
                 printf(
-                    __('Company data is missing or not found for ID VIAG: %s', 'ispag-crm'),
-                    esc_html($company_viag_id)
+                    __('Company data is missing or not found for ID: %s', 'ispag-crm'),
+                    esc_html($company_url_id)
                 );
                 ?>
             </div>
@@ -151,14 +151,14 @@ $discount_value = $company->discount_value ?? null;
 // Chargement des transactions
 if (class_exists('ISPAG_Crm_Deals_Repository')) {
     $deals_repository = new ISPAG_Crm_Deals_Repository();
-    $transactions_list_full = $deals_repository->get_projects_by_company($company_viag_id);
+    $transactions_list_full = $deals_repository->get_projects_by_company($company_id);
 }
 
 // Chargement des notes
 if (class_exists('ISPAG_Note_Manager')) {
     $note_repository = new ISPAG_Note_Repository();
     $note_renderer = new ISPAG_Note_Renderer();
-    $activity_detail = $note_repository->get_activities_for_entity('company', $company_viag_id);
+    $activity_detail = $note_repository->get_activities_for_entity('company', $company_id);
     $notes_list_full = $note_renderer->render_activities_list($activity_detail);
 } else {
     $notes_list_full = '<p>' . __('No registered activity', 'ispag-crm') . '</p>';
@@ -212,7 +212,7 @@ $owner_entry = $wpdb->get_row($wpdb->prepare(
      WHERE company_id = %d
      AND department_key = %s
      AND status = 'active'",
-    $company_viag_id,
+    $company_id,
     $user_department
 ));
 
@@ -360,7 +360,7 @@ get_header();
 
                     <div class="ispag-actions-bar">
                         <?php
-                        $actions['company_ids'] = $company_viag_id;
+                        $actions['company_ids'] = $company_id;
                         $actions['company_names'] = $company_name;
                         $actions['user_id'] = get_current_user_id();
                         $actions['contact_ids'] = $contact_ids;
@@ -407,7 +407,7 @@ get_header();
                         <dd
                             class="ispag-popover-field"
                             data-department-id="<?php echo $user_department; ?>"
-                            data-company-id="<?php echo $company_viag_id; ?>"
+                            data-company-id="<?php echo $company_id; ?>"
                             data-field-type="phone"
                             data-value="<?php echo esc_attr($company_phone); ?>">
                             <?php echo $company_phone; ?>
@@ -418,7 +418,7 @@ get_header();
                             class="ispag-editable-field"
                             data-type="select"
                             data-department-id="<?php echo $user_department; ?>"
-                            data-company-id="<?php echo $company_viag_id; ?>"
+                            data-company-id="<?php echo $company_id; ?>"
                             data-name="<?php echo ISPAG_Crm_Company_Constants::COMPANY_TYPE; ?>"
                             data-options='<?php echo $type_source_options; ?>'>
                             <?php _e($company_type, 'ispag-crm'); ?>
@@ -430,7 +430,7 @@ get_header();
                             class="ispag-editable-field"
                             data-type="select"
                             data-department-id="<?php echo $user_department; ?>"
-                            data-company-id="<?php echo $company_viag_id; ?>"
+                            data-company-id="<?php echo $company_id; ?>"
                             data-name="<?php echo ISPAG_Crm_Company_Constants::PRIORITY_LEVEL; ?>"
                             data-value="<?php echo esc_attr($company_priority_level); ?>"
                             data-options="<?php echo esc_attr($company_prio_options); ?>">
@@ -461,7 +461,7 @@ get_header();
                             class="ispag-editable-field"
                             data-type="select"
                             data-name="department_owner"
-                            data-company-id="<?php echo esc_attr($company_viag_id); ?>"
+                            data-company-id="<?php echo esc_attr($company_id); ?>"
                             data-department-id="<?php echo esc_attr($user_department); ?>"
                             data-value="<?php echo esc_attr($current_owner_id); ?>"
                             data-options='<?php echo esc_attr($users_list_source); ?>'>
@@ -489,7 +489,7 @@ get_header();
                         <dd class="ispag-editable-field"
                             data-type="select"
                             data-department-id="<?php echo esc_attr($user_department); ?>"
-                            data-company-id="<?php echo esc_attr($company_viag_id); ?>"
+                            data-company-id="<?php echo esc_attr($company_id); ?>"
                             data-name="rabais"
                             data-value="<?php echo esc_attr($discount_value); ?>"
                             data-options="<?php echo esc_attr($discount_options); ?>">
@@ -509,7 +509,7 @@ get_header();
                         <dd class="ispag-editable-field"
                             data-type="select"
                             data-department-id="<?php echo esc_attr($user_department); ?>"
-                            data-company-id="<?php echo absint($company_viag_id); ?>"
+                            data-company-id="<?php echo absint($company_id); ?>"
                             data-name="coef_vente"
                             data-value="<?php echo esc_attr($coef_value); ?>"
                             data-options="<?php echo esc_attr($coef_options); ?>">
@@ -568,7 +568,7 @@ get_header();
                         <?php if (isset($revenue_stats)) : ?>
                             <div class="ispag-card ispag-revenue-dashboard">
                                 <h5><?php _e('Revenue Perspectives', 'ispag-crm'); ?></h5>
-                                <?php echo $revenue_stats->render_perspective_cards($company_viag_id, 'company'); ?>
+                                <?php echo $revenue_stats->render_perspective_cards($company_id, 'company'); ?>
                             </div>
                         <?php endif; ?>
 
@@ -576,7 +576,7 @@ get_header();
                             id="gemini-ai-summary-<?php echo absint(get_current_user_id()); ?>"
                             class="ispag-ai-placeholder"
                             data-contact-id="<?php echo absint(get_current_user_id()); ?>"
-                            data-company-id="<?php echo absint($company_viag_id); ?>">
+                            data-company-id="<?php echo absint($company_id); ?>">
                             <?php echo ispag_get_template('ai-loader', [null]); ?>
                         </div>
                     </div>
@@ -595,7 +595,7 @@ get_header();
                             id="gemini-ai-profil-<?php echo absint(get_current_user_id()); ?>"
                             class="ispag-ai-profil-placeholder"
                             data-contact-id="<?php echo absint(get_current_user_id()); ?>"
-                            data-company-id="<?php echo absint($company_viag_id); ?>">
+                            data-company-id="<?php echo absint($company_id); ?>">
                             <?php echo ispag_get_template('ai-loader', [null]); ?>
                         </div>
 
@@ -603,7 +603,7 @@ get_header();
                             id="gemini-ai-actions-<?php echo absint(get_current_user_id()); ?>"
                             class="ispag-ai-actions-placeholder"
                             data-contact-id="<?php echo absint(get_current_user_id()); ?>"
-                            data-company-id="<?php echo absint($company_viag_id); ?>">
+                            data-company-id="<?php echo absint($company_id); ?>">
                             <?php echo ispag_get_template('ai-loader', [null]); ?>
                         </div>
                     </div>
@@ -630,7 +630,7 @@ get_header();
                     <?php
                     $datas['associated_contacts_list_full'] = $associated_contacts_list_full;
                     $datas['company_id'] = $company_id;
-                    $datas['company_viag_id'] = $company_viag_id;
+                    $datas['company_viag_id'] = $company_id;
                     echo ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
                     ?>
                     
