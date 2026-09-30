@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // console.log("✨ Formatage appliqué :", formatted);
                             observer.unobserve(field);
                         } catch (e) {
-                            console.error("❌ Erreur formatage:", e);
+                            console.error("❌ Error formatage:", e);
                         }
                     }
                 }
@@ -231,11 +231,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(itiPopover) { itiPopover.destroy(); itiPopover = null; }
                 saveBtn.innerText = '✔';
             } else {
-                alert('Erreur : ' + (res.data?.message || 'Impossible de sauvegarder'));
+                alert('Error: ' + (res.data?.message || 'Unable to save'));
                 saveBtn.innerText = originalBtnText;
             }
         })
-        .catch(err => { console.error('Erreur AJAX:', err); saveBtn.innerText = originalBtnText; })
+        .catch(err => { console.error('Error AJAX:', err); saveBtn.innerText = originalBtnText; })
         .finally(() => {
             saveBtn.disabled = false;
             setTimeout(() => { saveBtn.innerText = originalBtnText; }, 2000);
@@ -301,12 +301,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayContainer.innerHTML = `<img src="${imageUrl}" class="ispag-avatar-img" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
                 element.classList.add('has-avatar');
             } else {
-                alert('Erreur : ' + (res.data?.message || 'Impossible de sauvegarder'));
+                alert('Error: ' + (res.data?.message || 'Unable to save'));
                 displayContainer.innerHTML = originalContent;
             }
         })
         .catch(err => {
-            console.error("Erreur AJAX Image:", err);
+            console.error("Error AJAX Image:", err);
             displayContainer.innerHTML = originalContent;
         })
         .finally(() => {

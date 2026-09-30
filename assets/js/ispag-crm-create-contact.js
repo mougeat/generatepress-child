@@ -179,6 +179,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 checkFormProgression(); 
             }
         })
-        .catch(err => console.error("Erreur check email:", err));
+        .catch(err => console.error("Error check email:", err));
     }
 });

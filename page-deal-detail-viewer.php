@@ -516,7 +516,7 @@ get_header();
 // ID manquant ou classe Model non trouvée.
 else : 
 ?>
-    <div class="ispag-info-message"><h1>Erreur ou Page d'accueil des Transactions.</h1></div>
+    <div class="ispag-info-message"><h1>Error ou Page d'accueil des Transactions.</h1></div>
 <?php 
 endif; // FIN de la condition A (extérieure)
 
