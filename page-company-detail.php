@@ -542,26 +542,31 @@ get_header();
                         <div class="ispag-card">
                             <h5><?php _e('Company Profile', 'ispag-crm'); ?></h5>
                             <div data-company-id="<?php echo $company_id; ?>" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
-                                <div class="ispag-field-container">
-                                    <strong><?php _e('Street Address', 'ispag-crm'); ?>:</strong>
-                                    <p>
-                                        <span><?php echo esc_html($company_address); ?></span>
-                                    </p>
-                                </div>
-
-                                <div class="ispag-field-container">
-                                    <strong><?php _e('Postal Code', 'ispag-crm'); ?>:</strong>
-                                    <p>
-                                        <span><?php echo esc_html($company_postal_code); ?></span>
-                                    </p>
-                                </div>
-
-                                <div class="ispag-field-container">
-                                    <strong><?php _e('City', 'ispag-crm'); ?>:</strong>
-                                    <p>
-                                        <span><?php echo esc_html($company_city); ?></span>
-                                    </p>
-                                </div>
+                                <?php
+                                // Adresse modifiable en ligne (clic sur le texte) : nom du champ = clé de métadonnée d'entreprise
+                                $address_fields = array(
+                                    array(__('Street Address', 'ispag-crm'), ISPAG_Crm_Company_Constants::META_COMPANY_ADDRESS,     $company->address ?? ''),
+                                    array(__('Postal Code', 'ispag-crm'),    ISPAG_Crm_Company_Constants::META_COMPANY_POSTAL_CODE, $company->postal_code ?? ''),
+                                    array(__('City', 'ispag-crm'),           ISPAG_Crm_Company_Constants::META_COMPANY_CITY,        $company->city ?? ''),
+                                    array(__('Country', 'ispag-crm'),        ISPAG_Crm_Company_Constants::META_COMPANY_COUNTRY,     $company->country ?? ''),
+                                );
+                                foreach ($address_fields as $af) :
+                                    list($af_label, $af_key, $af_value) = $af;
+                                    ?>
+                                    <div class="ispag-field-container">
+                                        <strong><?php echo esc_html($af_label); ?>:</strong>
+                                        <p>
+                                            <span class="ispag-editable-field"
+                                                data-type="text"
+                                                data-title="<?php echo esc_attr($af_label); ?>"
+                                                data-name="<?php echo esc_attr($af_key); ?>"
+                                                data-value="<?php echo esc_attr($af_value); ?>">
+                                                <?php echo $af_value !== '' ? esc_html($af_value) : '<em>' . esc_html__('Not defined', 'ispag-crm') . '</em>'; ?>
+                                                <span class="edit-icon">✏️</span>
+                                            </span>
+                                        </p>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
 
