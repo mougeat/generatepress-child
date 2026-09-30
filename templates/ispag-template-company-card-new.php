@@ -65,8 +65,19 @@ $deal_id                         = $datas['deal_id']                         ?? 
                     </span>
                 </div>
                 
-                <?php if (!empty($company->city)) : ?>
-                    <p style="margin: 5px 0 0;"><?php _e( 'City', 'ispag-crm' ); ?>: <?php echo esc_html($company->city); ?></p>
+                <?php
+                $address_parts = array_filter(array(
+                    trim((string) ($company->address ?? '')),
+                    trim(trim((string) ($company->postal_code ?? '')) . ' ' . trim((string) ($company->city ?? ''))),
+                    trim((string) ($company->country ?? '')),
+                ));
+                ?>
+                <?php if (!empty($address_parts)) : ?>
+                    <p style="margin: 5px 0 0;"><?php _e( 'Address', 'ispag-crm' ); ?>: <?php echo esc_html(implode(', ', $address_parts)); ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($company->compagny_domain)) : ?>
+                    <p style="margin: 5px 0 0;"><?php _e( 'Website', 'ispag-crm' ); ?>: <a href="<?php echo esc_url('https://' . preg_replace('#^https?://#i', '', $company->compagny_domain)); ?>" target="_blank" rel="noopener" class="contact_link"><?php echo esc_html($company->compagny_domain); ?></a></p>
                 <?php endif; ?>
                 
                 <?php if (!empty($company->last_contact_date)) : ?>
