@@ -525,6 +525,7 @@ get_header();
                     <button class="ispag-tab-btn" data-tab="intelligence">
                         <?php esc_html_e('Intelligence', 'ispag-crm'); ?>
                     </button>
+                    <?php if ( class_exists( 'ISPAG_Crm_Supplier_Tab' ) ) { echo ISPAG_Crm_Supplier_Tab::tab_button( $company ); } ?>
                 </div>
 
                 <div class="ispag-tabs-content">
@@ -584,6 +585,8 @@ get_header();
                         <h5><?php esc_html_e('Transaction Information', 'ispag-crm'); ?></h5>
                         <?php echo ispag_get_template('deal-table', ['transactions' => $transactions_list_full]); ?>
                     </div>
+
+                    <?php if ( class_exists( 'ISPAG_Crm_Supplier_Tab' ) ) { echo ISPAG_Crm_Supplier_Tab::tab_pane( $company ); } ?>
 
                     <div id="ispag-tab-intelligence" class="ispag-tab-pane">
                         <div
