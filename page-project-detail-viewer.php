@@ -105,27 +105,29 @@ if ($can_manage_order) {
     };
 
     $a_company_ids = $a_company_names = [];
-    if ($assoc && !empty($assoc->AssociatedCompanyID) && class_exists('ISPAG_Crm_Company_Repository')) {
-        $company_repo_actions = new ISPAG_Crm_Company_Repository();
+    if ($assoc && !empty($assoc->AssociatedCompanyID)) {
+        $table_companies = class_exists('ISPAG_Crm_Company_Constants') ? ISPAG_Crm_Company_Constants::TABLE_NAME : '';
         foreach (array_filter(array_map('absint', explode(',', $assoc->AssociatedCompanyID))) as $cid) {
-            $c = $company_repo_actions->get_company_by_viag_id($cid);
-            if ($c && !empty($c->company_name)) {
+            $cname = '';
+            if ($table_companies) {
+                $cname = $wpdb->get_var($wpdb->prepare("SELECT company_name FROM {$table_companies} WHERE viag_id = %d LIMIT 1", $cid));
+            }
+            if ($cname) {
                 $a_company_ids[]   = $cid;
-                $a_company_names[] = $clean($c->company_name);
+                $a_company_names[] = $clean($cname);
             }
         }
     }
 
     $a_contact_ids = $a_contact_names = $a_contact_emails = $a_contact_phones = [];
-    if ($assoc && !empty($assoc->AssociatedContactIDs) && class_exists('ISPAG_Crm_Contacts_Repository')) {
-        $contact_repo_actions = new ISPAG_Crm_Contacts_Repository();
+    if ($assoc && !empty($assoc->AssociatedContactIDs)) {
         foreach (array_filter(array_map('absint', explode(',', $assoc->AssociatedContactIDs))) as $uid) {
-            $c = $contact_repo_actions->get_contact_by_id($uid);
-            if (is_object($c)) {
+            $u = get_userdata($uid);
+            if ($u) {
                 $a_contact_ids[]    = $uid;
-                $a_contact_names[]  = $clean($c->display_name ?? 'Inconnu');
-                $a_contact_emails[] = $c->email ?? '';
-                $a_contact_phones[] = $c->phone ?? '';
+                $a_contact_names[]  = $clean($u->display_name);
+                $a_contact_emails[] = $u->user_email;
+                $a_contact_phones[] = get_user_meta($uid, class_exists('ISPAG_Crm_Contact_Constants') ? ISPAG_Crm_Contact_Constants::META_LEAD_PHONE : 'phone', true);
             }
         }
     }
