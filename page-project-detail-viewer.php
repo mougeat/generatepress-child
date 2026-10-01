@@ -89,6 +89,61 @@ if(class_exists('ISPAG_Contact_Ajax_Handler')){
 $owner_list_source = implode(';', $owner_list_arr);
 
 //-----------------------------------------------------------------------
+// Données pour les boutons d'action (note, call, mail...) :
+// liés au deal_id du projet et, par défaut, à ses contacts et entreprises
+//-----------------------------------------------------------------------
+$project_actions = [];
+if ($can_manage_order) {
+    global $wpdb;
+    $assoc = $wpdb->get_row($wpdb->prepare(
+        "SELECT AssociatedCompanyID, AssociatedContactIDs FROM {$wpdb->prefix}achats_liste_commande WHERE hubspot_deal_id = %s LIMIT 1",
+        $deal_id
+    ));
+
+    $clean = function ($str) {
+        return trim(str_replace([',', "\r", "\n"], ' ', (string) $str));
+    };
+
+    $a_company_ids = $a_company_names = [];
+    if ($assoc && !empty($assoc->AssociatedCompanyID) && class_exists('ISPAG_Crm_Company_Repository')) {
+        $company_repo_actions = new ISPAG_Crm_Company_Repository();
+        foreach (array_filter(array_map('absint', explode(',', $assoc->AssociatedCompanyID))) as $cid) {
+            $c = $company_repo_actions->get_company_by_viag_id($cid);
+            if ($c && !empty($c->company_name)) {
+                $a_company_ids[]   = $cid;
+                $a_company_names[] = $clean($c->company_name);
+            }
+        }
+    }
+
+    $a_contact_ids = $a_contact_names = $a_contact_emails = $a_contact_phones = [];
+    if ($assoc && !empty($assoc->AssociatedContactIDs) && class_exists('ISPAG_Crm_Contacts_Repository')) {
+        $contact_repo_actions = new ISPAG_Crm_Contacts_Repository();
+        foreach (array_filter(array_map('absint', explode(',', $assoc->AssociatedContactIDs))) as $uid) {
+            $c = $contact_repo_actions->get_contact_by_id($uid);
+            if (is_object($c)) {
+                $a_contact_ids[]    = $uid;
+                $a_contact_names[]  = $clean($c->display_name ?? 'Inconnu');
+                $a_contact_emails[] = $c->email ?? '';
+                $a_contact_phones[] = $c->phone ?? '';
+            }
+        }
+    }
+
+    $project_actions = [
+        'company_ids'    => implode(',', $a_company_ids),
+        'company_names'  => implode(',', $a_company_names),
+        'contact_ids'    => implode(',', $a_contact_ids),
+        'contact_names'  => implode(',', $a_contact_names),
+        'contact_emails' => implode(',', $a_contact_emails),
+        'contact_phone'  => $a_contact_phones[0] ?? '',
+        'user_id'        => $user_id,
+        'deal_ids'       => $deal_id,
+        'show_delete'    => false,
+    ];
+}
+
+//-----------------------------------------------------------------------
 //On créé les datas minimale pour le projet
 //-----------------------------------------------------------------------
 if(class_exists('ISPAG_Projet_Repository')){
@@ -166,6 +221,15 @@ if(class_exists('ISPAG_Projet_Repository')){
                             <?php endif; ?>
                         </div>
                     </div>
+                    <?php if ($can_manage_order): ?>
+                        <div class="ispag-actions-bar">
+                            <?php
+                            $project_actions['deal_names'] = $project->ObjetCommande ?? '';
+                            $project_actions['offer_num']  = $project->NumCommande ?? '';
+                            echo ispag_get_template('action-bar', ['actions' => $project_actions]);
+                            ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="ispag-card ispag-project-btn-card"  data-deal-id="<?php echo esc_attr($deal_id); ?>">

@@ -18,6 +18,7 @@ $project_num    = $actions['project_num']    ?? '';
 $closing_date   = $actions['closing_date']   ?? '';
 $total_excl_vat = $actions['total_excl_vat'] ?? 0;
 $user_id        = $actions['user_id']        ?? 0;
+$show_delete    = $actions['show_delete']    ?? true;
 
 $deal_date = $closing_date ? date_i18n( 'd.m.Y', strtotime( $closing_date ) ) : '';
 $deal_total = number_format( (float) $total_excl_vat, 2, '.', '\'' ) . ' CHF';
@@ -196,6 +197,7 @@ $deal_total = number_format( (float) $total_excl_vat, 2, '.', '\'' ) . ' CHF';
             <?php esc_html_e( 'Log a LinkedIn message', 'ispag-crm' ); ?>
         </button>
 
+        <?php if ( $show_delete ) : ?>
         <div class="ispag-dropdown-divider"></div>
         <button class="ispag-dropdown-item ispag-item-danger"
             data-action="delete"
@@ -205,5 +207,6 @@ $deal_total = number_format( (float) $total_excl_vat, 2, '.', '\'' ) . ' CHF';
             <span class="dashicons dashicons-trash"></span>
             <?php esc_html_e( 'Delete', 'ispag-crm' ); ?>
         </button>
+        <?php endif; ?>
     </div>
 </div>
