@@ -110,7 +110,7 @@ if ($can_manage_order) {
         foreach (array_filter(array_map('absint', explode(',', $assoc->AssociatedCompanyID))) as $cid) {
             $cname = '';
             if ($table_companies) {
-                $cname = $wpdb->get_var($wpdb->prepare("SELECT company_name FROM {$table_companies} WHERE viag_id = %d LIMIT 1", $cid));
+                $cname = $wpdb->get_var($wpdb->prepare("SELECT company_name FROM {$table_companies} WHERE Id = %d LIMIT 1", $cid));
             }
             if ($cname) {
                 $a_company_ids[]   = $cid;
