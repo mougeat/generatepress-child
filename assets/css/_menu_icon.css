@@ -18,12 +18,23 @@
     }
 
     /* Insère l'icône à la place du texte sur PC */
-    .menu-icon-crm > a::before, .menu-icon-contact > a::before {
+    .menu-icon-contact > a::before {
         content: "";
         display: inline-block;
         width: 24px;
         height: 24px;
         background-image: url('../img/ios-contact.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .menu-icon-crm > a::before {
+        content: "";
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url('../img/menu-icons/menu-crm.svg');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
@@ -78,7 +89,7 @@
         display: inline-block;
         width: 24px;
         height: 24px;
-        background-image: url('../img/ios-profile.png');
+        background-image: url('../img/menu-icons/menu-profil.svg');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
@@ -89,7 +100,7 @@
         display: inline-block;
         width: 24px;
         height: 24px;
-        background-image: url('../img/ios-cart.png');
+        background-image: url('../img/menu-icons/menu-achat.svg');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
@@ -100,7 +111,7 @@
         display: inline-block;
         width: 24px;
         height: 24px;
-        background-image: url('../img/ios-product.png');
+        background-image: url('../img/menu-icons/menu-offre.svg');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
@@ -111,7 +122,7 @@
         display: inline-block;
         width: 24px;
         height: 24px;
-        background-image: url('../img/ios-handshake.png');
+        background-image: url('../img/menu-icons/menu-projet.svg');
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
