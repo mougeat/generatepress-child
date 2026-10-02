@@ -70,6 +70,28 @@ if (!class_exists('ISPAG_Projet_Repository')) {
     return;
 }
 
+// Le deal doit exister : sinon on affiche un message d'information plutôt qu'une page vide
+global $wpdb;
+$deal_exists = $wpdb->get_var($wpdb->prepare(
+    "SELECT COUNT(*) FROM {$wpdb->prefix}achats_liste_commande WHERE hubspot_deal_id = %s",
+    $deal_id
+));
+if (!$deal_exists) {
+    ?>
+    <div id="primary" class="content-area">
+        <main id="main" class="site-main">
+            <div class="ispag-alert ispag-alert-warning" style="margin: 50px auto; max-width: 600px; padding: 20px;">
+                <span class="dashicons dashicons-search"></span>
+                <strong><?php esc_html_e('Project not found', 'ispag-crm'); ?> :</strong>
+                <?php printf(esc_html__('No project matches the deal ID %s. It may have been deleted or the link is incorrect.', 'ispag-crm'), esc_html($deal_id)); ?>
+            </div>
+        </main>
+    </div>
+    <?php
+    get_footer();
+    return;
+}
+
 $can_manage_order = current_user_can('manage_order');
 $edit_content = current_user_can('manage_order') ? 'true' : 'false';
 
