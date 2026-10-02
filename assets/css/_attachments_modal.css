@@ -166,6 +166,19 @@
     border-radius: var(--ispag-badge-border-radius);
 }
 
+/* Dans la colonne de droite, « .ispag-right-panel button » impose width:100% + bordure : on neutralise pour la croix */
+.ispag-right-panel .ispag-dropzone__file-remove {
+    width: auto !important;
+    border: none !important;
+    padding: 4px 6px !important;
+    font-size: 16px !important;
+}
+
+/* display:flex écrase l'attribut hidden : l'aperçu vide restait affiché */
+.ispag-dropzone [hidden] {
+    display: none !important;
+}
+
 .ispag-dropzone__file-remove:hover {
     background: var(--ispag-danger-bg, #FEF3F2);
     color: var(--ispag-danger-text, #B42318);
