@@ -1,8 +1,9 @@
 /* Modale de prise de note / tâche / appel / réunion */
 #ispag-note-modal .ispag-modal-content {
-    max-width: 760px !important;
-    height: auto !important;
-    max-height: 90vh !important;
+    width: min(1100px, 94vw) !important;
+    max-width: 1100px !important;
+    height: 88vh !important;
+    max-height: 88vh !important;
     margin: auto;
 }
 
@@ -106,3 +107,7 @@
     font-size: 12px;
 }
 .ispag-eml-hint .dashicons { flex-shrink: 0; width: 16px; height: 16px; font-size: 16px; color: var(--ispag-blue); }
+
+/* Éditeur de texte : suit la hauteur de la fenêtre au lieu des 200 px fixes de TinyMCE */
+#ispag-note-modal .tox-tinymce { height: max(320px, 38vh) !important; }
+#ispag-note-modal #note-text-area { min-height: max(320px, 38vh); }
