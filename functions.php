@@ -63,6 +63,12 @@ function theme_enqueue_styles() {
     wp_enqueue_script( 'ispag-crm-popover', get_stylesheet_directory_uri() . '/assets/js/popover.js', array( 'jquery', 'intl-tel-input-js' ), '1.0.1', true );
     wp_enqueue_script( 'ispag-crm-deal-select', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-deal-list-select.js', array( 'jquery' ), '1.0.0', true );
 
+    // Tableau des tâches : regroupement, filtres, report rapide (uniquement sur cette page)
+    if ( is_page_template( 'page-task-dashboard.php' ) ) {
+        $task_js = get_stylesheet_directory() . '/assets/js/ispag-task-dashboard.js';
+        wp_enqueue_script( 'ispag-task-dashboard-theme', get_stylesheet_directory_uri() . '/assets/js/ispag-task-dashboard.js', array( 'jquery' ), (int) @filemtime( $task_js ), true );
+    }
+
     // Création d'entreprise depuis la page publique : script chargé seulement pour les utilisateurs autorisés
     if ( class_exists( 'ISPAG_Crm_Company_Creator' ) && ISPAG_Crm_Company_Creator::can_create() ) {
         wp_enqueue_script( 'ispag-crm-create-company', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-create-company.js', array( 'jquery' ), '1.0.0', true );
