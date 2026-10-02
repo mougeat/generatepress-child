@@ -495,7 +495,8 @@ if(class_exists('ISPAG_Projet_Repository')){
 
                         // --- Sur une fiche Deal / Projet ---
                         
-                        echo $renderer->render('project', $deal_id);
+                        // Dropzone directement dans la colonne (la liste des documents est dans l'onglet Documents)
+                        echo $renderer->render_upload_card('project', $deal_id);
                     }
                     ?>
                     <div id="ispag-modal-container"></div>
