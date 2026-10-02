@@ -216,6 +216,66 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
             $notes_list_full = '<p>' . __( 'No registered activity', 'ispag-crm' ) . '</p>';
         }
   
+
+        // --- Étapes (sélecteur d'étape + probabilité pour le pondéré) ---
+        $stage_repo         = new ISPAG_Crm_Deal_Stages_Repository();
+        $all_stages         = $stage_repo->get_all_stages();
+        $current_stage_key  = $deal->stage_key ?? '';
+        $stage_probability  = 0;
+        foreach ( $all_stages as $st ) {
+            if ( $st->stage_key === $current_stage_key ) { $stage_probability = (float) $st->probability; break; }
+        }
+
+        // --- Données du bandeau « chiffres clés » ---
+        $today_ts     = strtotime( 'today' );
+        $closing_ts   = ! empty( $deal->closing_date ) ? strtotime( $deal->closing_date ) : 0;
+        $contact_ts   = ! empty( $deal->last_activity_date ) ? strtotime( $deal->last_activity_date ) : 0;
+        $amount       = (float) $deal->total_excl_vat;
+        $is_open_deal = ( $stage_probability > 0 && $stage_probability < 100 ) && (int) $deal->project_db_status === 0;
+
+        // Prochaine tâche ouverte (la plus proche) parmi les activités déjà chargées
+        $next_task = null;
+        foreach ( (array) ( $activity_detail ?? [] ) as $act ) {
+            if ( empty( $act->is_task ) || ! empty( $act->is_completed ) ) continue;
+            $due = ! empty( $act->due_date ) ? strtotime( $act->due_date ) : 0;
+            if ( $next_task === null || ( $due && $due < $next_task['ts'] ) ) {
+                $next_task = [
+                    'ts'        => $due ?: PHP_INT_MAX,
+                    'title'     => $act->title ?? '',
+                    'overdue'   => $due && $due < $today_ts,
+                    'due_label' => $due ? date_i18n( 'd.m.Y', $due ) : __( 'No due date', 'ispag-crm' ),
+                ];
+            }
+        }
+
+        $summary = [
+            'amount'       => $amount,
+            'probability'  => $stage_probability,
+            'weighted'     => $amount * $stage_probability / 100,
+            'closing_date' => $closing_ts ? date_i18n( 'd.m.Y', $closing_ts ) : '',
+            'closing_days' => $closing_ts ? (int) round( ( $closing_ts - $today_ts ) / DAY_IN_SECONDS ) : null,
+            'last_contact' => $contact_ts ? date_i18n( 'd.m.Y', $contact_ts ) : '',
+            'contact_days' => $contact_ts ? max( 0, (int) round( ( $today_ts - strtotime( date( 'Y-m-d', $contact_ts ) ) ) / DAY_IN_SECONDS ) ) : null,
+            'next_task'    => $next_task,
+            'alerts'       => [],
+        ];
+
+        // Alertes : uniquement pour un deal encore ouvert
+        if ( $is_open_deal ) {
+            if ( $summary['closing_days'] !== null && $summary['closing_days'] < 0 ) {
+                $summary['alerts'][] = [ 'level' => 'danger', 'text' => __( 'Closing date is past: update it or move the deal', 'ispag-crm' ) ];
+            }
+            if ( $summary['contact_days'] === null || $summary['contact_days'] > 30 ) {
+                $summary['alerts'][] = [ 'level' => 'danger', 'text' => __( 'No contact for over 30 days', 'ispag-crm' ) ];
+            }
+            if ( ! $next_task ) {
+                $summary['alerts'][] = [ 'level' => 'warn', 'text' => __( 'No follow-up task planned', 'ispag-crm' ) ];
+            }
+            if ( $contacts_count === 0 ) {
+                $summary['alerts'][] = [ 'level' => 'warn', 'text' => __( 'No contact associated', 'ispag-crm' ) ];
+            }
+        }
+
 $deal_name = $deal->project_name;
 add_filter('pre_get_document_title', function($title) use ($deal_name) {
     if (!empty($deal_name)) {
@@ -254,15 +314,10 @@ get_header();
                                         <?php echo esc_html( $current_stage_label ); ?> 
                                     </span>
 
-                                    <?php 
-                                    $stage_repo = new ISPAG_Crm_Deal_Stages_Repository();
-                                    $all_stages = $stage_repo->get_all_stages(); 
-                                    ?>
                                     <select class="ispag-stage-updater" 
                                             data-deal-id="<?php echo esc_attr($deal->id); ?>" 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
-                                        <option value="" 
-                                                <?php selected($current_stage_key, $stage->stage_key); ?>>
+                                        <option value="">
                                             <?php echo __('Select current stage', 'ispag-crm'); ?>
                                         </option>
                                         <?php foreach ($all_stages as $stage) : ?>
@@ -282,8 +337,8 @@ get_header();
                         <?php 
                             $actions['company_ids']       = $company_ids;
                             $actions['company_names']     = $company_names;
-                            $actions['user_id']           = $user_id;
-                            $actions['contact_name']      = $contact_name;
+                            $actions['user_id']           = $user_id ?? '';
+                            $actions['contact_name']      = $contact_name ?? '';
                             $actions['contact_ids']       = $contact_ids;
                             $actions['contact_names']     = $contact_names;
                             $actions['contact_emails']    = $contact_emails;
@@ -291,7 +346,7 @@ get_header();
                             $actions['deal_ids']          = $deal->deal_group_ref;
                             $actions['deal_names']        = $deal->project_name;
                             $actions['offer_num']         = $deal->deal_group_ref;
-                            $actions['project_nums']      = $project_nums;
+                            $actions['project_nums']      = $project_nums ?? '';
                             $actions['closing_date']      = $deal->closing_date;
                             $actions['total_excl_vat']    = $deal->total_excl_vat; 
                                                     
@@ -389,40 +444,34 @@ get_header();
                 <div class="ispag-tabs-content">
                     
                     <div id="ispag-tab-overview" class="ispag-tab-pane active">
+                        <?php echo ispag_get_template( 'deal-summary', [ 'summary' => $summary ] ); ?>
+
                         <div class="ispag-card">
-                            <h5><?php _e( 'Data highlights', 'ispag-crm'); ?></h5>
-                            <div data-deal-id="<?php echo $deal->id; ?>" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
-                                
+                            <h5><?php _e( 'Details', 'ispag-crm'); ?></h5>
+                            <div class="ispag-deal-details" data-deal-id="<?php echo absint( $deal->id ); ?>">
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Create date', 'ispag-crm'); ?> :</strong>
+                                    <strong><?php _e( 'Create date', 'ispag-crm'); ?></strong>
                                     <span><?php echo date_i18n( 'd.m.Y', strtotime( $deal->date_creation ) ); ?></span>
                                 </div>
-
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Deal stage', 'ispag-crm'); ?> :</strong>
-                                    
-                                    <span><?php echo esc_html( $current_stage_label ); ?></span>
+                                    <strong><?php _e( 'Offer number', 'ispag-crm'); ?></strong>
+                                    <span><?php echo esc_html( $deal->offer_num ?: '—' ); ?></span>
                                 </div>
-
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Last activity date', 'ispag-crm'); ?> :</strong>
-                                    
-                                    <span><?php echo $last_activity_date; ?></span>
+                                    <strong><?php _e( 'Project number', 'ispag-crm'); ?></strong>
+                                    <span><?php echo esc_html( $deal->project_num ?: '—' ); ?></span>
                                 </div>
-
                                 <div class="ispag-field-container">
-                                </div>  
-                                
-                                <div class="ispag-field-container">
-                                    <strong><?php _e( 'Offer number', 'ispag-crm'); ?> :</strong>
-                                    
-                                    <span><?php echo $deal->offer_num; ?></span>
+                                    <strong><?php _e( 'Deal owner', 'ispag-crm'); ?></strong>
+                                    <span><?php echo esc_html( $deal->get_deal_owner_display_name() ); ?></span>
                                 </div>
-
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Project number', 'ispag-crm'); ?> :</strong>
-                                    
-                                    <span><?php echo $deal->project_num; ?></span>
+                                    <strong><?php _e( 'Record source', 'ispag-crm'); ?></strong>
+                                    <span><?php echo esc_html( $deal->record_source ?: '—' ); ?></span>
+                                </div>
+                                <div class="ispag-field-container">
+                                    <strong><?php _e( 'Contacts', 'ispag-crm'); ?> / <?php _e( 'Companies', 'ispag-crm'); ?></strong>
+                                    <span><?php echo (int) $contacts_count; ?> / <?php echo (int) $companies_count; ?></span>
                                 </div>
                             </div>
                         </div>
