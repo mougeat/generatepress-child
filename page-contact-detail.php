@@ -104,7 +104,7 @@ $company_domain          = ''; // Exemple statique
 $favicon                 = ''; // Exemple vide
 $contact_meta_owner      = $contact->crm_owner_id; // Exemple ID
 $owner_data              = get_userdata( $contact_meta_owner );
-$contact_owner           = $owner_data->display_name;
+$contact_owner           = $owner_data ? $owner_data->display_name : '';
 $last_contact_date       = $contact->last_contact_date ? date_i18n( 'd.m.Y', strtotime( $contact->last_contact_date ) ) : __('N/A', 'ispag-crm');   
 $last_contact_source       = esc_html( $contact->last_contact_date->type ?? '');
 $company_meta_type       = 'installateur'; // Exemple
@@ -398,6 +398,28 @@ $last_system_note = $wpdb->get_var($wpdb->prepare(
 
 // Message par défaut si aucune note n'est trouvée
 $explanation_lifecycle = $last_system_note ? strip_tags($last_system_note) : __("No automation data available.", "creation-reservoir");
+
+// --- Bandeau « chiffres clés » (même logique que les fiches deal et company) ---
+$next_task      = ISPAG_Entity_Summary::next_task( $activity_detail ?? [] );
+$deals_totals   = ISPAG_Entity_Summary::deals_totals( $transactions_list_full );
+$prio_labels    = [ 'A' => __( 'A - High', 'ispag-crm' ), 'B' => __( 'B - Medium', 'ispag-crm' ), 'C' => __( 'C - Low', 'ispag-crm' ) ];
+$prio_key       = strtoupper( trim( (string) ( $contact->priority_level ?? '' ) ) );
+$summary_tiles  = [
+    ISPAG_Entity_Summary::last_contact_tile( $contact->last_contact_date ?? null ),
+    ISPAG_Entity_Summary::next_task_tile( $next_task ),
+    ISPAG_Entity_Summary::open_deals_tile( $deals_totals ),
+    [
+        'icon'  => 'flag',
+        'label' => __( 'Priority Level', 'ispag-crm' ),
+        'value' => $prio_labels[ $prio_key ] ?? __( 'None', 'ispag-crm' ),
+        'sub'   => $contact_owner ? sprintf( __( 'Owner: %s', 'ispag-crm' ), $contact_owner ) : __( 'Not assigned', 'ispag-crm' ),
+        'level' => '',
+    ],
+];
+$summary_alerts = ( $is_ignored == '1' ) ? [] : ISPAG_Entity_Summary::common_alerts( $contact->last_contact_date ?? null, $next_task );
+if ( $is_ignored != '1' && empty( $contact->email ) ) {
+    $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No email address', 'ispag-crm' ) ];
+}
 
 // ----------------------------------------------------
 // 7. Création et Extraction des variables
@@ -718,27 +740,28 @@ get_header();
                 <div class="ispag-tabs-content">
                     
                     <div id="ispag-tab-about" class="ispag-tab-pane active">
-                        
+                        <?php echo ISPAG_Entity_Summary::render( $summary_tiles, $summary_alerts ); ?>
+
                         <div class="ispag-card">
                             <h5><?php _e( 'Company Profile', 'ispag-crm' ); ?></h5>
-                            <div data-contact-id="<?php echo $user_id; ?>" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
+                            <div class="ispag-entity-details" data-contact-id="<?php echo $user_id; ?>">
                                 
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Street adress', 'ispag-crm' ); ?> :</strong>
+                                    <strong><?php _e( 'Street adress', 'ispag-crm' ); ?></strong>
                                     <p>
                                         <span ><?php echo esc_html($company_address); ?></span>
                                     </p>
                                 </div>
                                 
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Postal code', 'ispag-crm' ); ?> :</strong>
+                                    <strong><?php _e( 'Postal code', 'ispag-crm' ); ?></strong>
                                     <p>
                                         <span ><?php echo esc_html($company_postal_code); ?></span>
                                     </p>
                                 </div>
 
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'City', 'ispag-crm' ); ?> :</strong>
+                                    <strong><?php _e( 'City', 'ispag-crm' ); ?></strong>
                                     <p>
                                         <span ><?php echo esc_html($company_city); ?></span>
                                     </p>

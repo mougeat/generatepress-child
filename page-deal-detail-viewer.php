@@ -226,53 +226,41 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
             if ( $st->stage_key === $current_stage_key ) { $stage_probability = (float) $st->probability; break; }
         }
 
-        // --- Données du bandeau « chiffres clés » ---
+        // --- Bandeau « chiffres clés » (logique partagée avec les fiches company et contact) ---
         $today_ts     = strtotime( 'today' );
         $closing_ts   = ! empty( $deal->closing_date ) ? strtotime( $deal->closing_date ) : 0;
-        $contact_ts   = ! empty( $deal->last_activity_date ) ? strtotime( $deal->last_activity_date ) : 0;
+        $closing_days = $closing_ts ? (int) round( ( $closing_ts - $today_ts ) / DAY_IN_SECONDS ) : null;
         $amount       = (float) $deal->total_excl_vat;
         $is_open_deal = ( $stage_probability > 0 && $stage_probability < 100 ) && (int) $deal->project_db_status === 0;
+        $next_task    = ISPAG_Entity_Summary::next_task( $activity_detail ?? [] );
 
-        // Prochaine tâche ouverte (la plus proche) parmi les activités déjà chargées
-        $next_task = null;
-        foreach ( (array) ( $activity_detail ?? [] ) as $act ) {
-            if ( empty( $act->is_task ) || ! empty( $act->is_completed ) ) continue;
-            $due = ! empty( $act->due_date ) ? strtotime( $act->due_date ) : 0;
-            if ( $next_task === null || ( $due && $due < $next_task['ts'] ) ) {
-                $next_task = [
-                    'ts'        => $due ?: PHP_INT_MAX,
-                    'title'     => $act->title ?? '',
-                    'overdue'   => $due && $due < $today_ts,
-                    'due_label' => $due ? date_i18n( 'd.m.Y', $due ) : __( 'No due date', 'ispag-crm' ),
-                ];
-            }
-        }
-
-        $summary = [
-            'amount'       => $amount,
-            'probability'  => $stage_probability,
-            'weighted'     => $amount * $stage_probability / 100,
-            'closing_date' => $closing_ts ? date_i18n( 'd.m.Y', $closing_ts ) : '',
-            'closing_days' => $closing_ts ? (int) round( ( $closing_ts - $today_ts ) / DAY_IN_SECONDS ) : null,
-            'last_contact' => $contact_ts ? date_i18n( 'd.m.Y', $contact_ts ) : '',
-            'contact_days' => $contact_ts ? max( 0, (int) round( ( $today_ts - strtotime( date( 'Y-m-d', $contact_ts ) ) ) / DAY_IN_SECONDS ) ) : null,
-            'next_task'    => $next_task,
-            'alerts'       => [],
+        $summary_tiles = [
+            [
+                'icon'  => 'money-alt',
+                'label' => __( 'Amount', 'ispag-crm' ),
+                'value' => number_format( $amount, 0, '.', '\'' ) . ' CHF',
+                'sub'   => sprintf( __( 'Weighted %s CHF (%s%%)', 'ispag-crm' ), number_format( $amount * $stage_probability / 100, 0, '.', '\'' ), $stage_probability ),
+                'level' => '',
+            ],
+            [
+                'icon'  => 'calendar-alt',
+                'label' => __( 'Close date', 'ispag-crm' ),
+                'value' => $closing_ts ? date_i18n( 'd.m.Y', $closing_ts ) : '—',
+                'sub'   => $closing_days === null ? '' : ( $closing_days < 0 ? sprintf( __( 'Overdue by %d d', 'ispag-crm' ), -$closing_days ) : ( $closing_days === 0 ? __( 'Today', 'ispag-crm' ) : sprintf( __( 'In %d d', 'ispag-crm' ), $closing_days ) ) ),
+                'level' => ( $closing_days !== null && $closing_days < 0 ) ? 'danger' : ( ( $closing_days !== null && $closing_days <= 7 ) ? 'warn' : '' ),
+            ],
+            ISPAG_Entity_Summary::last_contact_tile( $deal->last_activity_date ),
+            ISPAG_Entity_Summary::next_task_tile( $next_task ),
         ];
 
-        // Alertes : uniquement pour un deal encore ouvert
+        $summary_alerts = [];
         if ( $is_open_deal ) {
-            if ( $summary['closing_days'] !== null && $summary['closing_days'] < 0 ) {
-                $summary['alerts'][] = [ 'level' => 'danger', 'text' => __( 'Closing date is past: update it or move the deal', 'ispag-crm' ) ];
+            if ( $closing_days !== null && $closing_days < 0 ) {
+                $summary_alerts[] = [ 'level' => 'danger', 'text' => __( 'Closing date is past: update it or move the deal', 'ispag-crm' ) ];
             }
-            if ( $summary['contact_days'] === null || $summary['contact_days'] > 30 ) {
-                $summary['alerts'][] = [ 'level' => 'danger', 'text' => __( 'No contact for over 30 days', 'ispag-crm' ) ];
-            }
-            if ( ! $next_task ) {
-                $summary['alerts'][] = [ 'level' => 'warn', 'text' => __( 'No follow-up task planned', 'ispag-crm' ) ];
-            }
+            $summary_alerts = array_merge( $summary_alerts, ISPAG_Entity_Summary::common_alerts( $deal->last_activity_date, $next_task ) );
             if ( $contacts_count === 0 ) {
-                $summary['alerts'][] = [ 'level' => 'warn', 'text' => __( 'No contact associated', 'ispag-crm' ) ];
+                $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No contact associated', 'ispag-crm' ) ];
             }
         }
 
@@ -444,11 +432,11 @@ get_header();
                 <div class="ispag-tabs-content">
                     
                     <div id="ispag-tab-overview" class="ispag-tab-pane active">
-                        <?php echo ispag_get_template( 'deal-summary', [ 'summary' => $summary ] ); ?>
+                        <?php echo ISPAG_Entity_Summary::render( $summary_tiles, $summary_alerts ); ?>
 
                         <div class="ispag-card">
                             <h5><?php _e( 'Details', 'ispag-crm'); ?></h5>
-                            <div class="ispag-deal-details" data-deal-id="<?php echo absint( $deal->id ); ?>">
+                            <div class="ispag-entity-details" data-deal-id="<?php echo absint( $deal->id ); ?>">
                                 <div class="ispag-field-container">
                                     <strong><?php _e( 'Create date', 'ispag-crm'); ?></strong>
                                     <span><?php echo date_i18n( 'd.m.Y', strtotime( $deal->date_creation ) ); ?></span>

@@ -1,7 +1,7 @@
 /* Bandeau chiffres clés d'un deal */
-.ispag-deal-summary { margin-bottom: 15px; }
+.ispag-entity-summary { margin-bottom: 15px; }
 
-.ispag-deal-summary-tiles {
+.ispag-entity-summary-tiles {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 10px;
@@ -46,8 +46,8 @@
 .ispag-kpi.is-warn .ispag-kpi-sub   { color: #b07d00; font-weight: 600; }
 .ispag-kpi.is-danger .ispag-kpi-sub { color: var(--ispag-danger-color); font-weight: 600; }
 
-.ispag-deal-alerts { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-.ispag-deal-alerts li {
+.ispag-entity-alerts { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.ispag-entity-alerts li {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -57,15 +57,15 @@
     background: #fff4d6;
     color: #8a6100;
 }
-.ispag-deal-alerts li.is-danger { background: #fde8ea; color: var(--ispag-danger-color); }
-.ispag-deal-alerts .dashicons { width: 14px; height: 14px; font-size: 14px; }
+.ispag-entity-alerts li.is-danger { background: #fde8ea; color: var(--ispag-danger-color); }
+.ispag-entity-alerts .dashicons { width: 14px; height: 14px; font-size: 14px; }
 
 /* Détails secondaires (remplace l'ancienne grille « Data highlights ») */
-.ispag-deal-details {
+.ispag-entity-details {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 10px 20px;
     font-size: 13px;
 }
-.ispag-deal-details .ispag-field-container { display: flex; flex-direction: column; }
-.ispag-deal-details strong { font-size: 11px; font-weight: 500; text-transform: uppercase; color: var(--ispag-color-text-light); }
+.ispag-entity-details .ispag-field-container { display: flex; flex-direction: column; }
+.ispag-entity-details strong { font-size: 11px; font-weight: 500; text-transform: uppercase; color: var(--ispag-color-text-light); }

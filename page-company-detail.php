@@ -242,6 +242,32 @@ foreach ($users as $u) {
 }
 $users_list_source = implode(';', $users_list_arr);
 
+// --- Bandeau « chiffres clés » (même logique que les fiches deal et contact) ---
+$next_task      = ISPAG_Entity_Summary::next_task( $activity_detail ?? [] );
+$deals_totals   = ISPAG_Entity_Summary::deals_totals( $transactions_list_full );
+$summary_tiles  = [
+    ISPAG_Entity_Summary::open_deals_tile( $deals_totals ),
+    [
+        'icon'  => 'awards',
+        'label' => __( 'Won', 'ispag-crm' ),
+        'value' => number_format( $deals_totals['won']['amount'], 0, '.', '\'' ) . ' CHF',
+        'sub'   => sprintf( _n( '%d deal', '%d deals', $deals_totals['won']['count'], 'ispag-crm' ), $deals_totals['won']['count'] ),
+        'level' => '',
+    ],
+    ISPAG_Entity_Summary::last_contact_tile( $company->last_contact_date ?? null ),
+    ISPAG_Entity_Summary::next_task_tile( $next_task ),
+];
+$summary_alerts = [];
+if ( $is_active == 1 ) {
+    $summary_alerts = ISPAG_Entity_Summary::common_alerts( $company->last_contact_date ?? null, $next_task );
+    if ( ! $current_owner_id ) {
+        $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No company owner assigned', 'ispag-crm' ) ];
+    }
+    if ( empty( $associated_contacts_list_full ) ) {
+        $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No contact associated', 'ispag-crm' ) ];
+    }
+}
+
 // Préparation des variables pour le template
 $template_args = compact(
     'company',
@@ -530,9 +556,11 @@ get_header();
 
                 <div class="ispag-tabs-content">
                     <div id="ispag-tab-about" class="ispag-tab-pane active">
+                        <?php echo ISPAG_Entity_Summary::render( $summary_tiles, $summary_alerts ); ?>
+
                         <div class="ispag-card">
                             <h5><?php _e('Company Profile', 'ispag-crm'); ?></h5>
-                            <div data-company-id="<?php echo $company_id; ?>" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
+                            <div class="ispag-entity-details" data-company-id="<?php echo $company_id; ?>">
                                 <?php
                                 // Adresse modifiable en ligne (clic sur le texte) : nom du champ = clé de métadonnée d'entreprise
                                 $address_fields = array(
@@ -545,7 +573,7 @@ get_header();
                                     list($af_label, $af_key, $af_value) = $af;
                                     ?>
                                     <div class="ispag-field-container">
-                                        <strong><?php echo esc_html($af_label); ?>:</strong>
+                                        <strong><?php echo esc_html($af_label); ?></strong>
                                         <p>
                                             <span class="ispag-editable-field"
                                                 data-type="text"
