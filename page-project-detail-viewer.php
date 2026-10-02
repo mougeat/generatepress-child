@@ -231,7 +231,28 @@ if(class_exists('ISPAG_Projet_Repository')){
                                 </span>
                             </p>
                             <p>
-                                <?php echo __('Next step', 'ispag-crm'); ?> :  <span class="ispag-next-step-badge step-badge"><span class="ispag-skeleton-wrapper ispag-skeleton-line ispag-w-80" id="ispag_project_next_step"></span></span>
+                                <?php echo __('Next step', 'ispag-crm'); ?> :  <?php
+                                    // Prochaine étape : rendue côté serveur (le badge ne dépend plus d'un changement de statut pour s'afficher)
+                                    $next_label = null; $next_color = '#ccc';
+                                    if (class_exists('ISPAG_Project_Phase_Resolver')) {
+                                        $is_internal = current_user_can('manage_order');
+                                        $next_row = ISPAG_Project_Phase_Resolver::get_next_pending_phase(
+                                            $deal_id,
+                                            $is_internal ? ISPAG_Project_Phase_Resolver::CONTEXT_INTERNAL : ISPAG_Project_Phase_Resolver::CONTEXT_CLIENT
+                                        );
+                                        if ($next_row) {
+                                            $ph = $next_row['phase'];
+                                            $next_label = __(($is_internal ? $ph->TitrePhase : ($ph->TitrePhaseFuture ?: $ph->TitrePhase)), 'creation-reservoir');
+                                            $next_color = $ph->Color ?: '#ccc';
+                                        } else {
+                                            $next_label = __('Completed', 'creation-reservoir');
+                                            $next_color = '#00C875';
+                                        }
+                                    }
+                                    ?><span class="ispag-next-step-badge step-badge"<?php if ($next_label !== null): ?> style="color:<?php echo esc_attr($next_color); ?>; border:1px solid <?php echo esc_attr($next_color); ?>;"<?php endif; ?>><?php
+                                    if ($next_label !== null) { echo esc_html($next_label); }
+                                    else { ?><span class="ispag-skeleton-wrapper ispag-skeleton-line ispag-w-80" id="ispag_project_next_step"></span><?php }
+                                ?></span>
                             </p>
                             <?php if ($can_manage_order): ?>
                                 <p>
