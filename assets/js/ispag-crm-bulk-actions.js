@@ -1,3 +1,4 @@
+window.ispagT = window.ispagT || function (s) { return s; }; // traductions des textes JS (voir includes/js-strings.php)
 jQuery(document).ready(function($) {
     
     // --- VARIABLES ---
@@ -81,16 +82,16 @@ jQuery(document).ready(function($) {
         // console.log("DEBUG: IDs récupérés =", projectIds);
 
         if (!stageKey && !contactDate) { 
-            alert('Please choose a stage or a contact date.'); 
+            alert(ispagT('Please choose a stage or a contact date.')); 
             return; 
         }
 
         if (projectIds.length === 0) {
-            alert('No project selected.');
+            alert(ispagT('No project selected.'));
             return;
         }
 
-        if (confirm('Apply changes to ' + projectIds.length + ' projets ?')) {
+        if (confirm(ispagT('Apply changes to ') + projectIds.length + ' projets ?')) {
             //  console.log("DEBUG: Confirmation OK -> Appel sendBulkUpdate");
              sendBulkUpdate(projectIds, stageKey, contactDate);
         }

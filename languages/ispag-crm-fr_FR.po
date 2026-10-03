@@ -9,41 +9,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: ispag-crm\n"
 
-#: functions.php:100
-msgid "An error occurred. Please try again."
-msgstr "Une erreur s'est produite. Veuillez réessayer."
-
-#: functions.php:101
-msgid "Open the existing company"
-msgstr "Ouvrir l'entreprise existante"
-
-#: functions.php:179
+#: functions.php:146
 msgid "Security violation."
 msgstr "Violation de sécurité."
 
-#: functions.php:224
+#: functions.php:191
 msgid "Your quote request at ISPAG"
 msgstr "Votre demande de devis chez ISPAG"
 
-#: functions.php:225
+#: functions.php:192
 msgid "Hello, we have received your request for the project: "
 msgstr "Bonjour, nous avons bien reçu votre demande pour le projet : "
 
-#: functions.php:321
+#: functions.php:288
 msgid "CRM Sidebar"
 msgstr "Barre latérale CRM"
 
-#: functions.php:323
+#: functions.php:290
 msgid "Widget area dedicated to the CRM."
 msgstr "Zone de widgets dédiée au CRM."
-
-#: functions.php:98
-msgid "The company name is required."
-msgstr "Le nom de l'entreprise est obligatoire."
-
-#: functions.php:99
-msgid "Creating..."
-msgstr "Création en cours..."
 
 #: inc/class-ispag-entity-summary.php:33
 msgid "No due date"
@@ -84,6 +68,34 @@ msgstr "Aucun contact depuis plus de %d jours"
 #: inc/class-ispag-entity-summary.php:98
 msgid "No follow-up task planned"
 msgstr "Aucune tâche de suivi planifiée"
+
+#: inc/js-strings.php:13
+msgid "Apply changes to "
+msgstr "Appliquer les modifications à "
+
+#: inc/js-strings.php:14
+msgid "Error: "
+msgstr "Erreur : "
+
+#: inc/js-strings.php:15
+msgid "Invalid phone number"
+msgstr "Numéro de téléphone invalide"
+
+#: inc/js-strings.php:16
+msgid "No project selected."
+msgstr "Aucun projet sélectionné."
+
+#: inc/js-strings.php:17
+msgid "Please choose a stage or a contact date."
+msgstr "Veuillez choisir une étape ou une date de contact."
+
+#: inc/js-strings.php:18
+msgid "Select an image"
+msgstr "Sélectionner une image"
+
+#: inc/js-strings.php:19
+msgid "Utiliser cette image"
+msgstr "Utiliser cette image"
 
 #: ispag-kanban-viewer.php:133
 msgid "Table view"
