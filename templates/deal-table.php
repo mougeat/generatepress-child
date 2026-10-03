@@ -10,7 +10,7 @@ if (!isset($all_stages)) {
 }
 ?> 
 
-<?php echo ispag_get_template( 'deal-bulk-edit', [] );  ?>
+<?php if (current_user_can('manage_order')) { echo ispag_get_template( 'deal-bulk-edit', [] ); } ?>
 
 <?php echo ispag_get_template( 'deal-export-btn', [] );  ?>
 
@@ -89,6 +89,7 @@ if (!isset($all_stages)) {
                                 <?php echo esc_html($stage_label); ?>
                             </span>
 
+                            <?php if (current_user_can('manage_order')) : ?>
                             <select class="ispag-stage-updater" 
                                     data-deal-id="<?php echo esc_attr($transaction->id); ?>" 
                                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
@@ -102,6 +103,7 @@ if (!isset($all_stages)) {
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            <?php endif; ?>
                         </span>
                     </td>
                     <td style="text-align:right; font-family: monospace; font-weight: bold;"><?php echo $formatted_amount; ?></td>

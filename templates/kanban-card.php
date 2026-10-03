@@ -12,7 +12,7 @@ $is_overdue         = $closing_ts && $closing_ts < strtotime( 'today' );
      data-deal-id="<?php echo absint( $deal->id ); ?>"
      data-amount="<?php echo esc_attr( (float) $deal->total_excl_vat ); ?>"
      style="border-left-color: <?php echo $stage_color; ?>;"
-     draggable="true">
+     draggable="<?php echo current_user_can('manage_order') ? 'true' : 'false'; ?>">
     <div class="deal-title">
         <a href="<?php echo $deal->get_deal_detail_link(); ?>" class="ispag-deal-title-link">
             <?php echo esc_html( $deal->project_name ); ?>

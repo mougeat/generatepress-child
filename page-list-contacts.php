@@ -83,10 +83,12 @@ get_header();
         <div class="ispag-header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h1 style="margin: 0;"><?php the_title(); ?> (<?php echo $total_users; ?>)</h1>
             
+            <?php if ( current_user_can( 'add_contact' ) ) : ?>
             <button type="button" class="trigger-add-contact button button-primary ispag-btn-large">
                 <span class="dashicons dashicons-plus" style="margin-top: 4px; margin-right: 5px;"></span>
                 <?php _e('Create contact', 'ispag-crm'); ?>
             </button>
+            <?php endif; ?>
         </div>
 
         

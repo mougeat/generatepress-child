@@ -482,6 +482,43 @@ if(class_exists('ISPAG_Projet_Repository')){
                 </button>
                 <div class="ispag-right-panel" data-panel="right">
 
+                    <?php if (current_user_can('manage_order')) : // cartes Company / Contacts : réservées à la gestion des commandes ?>
+
+                    <?php endif; ?>
+
+                    <!-- ----------Affichage des documents ------->
+                            <?php
+                            // if(class_exists('ISPAG_Attachments_Repository') AND class_exists('ISPAG_Attachments_Card_Renderer')){
+                            //     $repository = new ISPAG_Attachments_Repository($wpdb);
+                            //     $renderer   = new ISPAG_Attachments_Card_Renderer($repository);
+
+                            //     // --- Sur une fiche Deal / Projet ---
+
+                            //     echo $renderer->render_doc_list('project', $deal_id, -1, true);
+                            // }
+                            ?>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colonne de droite -->
+            <!-- Wrapper qui porte la largeur flex + le bouton -->
+            <div class="ispag-right-panel-wrapper" data-panel="right-wrapper">
+                                <!-- Bouton collé au bord gauche du wrapper : il suit le panneau -->
+                <button id="toggle-right-panel" class="ispag-panel-toggle-right" type="button"
+                        aria-label="<?php esc_attr_e('Display / Mask panel', 'ispag-crm'); ?>"
+                        title="<?php esc_attr_e('Mask panel', 'ispag-crm'); ?>">
+                    <img
+                        src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-hide.png'); ?>"
+                        data-icon-hide="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-hide.png'); ?>"
+                        data-icon-show="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/img/ios-sidebar-display.png'); ?>"
+                        alt=""
+                        class="ispag-panel-toggle-icon">
+                </button>
+                <div class="ispag-right-panel" data-panel="right">
+
                     <div class="ispag-card ispag-company-card" data-deal-id="<?php echo absint($deal_id); ?>">
                         <h5>
                             <?php _e( 'Company', 'ispag-crm' ); ?> 

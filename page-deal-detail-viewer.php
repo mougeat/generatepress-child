@@ -302,6 +302,7 @@ get_header();
                                         <?php echo esc_html( $current_stage_label ); ?> 
                                     </span>
 
+                                    <?php if (current_user_can('manage_order')) : ?>
                                     <select class="ispag-stage-updater" 
                                             data-deal-id="<?php echo esc_attr($deal->id); ?>" 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
@@ -317,6 +318,7 @@ get_header();
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <?php endif; ?>
                                 </span>
                             </p>
                         </div>
@@ -373,7 +375,7 @@ get_header();
                         </dd>                -->
                         <dt><?php _e( 'Deal owner', 'ispag-crm' ); ?></dt>
                         <dd 
-                            class="ispag-editable-field" 
+                            class="<?php echo current_user_can('manage_order') ? 'ispag-editable-field' : ''; ?>" 
                             data-id="<?php echo $deal->id; ?>" 
                             data-name="deal_owner" 
                             data-value="<?php echo esc_attr($deal->deal_owner); ?>"
@@ -382,7 +384,7 @@ get_header();
                             data-options='<?php echo esc_attr($owner_options_json); ?>'
                         >
                             <?php echo $deal->get_deal_owner_display_name(); ?>
-                            <span class="edit-icon">✏️</span>
+                            <?php if (current_user_can('manage_order')) : ?><span class="edit-icon">✏️</span><?php endif; ?>
                         </dd>
                     </dl>
 
@@ -514,7 +516,7 @@ get_header();
                         class="ispag-panel-toggle-icon">
                 </button>
                 <div class="ispag-right-panel" data-panel="right">
-                
+                <?php if (current_user_can('manage_order')) : // cartes Company / Contacts réservées à la gestion des commandes ?>
                     <?php
                     $datas['associated_companies_list_full'] = $associated_companies_list_full;
                     $datas['deal_id'] = $deal->deal_group_ref;
@@ -527,8 +529,8 @@ get_header();
                     $datas['deal_group_ref'] = $deal->deal_group_ref;
                     echo ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
                     ?>
+                <?php endif; ?>
 
-                    
                     <div id="ispag-modal-container"></div>
                 </div>
             </div>
