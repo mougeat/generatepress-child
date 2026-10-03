@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentTarget = null;
     let itiPopover = null;
 
+    // Pages sans panneau d'édition (accueil, listes…) : rien à initialiser, et pas d'erreur JavaScript
+    if (!popover || !container) return;
+
 // console.log("🚀 ISPAG : Script popover.js chargé");
 
     // --- NOUVEAU : CHARGEMENT FORCÉ DES UTILS ---
@@ -84,10 +87,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const value = this.dataset.value || '';
             const optionsString = this.dataset.options || '';
 
-            const rect = this.getBoundingClientRect();
-            popover.style.top = `${rect.top + window.scrollY - 10}px`;
-            popover.style.left = `${rect.right + 15}px`;
+            // Affichage puis positionnement : à droite du champ s'il y a la place, sinon sous le champ, toujours dans l'écran (téléphone, tablette)
             popover.style.display = 'block';
+            const rect = this.getBoundingClientRect();
+            const pw = popover.offsetWidth || 300;
+            const margin = 8;
+            const vw = document.documentElement.clientWidth;
+            if (rect.right + 15 + pw + margin <= vw) {
+                popover.style.top = `${rect.top + window.scrollY - 10}px`;
+                popover.style.left = `${rect.right + 15}px`;
+            } else {
+                popover.style.top = `${rect.bottom + window.scrollY + 6}px`;
+                popover.style.left = `${Math.max(margin, Math.min(rect.left, vw - pw - margin))}px`;
+                popover.style.maxWidth = `${vw - 2 * margin}px`;
+            }
 
             if(itiPopover) { itiPopover.destroy(); itiPopover = null; }
             container.innerHTML = '';
