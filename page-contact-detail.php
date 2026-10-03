@@ -743,6 +743,16 @@ get_header();
                     <button class="ispag-tab-btn" data-tab="intelligence">
                         <?php esc_html_e( 'Intelligence', 'ispag-crm' ); ?>
                     </button>
+                    <?php
+                    // Conversation WhatsApp : visible si le module est configuré (relais + numéro) et que l'utilisateur voit les contacts
+                    $show_whatsapp = function_exists( 'ispag_whatsapp_is_enabled' ) && ispag_whatsapp_is_enabled()
+                        && class_exists( 'ISPAG_Whatsapp_Ajax_Handlers' ) && ISPAG_Whatsapp_Ajax_Handlers::can_use()
+                        && ! empty( $contact->phone );
+                    if ( $show_whatsapp ) : ?>
+                    <button class="ispag-tab-btn" data-tab="whatsapp">
+                        <?php esc_html_e( 'WhatsApp', 'ispag-crm' ); ?>
+                    </button>
+                    <?php endif; ?>
                 </div>
                 <div class="ispag-tabs-content">
                     
@@ -813,6 +823,12 @@ get_header();
                         ?>
                     </div>
                     
+                    <?php if ( ! empty( $show_whatsapp ) ) : ?>
+                    <div id="ispag-tab-whatsapp" class="ispag-tab-pane">
+                        <?php ( new ISPAG_Whatsapp_Panel_Renderer() )->render( absint( $user_id ), (string) $contact->phone ); ?>
+                    </div>
+                    <?php endif; ?>
+
                     <div id="ispag-tab-intelligence" class="ispag-tab-pane">
                         <div 
                         id="gemini-ai-profil-<?php echo absint($user_id); ?>" 
