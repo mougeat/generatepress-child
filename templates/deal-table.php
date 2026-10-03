@@ -1,11 +1,17 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage du tableau des transactions ISPAG
  * Variables attendues : $transactions (array)
  */
+
+// Étapes proposées dans le sélecteur de la colonne « Current stage » (liste vide si le CRM n'est pas actif)
+if (!isset($all_stages)) {
+    $all_stages = class_exists('ISPAG_Crm_Deal_Stages_Repository') ? (new ISPAG_Crm_Deal_Stages_Repository())->get_all_stages() : [];
+}
 ?> 
 
-<?php echo ispag_get_template( 'deal-bulk-edit', [] );  ?>
+<?php if (current_user_can('manage_order')) { echo ispag_get_template( 'deal-bulk-edit', [] ); } ?>
 
 <?php echo ispag_get_template( 'deal-export-btn', [] );  ?>
 
@@ -84,6 +90,7 @@
                                 <?php echo esc_html($stage_label); ?>
                             </span>
 
+                            <?php if (current_user_can('manage_order')) : ?>
                             <select class="ispag-stage-updater" 
                                     data-deal-id="<?php echo esc_attr($transaction->id); ?>" 
                                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
@@ -97,6 +104,7 @@
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            <?php endif; ?>
                         </span>
                     </td>
                     <td style="text-align:right; font-family: monospace; font-weight: bold;"><?php echo $formatted_amount; ?></td>

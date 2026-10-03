@@ -148,3 +148,101 @@
     background: #f1f5f9;
     color: #1e293b;
 }
+/* =======================================================
+   Tableau des tâches : filtres, sections, badges, report
+   ======================================================= */
+.ispag-task-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.ispag-task-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ispag-task-chips .ispag-chip .chip-count {
+    display: inline-block;
+    min-width: 18px;
+    margin-left: 4px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--ispag-border);
+    font-size: 11px;
+    font-weight: 600;
+}
+.ispag-task-chips .ispag-chip.is-active .chip-count { background: rgba(255, 255, 255, 0.3); }
+.ispag-task-chips .chip-danger:not(.is-active) { color: var(--ispag-danger-color); border-color: #f3c0c5; }
+
+.ispag-dash-header .ispag-action-btn { display: inline-flex; align-items: center; gap: 4px; width: auto; }
+.ispag-search-container input[type="search"] { -webkit-appearance: none; appearance: none; }
+
+/* En-têtes de section */
+.ispag-task-table tr.group-row td {
+    padding: 14px 12px 6px;
+    border-bottom: 1px solid var(--ispag-border);
+    background: var(--ispag-light-grey);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ispag-color-text-medium);
+}
+.ispag-task-table tr.group-overdue td { color: var(--ispag-danger-color); }
+
+/* Type */
+.task-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+.task-type-badge .dashicons { width: 14px; height: 14px; font-size: 14px; }
+
+.due-date-wrapper.is-today { color: #b07d00; font-weight: 600; }
+.task-row { transition: background 0.15s; }
+.task-row:hover { background: var(--ispag-light-grey); }
+
+/* Report rapide */
+.ispag-task-table .btn-group { display: flex; align-items: center; gap: 2px; justify-content: flex-end; }
+.task-snooze { position: relative; }
+.snooze-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 20;
+    min-width: 140px;
+    padding: 4px;
+    background: var(--ispag-white);
+    border: 1px solid var(--ispag-border);
+    border-radius: var(--ispag-btn-border-radius);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+.snooze-menu.open { display: block; }
+.snooze-option {
+    display: block;
+    width: 100%;
+    padding: 6px 10px;
+    border: 0;
+    background: none;
+    text-align: left;
+    font-size: 13px;
+    color: var(--ispag-color-text-dark);
+    cursor: pointer;
+    border-radius: 3px;
+}
+.snooze-option:hover { background: var(--ispag-light-grey); }
+
+/* État vide */
+.ispag-task-table .empty-msg { padding: 40px 0; text-align: center; color: var(--ispag-color-text-light); }
+.ispag-task-table .empty-msg .dashicons { display: block; margin: 0 auto 6px; width: 32px; height: 32px; font-size: 32px; color: var(--ispag-green); }
+
+/* Le menu de report déborde du tableau : on ne coupe pas en desktop */
+@media (min-width: 769px) {
+    .ispag-dashboard-wrapper .table-responsive { overflow: visible; }
+}

@@ -1,0 +1,71 @@
+/* Bandeau chiffres clés d'un deal */
+.ispag-entity-summary { margin-bottom: 15px; }
+
+.ispag-entity-summary-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+}
+
+.ispag-kpi {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    padding: 12px 14px;
+    background: var(--ispag-white);
+    border: 1px solid var(--ispag-border);
+    border-left: 4px solid var(--ispag-border);
+    border-radius: var(--ispag-btn-border-radius);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.ispag-kpi-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--ispag-color-text-light);
+}
+.ispag-kpi-label .dashicons { width: 14px; height: 14px; font-size: 14px; }
+
+.ispag-kpi-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ispag-color-text-dark);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.ispag-kpi-sub { font-size: 12px; color: var(--ispag-color-text-medium); }
+
+.ispag-kpi.is-warn   { border-left-color: var(--ispag-orange); }
+.ispag-kpi.is-danger { border-left-color: var(--ispag-danger-color); }
+.ispag-kpi.is-warn .ispag-kpi-sub   { color: #b07d00; font-weight: 600; }
+.ispag-kpi.is-danger .ispag-kpi-sub { color: var(--ispag-danger-color); font-weight: 600; }
+
+.ispag-entity-alerts { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.ispag-entity-alerts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: #fff4d6;
+    color: #8a6100;
+}
+.ispag-entity-alerts li.is-danger { background: #fde8ea; color: var(--ispag-danger-color); }
+.ispag-entity-alerts .dashicons { width: 14px; height: 14px; font-size: 14px; }
+
+/* Détails secondaires (remplace l'ancienne grille « Data highlights ») */
+.ispag-entity-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px 20px;
+    font-size: 13px;
+}
+.ispag-entity-details .ispag-field-container { display: flex; flex-direction: column; }
+.ispag-entity-details strong { font-size: 11px; font-weight: 500; text-transform: uppercase; color: var(--ispag-color-text-light); }

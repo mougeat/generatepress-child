@@ -222,3 +222,98 @@
 .ispag-copy-icon:hover {
     color: var(--ispag-green);
 }
+
+/* =======================================================
+   C. UX Kanban : badges, états de drag & drop, « Voir plus », toast
+   ======================================================= */
+.kanban-column-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px;
+    padding-right: 10px;
+}
+
+.kanban-count-badge {
+    display: inline-block;
+    min-width: 22px;
+    padding: 1px 7px;
+    margin-left: 4px;
+    border-radius: 999px;
+    background: var(--ispag-border);
+    color: var(--ispag-color-text-medium);
+    font-size: 0.75em;
+    font-weight: 600;
+    text-align: center;
+}
+
+.kanban-column-subtotal {
+    font-size: 0.7em;
+    color: var(--ispag-color-text-medium);
+    white-space: nowrap;
+}
+
+.kanban-deal-card .deal-info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.kanban-deal-card .deal-info .dashicons {
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+    color: var(--ispag-btn-grey);
+}
+
+.kanban-deal-card .deal-info.is-overdue,
+.kanban-deal-card .deal-info.is-overdue .dashicons {
+    color: #c0392b;
+    font-weight: 600;
+}
+
+.kanban-deal-card:active { cursor: grabbing; }
+.kanban-deal-card.is-dragging { opacity: 0.4; transform: rotate(1deg); }
+.kanban-deal-card.is-saving { opacity: 0.6; pointer-events: none; }
+
+/* Pendant un drag, toutes les colonnes signalent qu'elles acceptent le dépôt */
+.ispag-kanban-board.is-dragging-active .ispag-deals-dropzone {
+    outline: 2px dashed var(--ispag-border);
+    outline-offset: -4px;
+}
+.ispag-deals-dropzone.is-drag-over {
+    background-color: #e8f5e9;
+    outline: 2px dashed var(--ispag-green);
+}
+
+.kanban-column-body { scrollbar-width: thin; }
+
+.kanban-load-more {
+    align-self: center;
+    width: 100%;
+    margin-top: 2px;
+}
+.kanban-load-more.is-loading { opacity: 0.6; cursor: progress; }
+
+.ispag-kanban-toast {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 100000;
+    padding: 10px 16px;
+    border-radius: var(--ispag-btn-border-radius);
+    background: var(--ispag-green);
+    color: #fff;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.25s, transform 0.25s;
+}
+.ispag-kanban-toast.error { background: #c0392b; }
+.ispag-kanban-toast.visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    .kanban-deal-card, .ispag-kanban-toast { transition: none; }
+}

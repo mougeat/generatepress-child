@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Deals Kanban Viewer
  * Template Post Type: page
@@ -94,19 +95,16 @@ if ( $deal_repo && $stage_repo ) {
     // Les étapes (colonnes) dans le bon ordre
     $stages_list = $stage_repo->get_all_stages( true ); 
     
-    // Les deals groupés par leur étape
-    // Le Repository devra être mis à jour pour traiter 'company_id' et 'contact_id'
-    $deals_by_stage = $deal_repo->get_all_deals_grouped_by_stage( $kanban_filters );
-
-    // error_log(print_r($deals_by_stage, true));
-    
-    
+    // Totaux sur tous les deals, mais seules les premières cartes de chaque colonne sont chargées
+    // (la suite arrive via le bouton « Voir plus » en AJAX).
+    $kanban_per_stage = 20;
+    $kanban_data      = $deal_repo->get_kanban_data( $kanban_filters, $kanban_per_stage );
 
 } else {
     // Si les classes ne sont pas trouvées, on affiche un message d'erreur.
     $stages_list = [];
-    $deals_by_stage = [];
-    echo '<p class="ispag-error">Erreur: Les composants du CRM (Repositories) sont indisponibles. Assurez-vous que les classes sont chargées.</p>';
+    $kanban_data = [];
+    echo '<p class="ispag-error">Error: The CRM components (Repositories) are unavailable. Make sure the classes are loaded.</p>';
 }
 
 ?>
@@ -142,105 +140,53 @@ if ( $deal_repo && $stage_repo ) {
                     
                     <?php if ( ! empty( $stages_list ) ) : ?>
                     
-                        <div class="ispag-kanban-board">
+                        <div class="ispag-kanban-board"
+                             data-filters="<?php echo esc_attr( wp_json_encode( array_filter( $kanban_filters, fn( $v ) => $v !== null && $v !== '' ) ) ); ?>">
                             
                             <?php 
                             // Boucle sur toutes les étapes récupérées
                             foreach ( $stages_list as $stage_model ) : 
                                 $stage_key = $stage_model->stage_key;
 
-                                // Filtration pour n'afficher que les étapes 'ouvertes' si le filtre 'status' est 'open'
-                                if ( $kanban_filters['status'] === 'open' && $stage_model->is_closed == 1 ) {
+                                if ( ( $kanban_filters['status'] ?? '' ) === 'open' && $stage_model->is_closed == 1 ) {
                                     continue; // Saute les colonnes "Closed Won" et "Closed Lost"
                                 }
-                                
-                                // Récupération des deals pour cette étape (peut être un tableau vide)
-                                // Utilisez l'opérateur null-coalescing pour éviter une erreur si l'étape n'a aucun deal.
-                                $deals_in_stage = $deals_by_stage[ $stage_key ] ?? [];
-                                $deals_count    = count( $deals_in_stage );
-                                
-                                // Calcul des totaux
-                                $total_amount      = array_sum( array_column( $deals_in_stage, 'total_excl_vat' ) );
-                                $weighted_amount   = $stage_model->get_weighted_amount( $total_amount );
-                                $stage_color = esc_attr( $stage_model->stage_color );
+
+                                $bucket          = $kanban_data[ $stage_key ] ?? [ 'count' => 0, 'total' => 0, 'deals' => [] ];
+                                $deals_in_stage  = $bucket['deals'];
+                                $deals_count     = (int) $bucket['count'];
+                                $total_amount    = (float) $bucket['total'];
+                                $weighted_amount = $stage_model->get_weighted_amount( $total_amount );
+                                $remaining       = $deals_count - count( $deals_in_stage );
+                                $stage_color     = esc_attr( $stage_model->stage_color );
                                 ?>
 
-                                <div class="kanban-column" data-stage-key="<?php echo $stage_key; ?>">
-                                    
+                                <div class="kanban-column" data-stage-key="<?php echo esc_attr( $stage_key ); ?>" data-probability="<?php echo esc_attr( (float) $stage_model->probability ); ?>">
+
                                     <div class="kanban-column-header" style="border-top: 3px solid <?php echo $stage_color; ?>;">
                                         <h4>
-                                            <?php echo esc_html( $stage_model->stage_label ); ?> 
-                                            (<?php echo $deals_count; ?>)
+                                            <?php echo esc_html( $stage_model->stage_label ); ?>
+                                            <span class="kanban-count-badge"><?php echo $deals_count; ?></span>
                                         </h4>
+                                        <div class="kanban-column-subtotal"><?php echo number_format( $total_amount, 0, '.', '\'' ); ?> CHF</div>
                                     </div>
-                                    
-                                    <div class="kanban-column-body ispag-deals-dropzone" data-stage-key="<?php echo $stage_key; ?>">
-                                        <?php if ( ! empty( $deals_in_stage ) ) : ?>
-                                            <?php foreach ( $deals_in_stage as $deal ) : 
-                                                // $deal est un objet ISPAG_Crm_Deal_Model chargé
-                                                // $last_activity_date       = $deal->last_activity_date ? date_i18n( 'd.m.Y', strtotime( $deal->last_activity_date ) ) : __('N/A', 'ispag-crm');
-                                                
-                                                // Éviter de recalculer strtotime/date_i18n si vous avez déjà un format propre ou formatez de manière brute :
-                                                $last_activity_date = !empty($deal->last_activity_date) ? date('d.m.Y', strtotime($deal->last_activity_date)) : __('N/A', 'ispag-crm');
-                                                $closing_date       = !empty($deal->closing_date) ? date_i18n( 'd.m.Y', strtotime( $deal->closing_date )) : '';
-                                                
-                                                ?>
-                                                <div class="kanban-deal-card" 
-                                                     data-deal-id="<?php echo absint( $deal->id ); ?>"
-                                                     style="border-left-color: <?php echo $stage_color; ?>;"
-                                                     draggable="true"
-                                                >
-                                                    <div class="deal-title">
-                                                            <a href="<?php echo $deal->get_deal_detail_link(); ?>" class="ispag-deal-title-link">
-                                                                <?php echo esc_html( $deal->project_name ); ?>
-                                                                <?php if (isset($deal->is_copie) && $deal->is_copie == 1) : ?>
-                                                                    <span class="dashicons dashicons-admin-page ispag-copy-icon"></span>
-                                                                <?php endif; ?>
-                                                            </a>
-                                                    </div>
-                                                    <p class="deal-info amount">
-                                                        <?php _e('Total amount', 'ispag-crm'); ?>: <?php echo number_format( (float) $deal->total_excl_vat, 0, '.', '\'' ); ?> CHF
-                                                    </p>
-                                                    <p class="deal-info close-date">
-                                                        <?php _e('Closing date', 'ispag-crm'); ?>: <?php echo $closing_date; ?>
-                                                    </p>
-                                                    <p class="deal-info last-contact-date">
-                                                        <?php _e('Last contact', 'ispag-crm'); ?>: <?php echo $last_activity_date; ?>
-                                                    </p>
 
-                                                    <div class="deal-relation">
-                                                        <?php if ( ! empty( $deal->associated_company_favicon ) ) : ?>
-                                                            <img 
-                                                                src="<?php echo esc_url( $deal->associated_company_favicon ); ?>"
-                                                                alt="<?php echo esc_attr( $deal->associated_company_name ); ?>"
-                                                                title="<?php echo esc_attr( $deal->associated_company_name ); ?>"
-                                                                class="ispag-kanban-mini-profile-pic" >
-                                                        <?php else : ?>
-                                                            <span class="ispag-company-initials"><?php echo esc_html( $deal->associated_company_initials ); ?></span>
-                                                        <?php endif; ?>
-                                                        <?php if ( ! empty( $deal->associated_contacts ) ) : ?>
-                                                            <!-- <div class="ispag-contact-avatars"> -->
-                                                                <?php foreach ( $deal->associated_contacts as $contact ) : ?>
-                                                                    <img
-                                                                        src="<?php echo esc_url( $contact['avatar_url'] ); ?>"
-                                                                        alt="<?php echo esc_attr( $contact['name'] ); ?>"
-                                                                        title="<?php echo esc_attr( $contact['name'] ); ?>"
-                                                                        class="ispag-kanban-mini-profile-pic"
-                                                                    >
-                                                                <?php endforeach; ?>
-                                                            <!-- </div> -->
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <p class="no-deals-message"><?php echo __( 'No deal', 'ispag-crm' ); ?></p>
+                                    <div class="kanban-column-body ispag-deals-dropzone" data-stage-key="<?php echo esc_attr( $stage_key ); ?>">
+                                        <?php foreach ( $deals_in_stage as $deal ) {
+                                            echo ispag_get_template( 'kanban-card', [ 'deal' => $deal, 'stage_color' => $stage_color ] );
+                                        } ?>
+                                        <p class="no-deals-message" <?php echo $deals_count ? 'style="display:none"' : ''; ?>><?php _e( 'No deal', 'ispag-crm' ); ?></p>
+                                        <?php if ( $remaining > 0 ) : ?>
+                                            <button type="button" class="ispag-btn small ispag-btn-secondary-outlined kanban-load-more"
+                                                    data-loaded="<?php echo count( $deals_in_stage ); ?>">
+                                                <?php printf( __( 'Show more (%d)', 'ispag-crm' ), $remaining ); ?>
+                                            </button>
                                         <?php endif; ?>
                                     </div>
-                                     
+
                                     <div class="kanban-column-footer">
-                                        <p class="total-amount"><?php _e('Total amount', 'ispag-crm'); ?>: **<?php echo number_format( $total_amount, 0, '.', '\'' ); ?> CHF**</p>
-                                        <p class="weighted-amount">(<?php echo $stage_model->probability; ?>%) <?php _e('Weighted amount', 'ispag-crm'); ?>: **<?php echo number_format( $weighted_amount, 0, '.', '\'' ); ?> CHF**</p>
+                                        <p class="total-amount"><?php _e( 'Total amount', 'ispag-crm' ); ?>: <strong><?php echo number_format( $total_amount, 0, '.', '\'' ); ?> CHF</strong></p>
+                                        <p class="weighted-amount">(<?php echo (float) $stage_model->probability; ?>%) <?php _e( 'Weighted amount', 'ispag-crm' ); ?>: <strong><?php echo number_format( $weighted_amount, 0, '.', '\'' ); ?> CHF</strong></p>
                                     </div>
                                 </div>
                             <?php endforeach; // Fin de la boucle des étapes ?>

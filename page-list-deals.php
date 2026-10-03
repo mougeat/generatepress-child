@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Deals List Viewer
  * Description: Affiche la liste des transactions ISPAG sous forme de tableau sécurisé.
@@ -101,7 +102,7 @@ get_header();
 
         <article class="page type-page status-publish hentry">
             <header class="entry-header ispag-kanban-header">
-                <h1 class="entry-title"><?php _e('Suivi des Projets (Liste)', 'ispag-crm'); ?></h1>
+                <h1 class="entry-title"><?php _e('Project tracking (list)', 'ispag-crm'); ?></h1>
                 
                 <div class="ispag-board-controls">
                     <?php 

@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Deal Detail Viewer
  * Template Post Type: page
@@ -92,7 +93,7 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
         $associated_companies_list = $deal->get_associated_company_list();
         $associated_companies_list_full = array();
         foreach ($associated_companies_list as $companies) {
-            $associated_companies_list_full[] = $companies->viag_id;
+            $associated_companies_list_full[] = $companies->Id;
         }
         // error_log(print_r($associated_companies_list, true));
 
@@ -110,7 +111,7 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
         
         
         // Stage actuel (Doit être rempli dans le constructeur/méthode de chargement du modèle)
-        $current_stage_label      = $deal->stage_label ?? __('Non défini', 'ispag-crm');
+        $current_stage_label      = $deal->stage_label ?? __('Not defined', 'ispag-crm');
         $current_stage_color      = $deal->stage_color ?? '#cccccc';
         
         // Date de dernière activité. Assurez-vous que last_activity_date est rempli dans $deal
@@ -216,6 +217,54 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
             $notes_list_full = '<p>' . __( 'No registered activity', 'ispag-crm' ) . '</p>';
         }
   
+
+        // --- Étapes (sélecteur d'étape + probabilité pour le pondéré) ---
+        $stage_repo         = new ISPAG_Crm_Deal_Stages_Repository();
+        $all_stages         = $stage_repo->get_all_stages();
+        $current_stage_key  = $deal->stage_key ?? '';
+        $stage_probability  = 0;
+        foreach ( $all_stages as $st ) {
+            if ( $st->stage_key === $current_stage_key ) { $stage_probability = (float) $st->probability; break; }
+        }
+
+        // --- Bandeau « chiffres clés » (logique partagée avec les fiches company et contact) ---
+        $today_ts     = strtotime( 'today' );
+        $closing_ts   = ! empty( $deal->closing_date ) ? strtotime( $deal->closing_date ) : 0;
+        $closing_days = $closing_ts ? (int) round( ( $closing_ts - $today_ts ) / DAY_IN_SECONDS ) : null;
+        $amount       = (float) $deal->total_excl_vat;
+        $is_open_deal = ( $stage_probability > 0 && $stage_probability < 100 ) && (int) $deal->project_db_status === 0;
+        $next_task    = ISPAG_Entity_Summary::next_task( $activity_detail ?? [] );
+
+        $summary_tiles = [
+            [
+                'icon'  => 'money-alt',
+                'label' => __( 'Amount', 'ispag-crm' ),
+                'value' => number_format( $amount, 0, '.', '\'' ) . ' CHF',
+                'sub'   => sprintf( __( 'Weighted %s CHF (%s%%)', 'ispag-crm' ), number_format( $amount * $stage_probability / 100, 0, '.', '\'' ), $stage_probability ),
+                'level' => '',
+            ],
+            [
+                'icon'  => 'calendar-alt',
+                'label' => __( 'Close date', 'ispag-crm' ),
+                'value' => $closing_ts ? date_i18n( 'd.m.Y', $closing_ts ) : '—',
+                'sub'   => $closing_days === null ? '' : ( $closing_days < 0 ? sprintf( __( 'Overdue by %d d', 'ispag-crm' ), -$closing_days ) : ( $closing_days === 0 ? __( 'Today', 'ispag-crm' ) : sprintf( __( 'In %d d', 'ispag-crm' ), $closing_days ) ) ),
+                'level' => ( $closing_days !== null && $closing_days < 0 ) ? 'danger' : ( ( $closing_days !== null && $closing_days <= 7 ) ? 'warn' : '' ),
+            ],
+            ISPAG_Entity_Summary::last_contact_tile( $deal->last_activity_date ),
+            ISPAG_Entity_Summary::next_task_tile( $next_task ),
+        ];
+
+        $summary_alerts = [];
+        if ( $is_open_deal ) {
+            if ( $closing_days !== null && $closing_days < 0 ) {
+                $summary_alerts[] = [ 'level' => 'danger', 'text' => __( 'Closing date is past: update it or move the deal', 'ispag-crm' ) ];
+            }
+            $summary_alerts = array_merge( $summary_alerts, ISPAG_Entity_Summary::common_alerts( $deal->last_activity_date, $next_task ) );
+            if ( $contacts_count === 0 ) {
+                $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No contact associated', 'ispag-crm' ) ];
+            }
+        }
+
 $deal_name = $deal->project_name;
 add_filter('pre_get_document_title', function($title) use ($deal_name) {
     if (!empty($deal_name)) {
@@ -254,15 +303,11 @@ get_header();
                                         <?php echo esc_html( $current_stage_label ); ?> 
                                     </span>
 
-                                    <?php 
-                                    $stage_repo = new ISPAG_Crm_Deal_Stages_Repository();
-                                    $all_stages = $stage_repo->get_all_stages(); 
-                                    ?>
+                                    <?php if (current_user_can('manage_order')) : ?>
                                     <select class="ispag-stage-updater" 
                                             data-deal-id="<?php echo esc_attr($deal->id); ?>" 
                                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
-                                        <option value="" 
-                                                <?php selected($current_stage_key, $stage->stage_key); ?>>
+                                        <option value="">
                                             <?php echo __('Select current stage', 'ispag-crm'); ?>
                                         </option>
                                         <?php foreach ($all_stages as $stage) : ?>
@@ -274,6 +319,7 @@ get_header();
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    <?php endif; ?>
                                 </span>
                             </p>
                         </div>
@@ -282,8 +328,8 @@ get_header();
                         <?php 
                             $actions['company_ids']       = $company_ids;
                             $actions['company_names']     = $company_names;
-                            $actions['user_id']           = $user_id;
-                            $actions['contact_name']      = $contact_name;
+                            $actions['user_id']           = $user_id ?? '';
+                            $actions['contact_name']      = $contact_name ?? '';
                             $actions['contact_ids']       = $contact_ids;
                             $actions['contact_names']     = $contact_names;
                             $actions['contact_emails']    = $contact_emails;
@@ -291,7 +337,7 @@ get_header();
                             $actions['deal_ids']          = $deal->deal_group_ref;
                             $actions['deal_names']        = $deal->project_name;
                             $actions['offer_num']         = $deal->deal_group_ref;
-                            $actions['project_nums']      = $project_nums;
+                            $actions['project_nums']      = $project_nums ?? '';
                             $actions['closing_date']      = $deal->closing_date;
                             $actions['total_excl_vat']    = $deal->total_excl_vat; 
                                                     
@@ -330,7 +376,7 @@ get_header();
                         </dd>                -->
                         <dt><?php _e( 'Deal owner', 'ispag-crm' ); ?></dt>
                         <dd 
-                            class="ispag-editable-field" 
+                            class="<?php echo current_user_can('manage_order') ? 'ispag-editable-field' : ''; ?>" 
                             data-id="<?php echo $deal->id; ?>" 
                             data-name="deal_owner" 
                             data-value="<?php echo esc_attr($deal->deal_owner); ?>"
@@ -339,7 +385,7 @@ get_header();
                             data-options='<?php echo esc_attr($owner_options_json); ?>'
                         >
                             <?php echo $deal->get_deal_owner_display_name(); ?>
-                            <span class="edit-icon">✏️</span>
+                            <?php if (current_user_can('manage_order')) : ?><span class="edit-icon">✏️</span><?php endif; ?>
                         </dd>
                     </dl>
 
@@ -389,40 +435,34 @@ get_header();
                 <div class="ispag-tabs-content">
                     
                     <div id="ispag-tab-overview" class="ispag-tab-pane active">
+                        <?php echo ISPAG_Entity_Summary::render( $summary_tiles, $summary_alerts ); ?>
+
                         <div class="ispag-card">
-                            <h5><?php _e( 'Data highlights', 'ispag-crm'); ?></h5>
-                            <div data-deal-id="<?php echo $deal->id; ?>" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
-                                
+                            <h5><?php _e( 'Details', 'ispag-crm'); ?></h5>
+                            <div class="ispag-entity-details" data-deal-id="<?php echo absint( $deal->id ); ?>">
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Create date', 'ispag-crm'); ?> :</strong>
+                                    <strong><?php _e( 'Create date', 'ispag-crm'); ?></strong>
                                     <span><?php echo date_i18n( 'd.m.Y', strtotime( $deal->date_creation ) ); ?></span>
                                 </div>
-
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Deal stage', 'ispag-crm'); ?> :</strong>
-                                    
-                                    <span><?php echo esc_html( $current_stage_label ); ?></span>
+                                    <strong><?php _e( 'Offer number', 'ispag-crm'); ?></strong>
+                                    <span><?php echo esc_html( $deal->offer_num ?: '—' ); ?></span>
                                 </div>
-
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Last activity date', 'ispag-crm'); ?> :</strong>
-                                    
-                                    <span><?php echo $last_activity_date; ?></span>
+                                    <strong><?php _e( 'Project number', 'ispag-crm'); ?></strong>
+                                    <span><?php echo esc_html( $deal->project_num ?: '—' ); ?></span>
                                 </div>
-
                                 <div class="ispag-field-container">
-                                </div>  
-                                
-                                <div class="ispag-field-container">
-                                    <strong><?php _e( 'Offer number', 'ispag-crm'); ?> :</strong>
-                                    
-                                    <span><?php echo $deal->offer_num; ?></span>
+                                    <strong><?php _e( 'Deal owner', 'ispag-crm'); ?></strong>
+                                    <span><?php echo esc_html( $deal->get_deal_owner_display_name() ); ?></span>
                                 </div>
-
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Project number', 'ispag-crm'); ?> :</strong>
-                                    
-                                    <span><?php echo $deal->project_num; ?></span>
+                                    <strong><?php _e( 'Record source', 'ispag-crm'); ?></strong>
+                                    <span><?php echo esc_html( $deal->record_source ?: '—' ); ?></span>
+                                </div>
+                                <div class="ispag-field-container">
+                                    <strong><?php _e( 'Contacts', 'ispag-crm'); ?> / <?php _e( 'Companies', 'ispag-crm'); ?></strong>
+                                    <span><?php echo (int) $contacts_count; ?> / <?php echo (int) $companies_count; ?></span>
                                 </div>
                             </div>
                         </div>
@@ -477,7 +517,7 @@ get_header();
                         class="ispag-panel-toggle-icon">
                 </button>
                 <div class="ispag-right-panel" data-panel="right">
-                
+                <?php if (current_user_can('manage_order')) : // cartes Company / Contacts réservées à la gestion des commandes ?>
                     <?php
                     $datas['associated_companies_list_full'] = $associated_companies_list_full;
                     $datas['deal_id'] = $deal->deal_group_ref;
@@ -490,8 +530,8 @@ get_header();
                     $datas['deal_group_ref'] = $deal->deal_group_ref;
                     echo ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
                     ?>
+                <?php endif; ?>
 
-                    
                     <div id="ispag-modal-container"></div>
                 </div>
             </div>
@@ -516,7 +556,7 @@ get_header();
 // ID manquant ou classe Model non trouvée.
 else : 
 ?>
-    <div class="ispag-info-message"><h1>Erreur ou Page d'accueil des Transactions.</h1></div>
+    <div class="ispag-info-message"><h1>Error ou Page d'accueil des Transactions.</h1></div>
 <?php 
 endif; // FIN de la condition A (extérieure)
 

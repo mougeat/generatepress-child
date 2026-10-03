@@ -1090,3 +1090,66 @@ body.no-select {
 .contact_link:hover{
     text-decoration: underline;
 }
+/* -------------------------------------------------------------------------- */
+/* --- Fiches projet et achat : pas de barre de défilement interne            --- */
+/* La liste des articles (et chaque onglet) prend toute la hauteur : c'est la   */
+/* page qui défile. Les colonnes latérales restent visibles (sticky).           */
+/* -------------------------------------------------------------------------- */
+.ispag-detail-container.ispag-project-view,
+.ispag-detail-container.ispag-achat-detail {
+    height: auto;
+    min-height: calc(100vh - 120px);
+    align-items: flex-start;
+}
+
+.ispag-detail-container.ispag-project-view .ispag-main-content,
+.ispag-detail-container.ispag-achat-detail .ispag-main-content {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    padding-bottom: 40px;
+}
+
+.ispag-detail-container.ispag-project-view .ispag-tabs-content,
+.ispag-detail-container.ispag-achat-detail .ispag-tabs-content,
+.ispag-detail-container.ispag-project-view .ispag-tabs .tab-content,
+.ispag-detail-container.ispag-achat-detail .ispag-tabs .tab-content {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+}
+
+/* Colonnes latérales : restent en vue pendant le défilement de la page, et ne défilent seules que si elles dépassent l'écran */
+.ispag-detail-container.ispag-project-view .ispag-left-panel,
+.ispag-detail-container.ispag-achat-detail .ispag-left-panel {
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+    height: auto;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+
+.ispag-detail-container.ispag-project-view .ispag-right-panel-wrapper,
+.ispag-detail-container.ispag-achat-detail .ispag-right-panel-wrapper {
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+}
+
+.ispag-detail-container.ispag-project-view .ispag-right-panel,
+.ispag-detail-container.ispag-achat-detail .ispag-right-panel {
+    height: auto;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+    .ispag-detail-container.ispag-project-view .ispag-left-panel,
+    .ispag-detail-container.ispag-achat-detail .ispag-left-panel,
+    .ispag-detail-container.ispag-project-view .ispag-right-panel-wrapper,
+    .ispag-detail-container.ispag-achat-detail .ispag-right-panel-wrapper {
+        position: static;
+        max-height: none;
+    }
+}

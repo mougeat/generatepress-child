@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour afficher une modal lors de contrôle de contact / company / deal
  * Variables attendues : 
@@ -11,7 +12,7 @@
     <div class="ispag-modal-content">
         <!-- En-tête de la modale avec titre et croix -->
         <div class="ispag-modal-header ui-draggable-handle">
-            <h4 id="ispag-modal-title">Préférences de notification</h4>
+            <h4 id="ispag-modal-title">Notification preferences</h4>
             <span class="ispag-modal-close ispag-btn ispag-btn-red-outlined ispag-close-croix">&times;</span>
         </div>
         

@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Template Dashboard
  * Template Post Type: page

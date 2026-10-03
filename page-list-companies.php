@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Company List Viewer
  * Template Post Type: page
@@ -101,10 +102,17 @@ get_header();
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
 
-        <header class="page-header">
-            <h1 class="page-title">
+        <header class="page-header" style="display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <h1 class="page-title" style="margin: 0;">
                 <?php _e( 'Company List', 'ispag-crm' ); ?> (<?php echo $total_companies; ?>)
             </h1>
+
+            <?php if ( class_exists( 'ISPAG_Crm_Company_Creator' ) && ISPAG_Crm_Company_Creator::can_create() ) : ?>
+                <button type="button" class="trigger-add-company button button-primary ispag-btn-large">
+                    <span class="dashicons dashicons-plus" style="margin-top: 4px; margin-right: 5px;"></span>
+                    <?php _e( 'Create company', 'ispag-crm' ); ?>
+                </button>
+            <?php endif; ?>
         </header>
 
         <div class="ispag-toolbar">
@@ -228,7 +236,7 @@ get_header();
             <tbody>
                 <?php if ( ! empty( $companies ) ) : ?>
                     <?php foreach ( $companies as $company ) : 
-                        $company_app_url = home_url( '/company/' . $company->viag_id . '/' );
+                        $company_app_url = home_url( '/company/' . $company->Id . '/' );
                         $c_name = $company->company_name;
                         $words = explode(' ', trim($c_name));
                         $initials = (count($words) > 1) 

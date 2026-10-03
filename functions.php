@@ -8,6 +8,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /* ==========================================================================
+   0. MISE À JOUR DEPUIS UNE BRANCHE GITHUB
+   Jeton + branche : wp-config.php ou Outils → Updates ISPAG (« main » par défaut). Inactif sans jeton.
+   ========================================================================== */
+require_once get_stylesheet_directory() . '/inc/class-ispag-github-updater.php';
+ISPAG_GitHub_Updater::theme( get_stylesheet(), 'mougeat/generatepress-child' );
+
+// Pages basées sur les modèles du thème : créées à l'activation du thème ou via Outils → Pages ISPAG (jamais automatiquement)
+require_once get_stylesheet_directory() . '/inc/class-ispag-page-installer.php';
+require_once get_stylesheet_directory() . '/inc/class-ispag-entity-summary.php';
+ISPAG_Page_Installer::register( 'Thème ISPAG', require get_stylesheet_directory() . '/install/pages.php' );
+add_action( 'after_switch_theme', function () { ISPAG_Page_Installer::on_activation( 'Thème ISPAG' ); } );
+
+/* ==========================================================================
    1. CHARGEMENT DES TRADUCTIONS (TEXTDOMAIN)
    ========================================================================== */
 
@@ -49,6 +62,27 @@ function theme_enqueue_styles() {
     wp_enqueue_script( 'ispag-crm-create-contact', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-create-contact.js', array( 'jquery', 'intl-tel-input-js' ), '1.0.1', true );
     wp_enqueue_script( 'ispag-crm-popover', get_stylesheet_directory_uri() . '/assets/js/popover.js', array( 'jquery', 'intl-tel-input-js' ), '1.0.1', true );
     wp_enqueue_script( 'ispag-crm-deal-select', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-deal-list-select.js', array( 'jquery' ), '1.0.0', true );
+
+    // Tableau des tâches : regroupement, filtres, report rapide (uniquement sur cette page)
+    if ( is_page_template( 'page-task-dashboard.php' ) ) {
+        $task_js = get_stylesheet_directory() . '/assets/js/ispag-task-dashboard.js';
+        wp_enqueue_script( 'ispag-task-dashboard-theme', get_stylesheet_directory_uri() . '/assets/js/ispag-task-dashboard.js', array( 'jquery' ), (int) @filemtime( $task_js ), true );
+    }
+
+    // Création d'entreprise depuis la page publique : script chargé seulement pour les utilisateurs autorisés
+    if ( class_exists( 'ISPAG_Crm_Company_Creator' ) && ISPAG_Crm_Company_Creator::can_create() ) {
+        wp_enqueue_script( 'ispag-crm-create-company', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-create-company.js', array( 'jquery' ), '1.0.0', true );
+        wp_localize_script( 'ispag-crm-create-company', 'ispag_company_params', array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'nonce'    => wp_create_nonce( ISPAG_Crm_Company_Creator::NONCE_ACTION ),
+            'i18n'     => array(
+                'name_required' => __( 'The company name is required.', 'ispag-crm' ),
+                'creating'      => __( 'Creating...', 'ispag-crm' ),
+                'error'         => __( 'An error occurred. Please try again.', 'ispag-crm' ),
+                'open_existing' => __( 'Open the existing company', 'ispag-crm' ),
+            ),
+        ) );
+    }
 
     // Localisation AJAX pour la création de contact
     wp_localize_script( 'ispag-crm-create-contact', 'ispag_params', array(
@@ -147,22 +181,22 @@ function handle_ispag_quote_submission() {
 
     $message = "
     <div style='font-family: sans-serif; color: #333; max-width: 600px; border: 1px solid #eee; padding: 20px;'>
-        <h2 style='color: #E11D48;'>Nouvelle demande de réservoir</h2>
+        <h2 style='color: #E11D48;'>New tank request</h2>
         <p><strong>Client:</strong> {$company}</p>
         <p><strong>Email:</strong> {$email}</p>
         <p><strong>Projet:</strong> {$project}</p>
-        <p><strong>Téléphone:</strong> {$phone}</p>
+        <p><strong>Phone:</strong> {$phone}</p>
         <hr style='border: 0; border-top: 1px solid #eee;'>
-        <h3>Spécifications Techniques</h3>
+        <h3>Technical Specifications</h3>
         <ul>
             <li>Dimensions: Ø {$dia}mm x H {$height}mm</li>
             <li>Volume: {$vol} Litres</li>
             <li>Pression: {$pressure} bar</li>
-            <li>Matière: {$material}</li>
+            <li>Material: {$material}</li>
             <li>Isolation: {$insulation}</li>
             <li>Soudure sur site: {$site_w}</li>
         </ul>
-        <p style='font-size: 10px; color: #999;'>Envoyé depuis le configurateur en ligne ISPAG.</p>
+        <p style='font-size: 10px; color: #999;'>Sent from the ISPAG online configurator.</p>
     </div>";
 
     wp_mail( $to, $subject, $message, $headers );
@@ -178,43 +212,27 @@ function handle_ispag_quote_submission() {
 
 
 /* ==========================================================================
-   6. MULTILINGUISME (POLYLANG) & LOGOS
+   5b. DÉTAIL D'UN PROJET : VUE « 3 COLONNES » POUR TOUS
+   ==========================================================================
+   Les pages « details-du-projet » (FR) et « projektdetails » (DE) affichaient l'ancienne vue (shortcode [ispag_detail]).
+   Elles utilisent maintenant le modèle « ISPAG Project Detail Viewer » (page-project-detail-viewer.php, 3 colonnes),
+   quel que soit le chemin d'accès : /project-detail/<id>, /details-du-projet/?deal_id=<id>, liste, notifications…
+   Pour revenir à l'ancienne vue : add_filter( 'ispag_project_detail_three_columns', '__return_false' );
    ========================================================================== */
-
-add_filter( 'generate_logo', 'ispag_multilingual_logo_url' );
-add_filter( 'generate_mobile_header_logo', 'ispag_multilingual_logo_url' ); 
-
-function ispag_multilingual_logo_url( $logo_url ) {
-    if ( function_exists( 'pll_current_language' ) ) {
-        $lang = pll_current_language( 'slug' );
-
-        $logo_fr = home_url() . '/wp-content/uploads/2024/06/Logo_ISPAG_CMYK_F_web.png';
-        $logo_de = home_url() . '/wp-content/uploads/2026/07/Logo_ISPAG_RGB_D.png';
-
-        if ( strpos( $lang, 'de' ) !== false ) {
-            return $logo_de;
-        } elseif ( strpos( $lang, 'fr' ) !== false ) {
-            return $logo_fr;
-        }
+add_filter( 'template_include', function ( $template ) {
+    if ( ! is_page( array( 'details-du-projet', 'projektdetails' ) ) ) {
+        return $template;
     }
-    return $logo_url;
-}
-
-add_filter( 'wp_get_attachment_image_attributes', 'ispag_fix_logo_srcset', 10, 3 );
-
-function ispag_fix_logo_srcset( $attr, $attachment, $size ) {
-    if ( function_exists( 'pll_current_language' ) && isset( $attr['class'] ) && strpos( $attr['class'], 'is-logo-image' ) !== false ) {
-        $lang = pll_current_language( 'slug' );
-        if ( strpos( $lang, 'de' ) !== false ) {
-            unset( $attr['srcset'] );
-        }
+    if ( ! apply_filters( 'ispag_project_detail_three_columns', true ) ) {
+        return $template;
     }
-    return $attr;
-}
+    $three_columns = locate_template( 'page-project-detail-viewer.php' );
+    return $three_columns ? $three_columns : $template;
+}, 20 );
 
 
 /* ==========================================================================
-   7. GESTION DES DÉPARTEMENTS UTILISATEUR & SIDEBARS GLOBALES
+   6. GESTION DES DÉPARTEMENTS UTILISATEUR & SIDEBARS GLOBALES
    ========================================================================== */
 
 function ispag_init_user_department() {
@@ -266,9 +284,17 @@ function ispag_add_global_contact_sidebar() {
 }
 add_action( 'wp_footer', 'ispag_add_global_contact_sidebar' );
 
+// Panneau « Créer une entreprise » : uniquement pour les utilisateurs autorisés (voir ISPAG_Crm_Company_Creator::can_create)
+function ispag_add_global_company_sidebar() {
+    if ( class_exists( 'ISPAG_Crm_Company_Creator' ) && ISPAG_Crm_Company_Creator::can_create() ) {
+        echo ispag_get_template( 'ispag-create-company-sidebar', [] );
+    }
+}
+add_action( 'wp_footer', 'ispag_add_global_company_sidebar' );
+
 
 /* ==========================================================================
-   8. ENREGISTREMENT DES ZONES DE WIDGETS
+   7. ENREGISTREMENT DES ZONES DE WIDGETS
    ========================================================================== */
 
 function ispag_register_crm_sidebar() {
@@ -283,3 +309,24 @@ function ispag_register_crm_sidebar() {
     ) );
 }
 add_action( 'widgets_init', 'ispag_register_crm_sidebar' );
+
+// Hauteur réellement visible sur mobile (barres du navigateur) -> variable CSS --ispag-vh, utilisée par les modales
+add_action( 'wp_footer', function () {
+    ?>
+    <script>
+    (function () {
+        function setVh() {
+            var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+            document.documentElement.style.setProperty('--ispag-vh', Math.round(h) + 'px');
+            var bar = document.getElementById('wpadminbar');
+            var barH = (bar && getComputedStyle(bar).position === 'fixed') ? bar.offsetHeight : 0;
+            document.documentElement.style.setProperty('--ispag-adminbar', barH + 'px');
+        }
+        setVh();
+        window.addEventListener('resize', setVh);
+        window.addEventListener('orientationchange', setVh);
+        if (window.visualViewport) { window.visualViewport.addEventListener('resize', setVh); }
+    })();
+    </script>
+    <?php
+}, 5 );

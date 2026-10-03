@@ -1,0 +1,113 @@
+/* Modale de prise de note / tâche / appel / réunion */
+#ispag-note-modal .ispag-modal-content {
+    width: min(1100px, 94vw) !important;
+    max-width: 1100px !important;
+    height: 88vh !important;
+    max-height: 88vh !important;
+    margin: auto;
+}
+
+#ispag-note-modal #create-note-form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1 1 auto;
+}
+#ispag-note-modal .ispag-modal-body { overflow-y: auto; flex: 1 1 auto; }
+
+#ispag-note-modal .ispag-modal-header {
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--ispag-border);
+}
+#ispag-note-modal .ispag-modal-header h4 { display: flex; align-items: center; gap: 8px; margin: 0; }
+#ispag-note-modal .ispag-modal-type-icon { color: var(--ispag-blue); }
+
+/* Champs : labels discrets, focus visible */
+#ispag-note-modal label { font-size: 12px; font-weight: 600; color: var(--ispag-color-text-medium); }
+#ispag-note-modal input[type="text"],
+#ispag-note-modal input[type="date"],
+#ispag-note-modal input[type="time"],
+#ispag-note-modal select,
+#ispag-note-modal textarea {
+    border: 1px solid var(--ispag-border);
+    border-radius: var(--ispag-btn-border-radius);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+#ispag-note-modal input:focus,
+#ispag-note-modal select:focus,
+#ispag-note-modal textarea:focus {
+    border-color: var(--ispag-blue);
+    box-shadow: 0 0 0 1px var(--ispag-blue);
+    outline: none;
+}
+#ispag-note-modal .ispag-form-group { margin: 14px 0 10px; }
+#ispag-note-modal .ispag-form-group .ispag-input { width: 100%; padding: 9px 10px; font-size: 15px; }
+#ispag-note-modal .ispag-field-invalid { border-color: var(--ispag-danger-color) !important; box-shadow: 0 0 0 1px var(--ispag-danger-color) !important; }
+
+/* Section tâche */
+#ispag-note-modal .ispag-task-toggle-section { margin-top: 12px; }
+#ispag-note-modal .ispag-task-toggle-section > label { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; }
+#ispag-note-modal .ispag-reminder-field {
+    padding: 12px;
+    background: var(--ispag-light-grey);
+    border: 1px solid var(--ispag-border);
+    border-radius: var(--ispag-btn-border-radius);
+}
+
+/* Puces d'échéance : le select reste dans le DOM mais n'est plus montré */
+.ispag-due-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.ispag-chip {
+    padding: 4px 12px;
+    border: 1px solid var(--ispag-border);
+    border-radius: 999px;
+    background: var(--ispag-white);
+    color: var(--ispag-color-text-medium);
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.ispag-chip:hover { border-color: var(--ispag-blue); color: var(--ispag-color-text-dark); }
+.ispag-chip.is-active { background: var(--ispag-blue); border-color: var(--ispag-blue); color: #fff; }
+#ispag-note-modal .ispag-due-offset-select { display: none; }
+
+/* Message d'erreur en ligne (remplace les alert()) */
+.ispag-modal-error {
+    margin: 0 20px 10px;
+    padding: 8px 12px;
+    border-radius: var(--ispag-btn-border-radius);
+    background: #fde8ea;
+    color: var(--ispag-danger-color);
+    font-size: 13px;
+}
+.ispag-modal-error[hidden] { display: none; }
+
+/* Pied : aide clavier à gauche, actions à droite */
+#ispag-note-modal .ispag-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--ispag-border);
+}
+.ispag-modal-hint { margin-right: auto; font-size: 12px; color: var(--ispag-color-text-light); }
+@media (max-width: 768px) { .ispag-modal-hint { display: none; } }
+
+/* Info « brouillon .eml » (mode e-mail) */
+.ispag-eml-hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 10px 0 0;
+    padding: 8px 12px;
+    border-radius: var(--ispag-btn-border-radius);
+    background: #eaf6fb;
+    color: var(--ispag-color-text-medium);
+    font-size: 12px;
+}
+.ispag-eml-hint .dashicons { flex-shrink: 0; width: 16px; height: 16px; font-size: 16px; color: var(--ispag-blue); }
+
+/* Éditeur de texte : suit la hauteur de la fenêtre au lieu des 200 px fixes de TinyMCE */
+#ispag-note-modal .tox-tinymce { height: max(320px, 38vh) !important; }
+#ispag-note-modal #note-text-area { min-height: max(320px, 38vh); }

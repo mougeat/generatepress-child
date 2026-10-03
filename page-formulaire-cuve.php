@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG - Quote Configurator
  * Description: Multilingual technical quote form for custom tanks.

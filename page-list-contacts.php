@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Contact List Viewer
  * Template Post Type: page
@@ -83,10 +84,12 @@ get_header();
         <div class="ispag-header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h1 style="margin: 0;"><?php the_title(); ?> (<?php echo $total_users; ?>)</h1>
             
+            <?php if ( current_user_can( 'add_contact' ) ) : ?>
             <button type="button" class="trigger-add-contact button button-primary ispag-btn-large">
                 <span class="dashicons dashicons-plus" style="margin-top: 4px; margin-right: 5px;"></span>
                 <?php _e('Create contact', 'ispag-crm'); ?>
             </button>
+            <?php endif; ?>
         </div>
 
         
@@ -196,13 +199,13 @@ get_header();
                     $lead_function  = ISPAG_Crm_Contact_Constants::META_LEAD_FUNCTION;
                     $priority_level  = ISPAG_Crm_Contact_Constants::PRIORITY_LEVEL;
 
-                    $owner_display_name = !empty($contact->$owner_key) ? get_the_author_meta( 'display_name', $contact->$owner_key ) : __('Non assigné', 'ispag-crm');
+                    $owner_display_name = !empty($contact->$owner_key) ? get_the_author_meta( 'display_name', $contact->$owner_key ) : __('Unassigned', 'ispag-crm');
                     $last_contact_date  = $contact->last_contact_date ? date_i18n( 'd.m.Y', strtotime( $contact->last_contact_date ) ) : __('N/A', 'ispag-crm');   
                     // $avatar_url         = $contact->avatar_url;
                     
                     // $company_name = '—';
                     // if ( ! empty( $contact->$comp_id_key ) ) {
-                    //     $company = $company_repo->get_company_by_viag_id( $contact->$comp_id_key );
+                    //     $company = $company_repo->get_company_by_id( $contact->$comp_id_key );
                     //     if ( $company ) $company_name = $company->company_name;
                     // }
                 ?> 

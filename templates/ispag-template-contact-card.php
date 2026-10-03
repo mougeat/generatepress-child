@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage du contenu desarticles d'un projet
  * Variables attendues : $datas (array)
@@ -6,7 +7,7 @@
 
 $associated_contacts_list_full  = $datas['associated_contacts_list_full']    ?? '';
 $company_id                     = $datas['company_id']    ?? '';
-$company_viag_id                = $datas['company_viag_id']    ?? '';
+$company_id_ref                = $datas['company_id']    ?? '';
 $user_id                        = $datas['user_id']    ?? '';
 $deal_id                        = $datas['deal_id']    ?? '';
 $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
@@ -19,7 +20,7 @@ $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
         <?php _e('Contacts', 'ispag-crm'); ?> (<?php echo count($associated_contacts_list_full); ?>)
         <span id="open-add-contact-modal" class="add_relation-btn"
             
-            data-company-id="<?php echo absint($company_viag_id); ?>"
+            data-company-id="<?php echo absint($company_id_ref); ?>"
             data-deal-group-ref="<?php echo esc_attr($deal_group_ref); ?>"
             data-deal-id="<?php echo absint($deal_id); ?>">
             + <?php _e('Add', 'ispag-crm'); ?>
@@ -55,14 +56,14 @@ $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
                     class="ispag-remove-association"
                     data-action="remove-contact-from-company"
                     data-contact-id="<?php echo absint($contact->ID); ?>"
-                    data-company-id="<?php echo absint($company_viag_id); ?>"
+                    data-company-id="<?php echo absint($company_id_ref); ?>"
                     title="<?php esc_attr_e('Remove association', 'ispag-crm'); ?>"
                     style="color: #e74c3c; cursor: pointer;">
                     <span class="dashicons dashicons-trash"></span>
                 </span>
             </div>
             <p style="margin: 5px 0 0;"><?php _e('Function', 'ispag-crm'); ?>: <?php echo esc_html($contact->lead_function ?? ''); ?></p>
-            <p style="margin: 5px 0 0;"><?php _e('Last Contact', 'ispag-crm'); ?>: <?php echo date_i18n(get_option('date_format'), strtotime($contact->last_contact_date)); ?></p>
+            <p style="margin: 5px 0 0;"><?php _e('Last Contact', 'ispag-crm'); ?>: <?php echo (!empty($contact->last_contact_date) ? date_i18n(get_option('date_format'), strtotime($contact->last_contact_date)) : '—'); ?></p>
             <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm'); ?>: <a href="tel:<?php echo esc_html( $contact->phone ); ?>" class="contact_link ispag-phone-display"><?php echo esc_html( $contact->phone ); ?></a></p>
             <p style="margin: 5px 0 0;"><?php _e( 'Email', 'ispag-crm'); ?>: <a href="mailto:<?php echo esc_html( $contact->email ); ?>" class="contact_link"><?php echo esc_html( $contact->email ); ?></a></p>
         </div>
@@ -70,7 +71,7 @@ $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
     endforeach;
 
     if ($nb_contact > NB_TRANSACTIONS_RIGHT) {
-        $company_url = home_url('/listes-des-contacts/?filter_company=' . $company_viag_id . '/');
+        $company_url = home_url('/listes-des-contacts/?filter_company=' . $company_id_ref . '/');
         ?>
         <a href="<?php echo $company_url; ?>" class="ispag-button-link"><?php _e('Show all contacts', 'ispag-crm'); ?></a>
     <?php

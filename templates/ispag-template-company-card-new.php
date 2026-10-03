@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage des entreprises associées à un projet/deal
  * Variables attendues : $datas (array)
@@ -23,7 +24,7 @@ $deal_id                         = $datas['deal_id']                         ?? 
         foreach ($companies as $company) {
             if (!$company) continue;
 
-            $company_app_url = home_url( '/company/' . $company->viag_id . '/' );
+            $company_app_url = home_url( '/company/' . $company->Id . '/' );
             $company_name    = $company->company_name ?? '';
             $favicon         = $company->favicon ?? null;
 
@@ -56,7 +57,7 @@ $deal_id                         = $datas['deal_id']                         ?? 
                         class="ispag-remove-association" 
                         data-action="remove-contact-from-company"
                         data-contact-id="<?php echo absint($user_id); ?>"
-                        data-company-id="<?php echo absint($company->viag_id); ?>"
+                        data-company-id="<?php echo absint($company->Id); ?>"
                         data-deal-id="<?php echo absint($deal_id); ?>"
                         title="<?php esc_attr_e( 'Remove association', 'ispag-crm' ); ?>"
                         style="color: #e74c3c; cursor: pointer;"
@@ -65,12 +66,23 @@ $deal_id                         = $datas['deal_id']                         ?? 
                     </span>
                 </div>
                 
-                <?php if (!empty($company->city)) : ?>
-                    <p style="margin: 5px 0 0;"><?php _e( 'City', 'ispag-crm' ); ?>: <?php echo esc_html($company->city); ?></p>
+                <?php
+                $address_parts = array_filter(array(
+                    trim((string) ($company->address ?? '')),
+                    trim(trim((string) ($company->postal_code ?? '')) . ' ' . trim((string) ($company->city ?? ''))),
+                    trim((string) ($company->country ?? '')),
+                ));
+                ?>
+                <?php if (!empty($address_parts)) : ?>
+                    <p style="margin: 5px 0 0;"><?php _e( 'Address', 'ispag-crm' ); ?>: <?php echo esc_html(implode(', ', $address_parts)); ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($company->compagny_domain)) : ?>
+                    <p style="margin: 5px 0 0;"><?php _e( 'Website', 'ispag-crm' ); ?>: <a href="<?php echo esc_url('https://' . preg_replace('#^https?://#i', '', $company->compagny_domain)); ?>" target="_blank" rel="noopener" class="contact_link"><?php echo esc_html($company->compagny_domain); ?></a></p>
                 <?php endif; ?>
                 
                 <?php if (!empty($company->last_contact_date)) : ?>
-                    <p style="margin: 5px 0 0;"><?php _e( 'Last Contact', 'ispag-crm'); ?>: <?php echo date_i18n(get_option('date_format'), strtotime($company->last_contact_date)); ?></p>
+                    <p style="margin: 5px 0 0;"><?php _e( 'Last Contact', 'ispag-crm'); ?>: <?php echo (!empty($company->last_contact_date) ? date_i18n(get_option('date_format'), strtotime($company->last_contact_date)) : '—'); ?></p>
                 <?php endif; ?>
                 
                 <?php if (!empty($company->phone)) : ?>
@@ -84,7 +96,7 @@ $deal_id                         = $datas['deal_id']                         ?? 
             <?php
         }
     } else {
-        echo '<p class="ispag-no-company">' . __( 'Aucune entreprise associée.', 'ispag-crm' ) . '</p>';
+        echo '<p class="ispag-no-company">' . __( 'No associated company.', 'ispag-crm' ) . '</p>';
     }
     ?>
     

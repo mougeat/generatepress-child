@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Company Detail
  * Template Post Type: page
@@ -51,15 +52,15 @@ if (class_exists('ISPAG_Revenue_Stats')) {
 
 define('NB_TRANSACTIONS_RIGHT', 5);
 
-// Récupération de l'ID VIAG de l'URL
-$company_viag_id = get_query_var('company_id');
-if (empty($company_viag_id)) {
+// Récupération de l'Id de l'entreprise dans l'URL (/company/<Id>/)
+$company_url_id = get_query_var('company_id');
+if (empty($company_url_id)) {
     global $wp_query;
-    $company_viag_id = $wp_query->query_vars['company_id'] ?? 0;
+    $company_url_id = $wp_query->query_vars['company_id'] ?? 0;
 }
 
 // Chargement des données de l'entreprise
-$company = $repository->get_company_by_viag_id($company_viag_id);
+$company = $repository->get_company_by_id($company_url_id);
 
 // // Récupération des options de coefficients (wpcb_sales_coef*)
 // $sales_coef_options = [];
@@ -105,8 +106,8 @@ if (empty($company)) {
             <div class="ispag-error-message">
                 <?php
                 printf(
-                    __('Company data is missing or not found for ID VIAG: %s', 'ispag-crm'),
-                    esc_html($company_viag_id)
+                    __('Company data is missing or not found for ID: %s', 'ispag-crm'),
+                    esc_html($company_url_id)
                 );
                 ?>
             </div>
@@ -120,7 +121,6 @@ if (empty($company)) {
 // Préparation des variables
 $company_id = absint($company->Id);
 $company_name = esc_html($company->company_name ?? '');
-$company_viag_id = esc_html($company->viag_id ?? '');
 $company_type = esc_html($company->type ?? '');
 $isIngenieur = esc_html($company->isIngenieur ?? '');
 $is_active = esc_html($company->is_active ?? '');
@@ -141,7 +141,7 @@ $link_new_contact = home_url('/add-contact/');
 $link_new_project = home_url('/add-project/');
 $transactions_list_full = [];
 $associated_contacts_list_full = $company->associated_contacts_list_full ?? [];
-$last_activity_date = $company->last_contact_date ? date_i18n('d.m.Y', strtotime($company->last_contact_date)) : __('N/A', 'ispag-crm');
+$last_activity_date = !empty($company->last_contact_date) ? date_i18n('d.m.Y', strtotime($company->last_contact_date)) : __('N/A', 'ispag-crm');
 $coef_value = $company->coef_value ?? null;
 $discount_value = $company->discount_value ?? null;
 
@@ -151,14 +151,14 @@ $discount_value = $company->discount_value ?? null;
 // Chargement des transactions
 if (class_exists('ISPAG_Crm_Deals_Repository')) {
     $deals_repository = new ISPAG_Crm_Deals_Repository();
-    $transactions_list_full = $deals_repository->get_projects_by_company($company_viag_id);
+    $transactions_list_full = $deals_repository->get_projects_by_company($company_id);
 }
 
 // Chargement des notes
 if (class_exists('ISPAG_Note_Manager')) {
     $note_repository = new ISPAG_Note_Repository();
     $note_renderer = new ISPAG_Note_Renderer();
-    $activity_detail = $note_repository->get_activities_for_entity('company', $company_viag_id);
+    $activity_detail = $note_repository->get_activities_for_entity('company', $company_id);
     $notes_list_full = $note_renderer->render_activities_list($activity_detail);
 } else {
     $notes_list_full = '<p>' . __('No registered activity', 'ispag-crm') . '</p>';
@@ -212,7 +212,7 @@ $owner_entry = $wpdb->get_row($wpdb->prepare(
      WHERE company_id = %d
      AND department_key = %s
      AND status = 'active'",
-    $company_viag_id,
+    $company_id,
     $user_department
 ));
 
@@ -243,12 +243,42 @@ foreach ($users as $u) {
 }
 $users_list_source = implode(';', $users_list_arr);
 
+// --- Bandeau « chiffres clés » (même logique que les fiches deal et contact) ---
+$next_task      = ISPAG_Entity_Summary::next_task( $activity_detail ?? [] );
+$deals_totals   = ISPAG_Entity_Summary::deals_totals( $transactions_list_full );
+$summary_tiles  = [
+    ISPAG_Entity_Summary::open_deals_tile( $deals_totals ),
+    [
+        'icon'  => 'awards',
+        'label' => __( 'Won', 'ispag-crm' ),
+        'value' => number_format( $deals_totals['won']['amount'], 0, '.', '\'' ) . ' CHF',
+        'sub'   => sprintf( _n( '%d deal', '%d deals', $deals_totals['won']['count'], 'ispag-crm' ), $deals_totals['won']['count'] ),
+        'level' => '',
+    ],
+    ISPAG_Entity_Summary::last_contact_tile( $company->last_contact_date ?? null ),
+    ISPAG_Entity_Summary::next_task_tile( $next_task ),
+];
+$summary_alerts = [];
+if ( $is_active == 1 ) {
+    $summary_alerts = ISPAG_Entity_Summary::common_alerts( $company->last_contact_date ?? null, $next_task );
+    if ( ! $current_owner_id ) {
+        $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No company owner assigned', 'ispag-crm' ) ];
+    }
+    if ( empty( $associated_contacts_list_full ) ) {
+        $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No contact associated', 'ispag-crm' ) ];
+    }
+}
+
 // Préparation des variables pour le template
+// Variables facultatives (options d'édition construites ailleurs) : valeur vide par défaut, sinon compact() émet un avertissement
+foreach (['owner_options_js', 'type_options_js', 'discount_type_options_string', 'sales_coef_options_string'] as $optional_var) {
+    if (!isset($$optional_var)) { $$optional_var = ''; }
+}
+
 $template_args = compact(
     'company',
     'company_id',
     'company_name',
-    'company_viag_id',
     'company_type',
     'isIngenieur',
     'is_active',
@@ -309,7 +339,7 @@ get_header();
                             data-field-type="avatar"
                             data-company-id="<?php echo absint($company_id); ?>"
                             style="cursor: pointer;"
-                            title="<?php _e('Modifier l\'icône', 'ispag-crm'); ?>">
+                            title="<?php _e('Edit icon', 'ispag-crm'); ?>">
                             <span class="current-value">
                                 <?php
                                 if ($favicon) {
@@ -343,24 +373,14 @@ get_header();
                                 data-company-id="<?php echo $company_id; ?>"
                                 data-name="compagny_domain"
                                 data-value="<?php echo esc_attr($company_domain); ?>">
-                                <?php echo $company_domain ?? 'pas de domaine défini'; ?>
-                            </p>
-                            <p
-                                class="ispag-popover-field"
-                                data-field-type="text"
-                                data-department-id="<?php echo $user_department; ?>"
-                                data-company-id="<?php echo $company_id; ?>"
-                                data-name="viag_id"
-                                data-value="<?php echo esc_attr($company_viag_id); ?>">
-                                <?php echo $company_viag_id; ?>
-                                <span class="edit-icon">✏️</span>
+                                <?php echo $company_domain ?? 'no domain defined'; ?>
                             </p>
                         </div>
                     </div>
 
                     <div class="ispag-actions-bar">
                         <?php
-                        $actions['company_ids'] = $company_viag_id;
+                        $actions['company_ids'] = $company_id;
                         $actions['company_names'] = $company_name;
                         $actions['user_id'] = get_current_user_id();
                         $actions['contact_ids'] = $contact_ids;
@@ -407,8 +427,9 @@ get_header();
                         <dd
                             class="ispag-popover-field"
                             data-department-id="<?php echo $user_department; ?>"
-                            data-company-id="<?php echo $company_viag_id; ?>"
+                            data-company-id="<?php echo $company_id; ?>"
                             data-field-type="phone"
+                            data-name="phone"
                             data-value="<?php echo esc_attr($company_phone); ?>">
                             <?php echo $company_phone; ?>
                         </dd>
@@ -418,9 +439,10 @@ get_header();
                             class="ispag-editable-field"
                             data-type="select"
                             data-department-id="<?php echo $user_department; ?>"
-                            data-company-id="<?php echo $company_viag_id; ?>"
+                            data-company-id="<?php echo $company_id; ?>"
                             data-name="<?php echo ISPAG_Crm_Company_Constants::COMPANY_TYPE; ?>"
-                            data-options='<?php echo $type_source_options; ?>'>
+                            data-value="<?php echo esc_attr($company->type_key ?? ''); ?>"
+                            data-options="<?php echo esc_attr($type_source_options); ?>">
                             <?php _e($company_type, 'ispag-crm'); ?>
                             <span class="edit-icon">✏️</span>
                         </dd>
@@ -430,7 +452,7 @@ get_header();
                             class="ispag-editable-field"
                             data-type="select"
                             data-department-id="<?php echo $user_department; ?>"
-                            data-company-id="<?php echo $company_viag_id; ?>"
+                            data-company-id="<?php echo $company_id; ?>"
                             data-name="<?php echo ISPAG_Crm_Company_Constants::PRIORITY_LEVEL; ?>"
                             data-value="<?php echo esc_attr($company_priority_level); ?>"
                             data-options="<?php echo esc_attr($company_prio_options); ?>">
@@ -461,7 +483,7 @@ get_header();
                             class="ispag-editable-field"
                             data-type="select"
                             data-name="department_owner"
-                            data-company-id="<?php echo esc_attr($company_viag_id); ?>"
+                            data-company-id="<?php echo esc_attr($company_id); ?>"
                             data-department-id="<?php echo esc_attr($user_department); ?>"
                             data-value="<?php echo esc_attr($current_owner_id); ?>"
                             data-options='<?php echo esc_attr($users_list_source); ?>'>
@@ -489,7 +511,7 @@ get_header();
                         <dd class="ispag-editable-field"
                             data-type="select"
                             data-department-id="<?php echo esc_attr($user_department); ?>"
-                            data-company-id="<?php echo esc_attr($company_viag_id); ?>"
+                            data-company-id="<?php echo esc_attr($company_id); ?>"
                             data-name="rabais"
                             data-value="<?php echo esc_attr($discount_value); ?>"
                             data-options="<?php echo esc_attr($discount_options); ?>">
@@ -509,7 +531,7 @@ get_header();
                         <dd class="ispag-editable-field"
                             data-type="select"
                             data-department-id="<?php echo esc_attr($user_department); ?>"
-                            data-company-id="<?php echo absint($company_viag_id); ?>"
+                            data-company-id="<?php echo absint($company_id); ?>"
                             data-name="coef_vente"
                             data-value="<?php echo esc_attr($coef_value); ?>"
                             data-options="<?php echo esc_attr($coef_options); ?>">
@@ -535,40 +557,48 @@ get_header();
                     <button class="ispag-tab-btn" data-tab="intelligence">
                         <?php esc_html_e('Intelligence', 'ispag-crm'); ?>
                     </button>
+                    <?php if ( class_exists( 'ISPAG_Crm_Supplier_Tab' ) ) { echo ISPAG_Crm_Supplier_Tab::tab_button( $company ); } ?>
                 </div>
 
                 <div class="ispag-tabs-content">
                     <div id="ispag-tab-about" class="ispag-tab-pane active">
+                        <?php echo ISPAG_Entity_Summary::render( $summary_tiles, $summary_alerts ); ?>
+
                         <div class="ispag-card">
                             <h5><?php _e('Company Profile', 'ispag-crm'); ?></h5>
-                            <div data-company-id="<?php echo $company_id; ?>" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
-                                <div class="ispag-field-container">
-                                    <strong><?php _e('Street Address', 'ispag-crm'); ?>:</strong>
-                                    <p>
-                                        <span><?php echo esc_html($company_address); ?></span>
-                                    </p>
-                                </div>
-
-                                <div class="ispag-field-container">
-                                    <strong><?php _e('Postal Code', 'ispag-crm'); ?>:</strong>
-                                    <p>
-                                        <span><?php echo esc_html($company_postal_code); ?></span>
-                                    </p>
-                                </div>
-
-                                <div class="ispag-field-container">
-                                    <strong><?php _e('City', 'ispag-crm'); ?>:</strong>
-                                    <p>
-                                        <span><?php echo esc_html($company_city); ?></span>
-                                    </p>
-                                </div>
+                            <div class="ispag-entity-details" data-company-id="<?php echo $company_id; ?>">
+                                <?php
+                                // Adresse modifiable en ligne (clic sur le texte) : nom du champ = clé de métadonnée d'entreprise
+                                $address_fields = array(
+                                    array(__('Street Address', 'ispag-crm'), ISPAG_Crm_Company_Constants::META_COMPANY_ADDRESS,     $company->address ?? ''),
+                                    array(__('Postal Code', 'ispag-crm'),    ISPAG_Crm_Company_Constants::META_COMPANY_POSTAL_CODE, $company->postal_code ?? ''),
+                                    array(__('City', 'ispag-crm'),           ISPAG_Crm_Company_Constants::META_COMPANY_CITY,        $company->city ?? ''),
+                                    array(__('Country', 'ispag-crm'),        ISPAG_Crm_Company_Constants::META_COMPANY_COUNTRY,     $company->country ?? ''),
+                                );
+                                foreach ($address_fields as $af) :
+                                    list($af_label, $af_key, $af_value) = $af;
+                                    ?>
+                                    <div class="ispag-field-container">
+                                        <strong><?php echo esc_html($af_label); ?></strong>
+                                        <p>
+                                            <span class="ispag-editable-field"
+                                                data-type="text"
+                                                data-title="<?php echo esc_attr($af_label); ?>"
+                                                data-name="<?php echo esc_attr($af_key); ?>"
+                                                data-value="<?php echo esc_attr($af_value); ?>">
+                                                <?php echo $af_value !== '' ? esc_html($af_value) : '<em>' . esc_html__('Not defined', 'ispag-crm') . '</em>'; ?>
+                                                <span class="edit-icon">✏️</span>
+                                            </span>
+                                        </p>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
 
                         <?php if (isset($revenue_stats)) : ?>
                             <div class="ispag-card ispag-revenue-dashboard">
                                 <h5><?php _e('Revenue Perspectives', 'ispag-crm'); ?></h5>
-                                <?php echo $revenue_stats->render_perspective_cards($company_viag_id, 'company'); ?>
+                                <?php echo $revenue_stats->render_perspective_cards($company_id, 'company'); ?>
                             </div>
                         <?php endif; ?>
 
@@ -576,7 +606,7 @@ get_header();
                             id="gemini-ai-summary-<?php echo absint(get_current_user_id()); ?>"
                             class="ispag-ai-placeholder"
                             data-contact-id="<?php echo absint(get_current_user_id()); ?>"
-                            data-company-id="<?php echo absint($company_viag_id); ?>">
+                            data-company-id="<?php echo absint($company_id); ?>">
                             <?php echo ispag_get_template('ai-loader', [null]); ?>
                         </div>
                     </div>
@@ -590,12 +620,14 @@ get_header();
                         <?php echo ispag_get_template('deal-table', ['transactions' => $transactions_list_full]); ?>
                     </div>
 
+                    <?php if ( class_exists( 'ISPAG_Crm_Supplier_Tab' ) ) { echo ISPAG_Crm_Supplier_Tab::tab_pane( $company ); } ?>
+
                     <div id="ispag-tab-intelligence" class="ispag-tab-pane">
                         <div
                             id="gemini-ai-profil-<?php echo absint(get_current_user_id()); ?>"
                             class="ispag-ai-profil-placeholder"
                             data-contact-id="<?php echo absint(get_current_user_id()); ?>"
-                            data-company-id="<?php echo absint($company_viag_id); ?>">
+                            data-company-id="<?php echo absint($company_id); ?>">
                             <?php echo ispag_get_template('ai-loader', [null]); ?>
                         </div>
 
@@ -603,7 +635,7 @@ get_header();
                             id="gemini-ai-actions-<?php echo absint(get_current_user_id()); ?>"
                             class="ispag-ai-actions-placeholder"
                             data-contact-id="<?php echo absint(get_current_user_id()); ?>"
-                            data-company-id="<?php echo absint($company_viag_id); ?>">
+                            data-company-id="<?php echo absint($company_id); ?>">
                             <?php echo ispag_get_template('ai-loader', [null]); ?>
                         </div>
                     </div>
@@ -630,7 +662,6 @@ get_header();
                     <?php
                     $datas['associated_contacts_list_full'] = $associated_contacts_list_full;
                     $datas['company_id'] = $company_id;
-                    $datas['company_viag_id'] = $company_viag_id;
                     echo ispag_get_template( 'ispag-template-contact-card', [ 'datas' => $datas ] ); 
                     ?>
                     

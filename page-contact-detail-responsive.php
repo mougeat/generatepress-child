@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Contact Detail responsive
  * Template Post Type: page
@@ -39,16 +40,14 @@ if ( class_exists( 'ISPAG_Revenue_Stats' ) ) {
 }
 
 CONST NB_TRANSACTIONS_RIGHT = 5;
-// 3. Récupération de l'ID VIAG de l'URL
+// 3. Récupération de l'Id du contact depuis l'URL
 // NOTE: Vous devez avoir une règle de réécriture qui mappe l'ID de l'URL (/company/46390/)
-// à une variable de requête personnalisée comme 'ispag_viag_id' (ou 'viag_id').
-// Si 'viag_id' fonctionne, utilisez 'viag_id'.
 $user_id = get_query_var( 'user_id' ); 
 
 // Fallback pour tester ou si le query_var n'est pas enregistré
 if ( empty( $user_id ) ) {
     global $wp_query;
-    // Essaie d'utiliser 'viag_id' qui est souvent le nom donné dans les rewrite rules
+    // Variable de requête définie par la règle de réécriture
     $user_id = $wp_query->query_vars['user_id'] ?? 0;
 }
 
@@ -157,7 +156,7 @@ $company_names_arr = [];
 $company_repo = new ISPAG_Crm_Company_Repository();
 
 foreach ($associated_companies_list_full as $company_id) {
-    $company = $company_repo->get_company_by_viag_id($company_id);
+    $company = $company_repo->get_company_by_id($company_id);
     
     if ( $company && !empty($company->company_name) ) {
         $company_ids_arr[]   = $company_id;
@@ -297,7 +296,7 @@ $last_system_note = $wpdb->get_var($wpdb->prepare(
 ));
 
 // Message par défaut si aucune note n'est trouvée
-$explanation_lifecycle = $last_system_note ? strip_tags($last_system_note) : __("Aucune donnée d'automatisation disponible.", "creation-reservoir");
+$explanation_lifecycle = $last_system_note ? strip_tags($last_system_note) : __("No automation data available.", "creation-reservoir");
 
 // ----------------------------------------------------
 // 7. Création et Extraction des variables
@@ -456,9 +455,9 @@ extract( $template_args );
                     if (class_exists( 'ISPAG_Crm_Company_Repository' ) ){
                         $company_repo = new ISPAG_Crm_Company_Repository();
                         foreach ($associated_companies_list_full as $company_id) {
-                            $company = $company_repo->get_company_by_viag_id($company_id);
+                            $company = $company_repo->get_company_by_id($company_id);
                             if($company) {
-                                $company_app_url = home_url( '/company/' . $company->viag_id . '/' );
+                                $company_app_url = home_url( '/company/' . $company->Id . '/' );
                                 ?>
                                 <div class="ispag-sidebar-item">
                                     <strong><a href="<?php echo esc_url($company_app_url); ?>"><?php echo $company->company_name; ?></a></strong>
@@ -478,7 +477,7 @@ extract( $template_args );
                         $nb_trans = 0;
                         foreach ( $transactions_list_full as $transaction ): 
                             if ( ++$nb_trans > 5 ) break;
-                            $current_stage_label = !empty($transaction->stage_label) ? $transaction->stage_label : __('Non défini', 'ispag-crm');
+                            $current_stage_label = !empty($transaction->stage_label) ? $transaction->stage_label : __('Not defined', 'ispag-crm');
                             $current_stage_color = !empty($transaction->stage_color) ? $transaction->stage_color : '#cccccc';
                         ?>
                             <div class="ispag-transaction-item-mini">

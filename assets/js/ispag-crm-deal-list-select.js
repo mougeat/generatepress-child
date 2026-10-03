@@ -1,13 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    console.log('✅ JS Deal List Select chargé !');
-
 
     var searchInput = document.getElementById('ispag-kanban-search') || document.getElementById('ispag-projects-search');
     var ownerFilter = document.getElementById('ispag-kanban-owner-filter');
     var closingDateFilter = document.getElementById('ispag-kanban-closing-date-filter'); 
     var createDateFilter = document.getElementById('ispag-kanban-create-date-filter'); 
     var clearFiltersBtn = document.getElementById('ispag-clear-filters-btn');
+
+    // Pré-sélectionne l'owner actif (le select est rendu sans valeur côté PHP)
+    if (ownerFilter) {
+        var ownerParam = new URL(window.location.href).searchParams.get('owner');
+        if (ownerParam) { ownerFilter.value = ownerParam; }
+    }
 
     // Attach du bouton de réinitialisation indépendamment des autres champs
     if (clearFiltersBtn) {
@@ -68,11 +72,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // On redirige seulement s'il y a des filtres actifs (query ou path)
         if (window.location.search || pathname !== cleanedPathname) {
-            alert('IN if (window.location.search || pathname !== cleanedPathname) ');
             window.location.href = targetUrl;
         } else if (searchInput.value.trim() !== '') {
             // Si le champ de recherche n'est pas vide mais les paramètres d'URL sont clairs
-            alert('IN else if (searchInput.value.trim() !== ');
             window.location.href = targetUrl;
             // searchInput.val();
         }

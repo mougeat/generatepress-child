@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage du contenu desarticles d'un projet
  * Variables attendues : $datas (array)
@@ -29,8 +30,8 @@ $initials                           = $datas['initials']    ?? '';
         
         foreach ($associated_companies_list_full as $company_id) {
             
-            $company = $company_repo->get_company_by_viag_id($company_id);
-            $company_app_url = home_url( '/company/' . $company->viag_id . '/' );
+            $company = $company_repo->get_company_by_id($company_id);
+            $company_app_url = home_url( '/company/' . $company->Id . '/' );
 
             // 1. On récupère le domaine (assure-tu que la propriété est bien 'compagny_domain' ou 'domain')
             $company_domain = !empty($company->compagny_domain) ? $company->compagny_domain : '';
@@ -66,7 +67,7 @@ $initials                           = $datas['initials']    ?? '';
                         class="ispag-remove-association" 
                         data-action="remove-contact-from-company"
                         data-contact-id="<?php echo absint($user_id); ?>"
-                        data-company-id="<?php echo absint($company->viag_id); ?>"
+                        data-company-id="<?php echo absint($company->Id); ?>"
                         data-deal-id="<?php echo absint($deal_id); ?>"
                         title="<?php esc_attr_e( 'Remove association', 'ispag-crm' ); ?>"
                         style="color: #e74c3c; cursor: pointer;"
@@ -75,7 +76,7 @@ $initials                           = $datas['initials']    ?? '';
                     </span>
                 </div>
                 <p style="margin: 5px 0 0;"><?php _e( 'City', 'ispag-crm' ); ?>: <?php echo $company->city; ?></p>
-                <p style="margin: 5px 0 0;"><?php _e( 'Last Contact', 'ispag-crm'); ?>: <?php echo date_i18n(get_option('date_format'), strtotime($company->last_contact_date)); ?></p>
+                <p style="margin: 5px 0 0;"><?php _e( 'Last Contact', 'ispag-crm'); ?>: <?php echo (!empty($company->last_contact_date) ? date_i18n(get_option('date_format'), strtotime($company->last_contact_date)) : '—'); ?></p>
                 <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm' ); ?>: <a href="tel:<?php echo esc_html( $company->phone ); ?>" class="contact_link ispag-phone-display"><?php echo $company->phone; ?></a></p>
                 <p style="margin: 5px 0 0;"><?php _e( 'Email', 'ispag-crm' ); ?>: <a href="mailto:<?php echo esc_html( $company->email ); ?>" class="contact_link"><?php echo $company->email; ?></a></p>
                 
@@ -85,5 +86,5 @@ $initials                           = $datas['initials']    ?? '';
     }
     
     ?>
-    <input type="hidden" id="hidden_company_name"  value="<?php echo $company->company_name; ?>"/>
+    <input type="hidden" id="hidden_company_name"  value="<?php echo esc_attr($company->company_name ?? ''); ?>"/>
 </div>

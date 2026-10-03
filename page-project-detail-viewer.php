@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Project Detail Viewer
  * Template Post Type: page
@@ -70,6 +71,28 @@ if (!class_exists('ISPAG_Projet_Repository')) {
     return;
 }
 
+// Le deal doit exister : sinon on affiche un message d'information plutôt qu'une page vide
+global $wpdb;
+$deal_exists = $wpdb->get_var($wpdb->prepare(
+    "SELECT COUNT(*) FROM {$wpdb->prefix}achats_liste_commande WHERE hubspot_deal_id = %s",
+    $deal_id
+));
+if (!$deal_exists) {
+    ?>
+    <div id="primary" class="content-area">
+        <main id="main" class="site-main">
+            <div class="ispag-alert ispag-alert-warning" style="margin: 50px auto; max-width: 600px; padding: 20px;">
+                <span class="dashicons dashicons-search"></span>
+                <strong><?php esc_html_e('Project not found', 'ispag-crm'); ?> :</strong>
+                <?php printf(esc_html__('No project matches the deal ID %s. It may have been deleted or the link is incorrect.', 'ispag-crm'), esc_html($deal_id)); ?>
+            </div>
+        </main>
+    </div>
+    <?php
+    get_footer();
+    return;
+}
+
 $can_manage_order = current_user_can('manage_order');
 $edit_content = current_user_can('manage_order') ? 'true' : 'false';
 
@@ -89,6 +112,63 @@ if(class_exists('ISPAG_Contact_Ajax_Handler')){
 $owner_list_source = implode(';', $owner_list_arr);
 
 //-----------------------------------------------------------------------
+// Données pour les boutons d'action (note, call, mail...) :
+// liés au deal_id du projet et, par défaut, à ses contacts et entreprises
+//-----------------------------------------------------------------------
+$project_actions = [];
+if ($can_manage_order) {
+    global $wpdb;
+    $assoc = $wpdb->get_row($wpdb->prepare(
+        "SELECT AssociatedCompanyID, AssociatedContactIDs FROM {$wpdb->prefix}achats_liste_commande WHERE hubspot_deal_id = %s LIMIT 1",
+        $deal_id
+    ));
+
+    $clean = function ($str) {
+        return trim(str_replace([',', "\r", "\n"], ' ', (string) $str));
+    };
+
+    $a_company_ids = $a_company_names = [];
+    if ($assoc && !empty($assoc->AssociatedCompanyID)) {
+        $table_companies = class_exists('ISPAG_Crm_Company_Constants') ? ISPAG_Crm_Company_Constants::TABLE_NAME : '';
+        foreach (array_filter(array_map('absint', explode(',', $assoc->AssociatedCompanyID))) as $cid) {
+            $cname = '';
+            if ($table_companies) {
+                $cname = $wpdb->get_var($wpdb->prepare("SELECT company_name FROM {$table_companies} WHERE Id = %d LIMIT 1", $cid));
+            }
+            if ($cname) {
+                $a_company_ids[]   = $cid;
+                $a_company_names[] = $clean($cname);
+            }
+        }
+    }
+
+    $a_contact_ids = $a_contact_names = $a_contact_emails = $a_contact_phones = [];
+    if ($assoc && !empty($assoc->AssociatedContactIDs)) {
+        foreach (array_filter(array_map('absint', explode(',', $assoc->AssociatedContactIDs))) as $uid) {
+            $u = get_userdata($uid);
+            if ($u) {
+                $a_contact_ids[]    = $uid;
+                $a_contact_names[]  = $clean($u->display_name);
+                $a_contact_emails[] = $u->user_email;
+                $a_contact_phones[] = get_user_meta($uid, class_exists('ISPAG_Crm_Contact_Constants') ? ISPAG_Crm_Contact_Constants::META_LEAD_PHONE : 'phone', true);
+            }
+        }
+    }
+
+    $project_actions = [
+        'company_ids'    => implode(',', $a_company_ids),
+        'company_names'  => implode(',', $a_company_names),
+        'contact_ids'    => implode(',', $a_contact_ids),
+        'contact_names'  => implode(',', $a_contact_names),
+        'contact_emails' => implode(',', $a_contact_emails),
+        'contact_phone'  => $a_contact_phones[0] ?? '',
+        'user_id'        => $user_id,
+        'deal_ids'       => $deal_id,
+        'show_delete'    => false,
+    ];
+}
+
+//-----------------------------------------------------------------------
 //On créé les datas minimale pour le projet
 //-----------------------------------------------------------------------
 if(class_exists('ISPAG_Projet_Repository')){
@@ -101,7 +181,7 @@ if(class_exists('ISPAG_Projet_Repository')){
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
-        <div class="ispag-detail-container ispag-company-detail">
+        <div class="ispag-detail-container ispag-company-detail ispag-project-view">
 
             <!-- Colonne de gauche -->
             <div class="ispag-left-panel" data-panel="left">
@@ -152,7 +232,28 @@ if(class_exists('ISPAG_Projet_Repository')){
                                 </span>
                             </p>
                             <p>
-                                <?php echo __('Next step', 'ispag-crm'); ?> :  <span class="ispag-next-step-badge step-badge"><span class="ispag-skeleton-wrapper ispag-skeleton-line ispag-w-80" id="ispag_project_next_step"></span></span>
+                                <?php echo __('Next step', 'ispag-crm'); ?> :  <?php
+                                    // Prochaine étape : rendue côté serveur (le badge ne dépend plus d'un changement de statut pour s'afficher)
+                                    $next_label = null; $next_color = '#ccc';
+                                    if (class_exists('ISPAG_Project_Phase_Resolver')) {
+                                        $is_internal = current_user_can('manage_order');
+                                        $next_row = ISPAG_Project_Phase_Resolver::get_next_pending_phase(
+                                            $deal_id,
+                                            $is_internal ? ISPAG_Project_Phase_Resolver::CONTEXT_INTERNAL : ISPAG_Project_Phase_Resolver::CONTEXT_CLIENT
+                                        );
+                                        if ($next_row) {
+                                            $ph = $next_row['phase'];
+                                            $next_label = __(($is_internal ? $ph->TitrePhase : ($ph->TitrePhaseFuture ?: $ph->TitrePhase)), 'creation-reservoir');
+                                            $next_color = $ph->Color ?: '#ccc';
+                                        } else {
+                                            $next_label = __('Completed', 'creation-reservoir');
+                                            $next_color = '#00C875';
+                                        }
+                                    }
+                                    ?><span class="ispag-next-step-badge step-badge"<?php if ($next_label !== null): ?> style="color:<?php echo esc_attr($next_color); ?>; border:1px solid <?php echo esc_attr($next_color); ?>;"<?php endif; ?>><?php
+                                    if ($next_label !== null) { echo esc_html($next_label); }
+                                    else { ?><span class="ispag-skeleton-wrapper ispag-skeleton-line ispag-w-80" id="ispag_project_next_step"></span><?php }
+                                ?></span>
                             </p>
                             <?php if ($can_manage_order): ?>
                                 <p>
@@ -166,6 +267,15 @@ if(class_exists('ISPAG_Projet_Repository')){
                             <?php endif; ?>
                         </div>
                     </div>
+                    <?php if ($can_manage_order): ?>
+                        <div class="ispag-actions-bar">
+                            <?php
+                            $project_actions['deal_names'] = $project->ObjetCommande ?? '';
+                            $project_actions['offer_num']  = $project->NumCommande ?? '';
+                            echo ispag_get_template('action-bar', ['actions' => $project_actions]);
+                            ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="ispag-card ispag-project-btn-card"  data-deal-id="<?php echo esc_attr($deal_id); ?>">
@@ -429,7 +539,8 @@ if(class_exists('ISPAG_Projet_Repository')){
 
                         // --- Sur une fiche Deal / Projet ---
                         
-                        echo $renderer->render('project', $deal_id);
+                        // Dropzone directement dans la colonne (la liste des documents est dans l'onglet Documents)
+                        echo $renderer->render_upload_card('project', $deal_id);
                     }
                     ?>
                     <div id="ispag-modal-container"></div>

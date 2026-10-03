@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Contact Detail
  * Template Post Type: page
@@ -42,16 +43,14 @@ if ( class_exists( 'ISPAG_Revenue_Stats' ) ) {
 }
 
 CONST NB_TRANSACTIONS_RIGHT = 5;
-// 3. Récupération de l'ID VIAG de l'URL
+// 3. Récupération de l'Id du contact depuis l'URL
 // NOTE: Vous devez avoir une règle de réécriture qui mappe l'ID de l'URL (/company/46390/)
-// à une variable de requête personnalisée comme 'ispag_viag_id' (ou 'viag_id').
-// Si 'viag_id' fonctionne, utilisez 'viag_id'.
 $user_id = get_query_var( 'user_id' ); 
 
 // Fallback pour tester ou si le query_var n'est pas enregistré
 if ( empty( $user_id ) ) {
     global $wp_query;
-    // Essaie d'utiliser 'viag_id' qui est souvent le nom donné dans les rewrite rules
+    // Variable de requête définie par la règle de réécriture
     $user_id = $wp_query->query_vars['user_id'] ?? 0;
 }
 
@@ -99,6 +98,8 @@ $contact_lead_function   = esc_html( $contact->lead_function ?? '—' ); // Déj
 // Simulation de la récupération des autres méta-données pour le template
 // NOTE: En production, vous auriez probablement une méthode pour charger TOUTES les métadonnées ici.
 $contact_phone           = esc_html( $contact->phone ?? '' );
+$contact_emails          = $contact->email ?? '';   // listes (séparées par des virgules) transmises à la barre d'actions
+$contact_phones          = $contact->phone ?? '';
 
 $avatar_url              = $contact->avatar_url;
 $linkedin_url            = $contact->linkedin_page ?? '—' ;
@@ -106,7 +107,7 @@ $company_domain          = ''; // Exemple statique
 $favicon                 = ''; // Exemple vide
 $contact_meta_owner      = $contact->crm_owner_id; // Exemple ID
 $owner_data              = get_userdata( $contact_meta_owner );
-$contact_owner           = $owner_data->display_name;
+$contact_owner           = $owner_data ? $owner_data->display_name : '';
 $last_contact_date       = $contact->last_contact_date ? date_i18n( 'd.m.Y', strtotime( $contact->last_contact_date ) ) : __('N/A', 'ispag-crm');   
 $last_contact_source       = esc_html( $contact->last_contact_date->type ?? '');
 $company_meta_type       = 'installateur'; // Exemple
@@ -122,7 +123,7 @@ $transactions_list_full  = []; // Liste complète des transactions (devrait êtr
 // Extraction de tous les IDs d'entreprises associés
 if ( ! empty( $contact->companies ) && is_array( $contact->companies ) ) {
     // wp_list_pluck extrait uniquement la colonne 'Id' de votre tableau d'objets
-    $associated_companies_list_full = wp_list_pluck( $contact->companies, 'viag_id' );
+    $associated_companies_list_full = wp_list_pluck( $contact->companies, 'Id' );
 
 } else {
     // Sécurité : si aucune entreprise n'est trouvée
@@ -168,8 +169,12 @@ $company_repo = new ISPAG_Crm_Company_Repository();
 $primary_company_priority = '';
 $primary_company_owner = __('Not assigned', 'ispag-crm');
 
+// Contact sans entreprise : valeurs vides plutôt que des variables inexistantes (compact() et gabarits)
+$company = null; $company_id = 0;
+$company_address = $company_postal_code = $company_city = $company_country = '';
+
 foreach ($associated_companies_list_full as $index => $company_id) {
-    $company = $company_repo->get_company_by_viag_id($company_id);
+    $company = $company_repo->get_company_by_id($company_id);
     
     if ( $company && !empty($company->company_name) ) {
         $company_ids_arr[]   = $company_id;
@@ -208,7 +213,7 @@ foreach ($associated_companies_list_full as $index => $company_id) {
             }
 
             $company_repo = new ISPAG_Crm_Company_Repository();
-            $company = $company_repo->get_company_by_viag_id($company_id);
+            $company = $company_repo->get_company_by_id($company_id);
 
             //Adresse de l'entreprise principale
             $company_address         = esc_html( $company->address ?? '' );
@@ -399,7 +404,29 @@ $last_system_note = $wpdb->get_var($wpdb->prepare(
 ));
 
 // Message par défaut si aucune note n'est trouvée
-$explanation_lifecycle = $last_system_note ? strip_tags($last_system_note) : __("Aucune donnée d'automatisation disponible.", "creation-reservoir");
+$explanation_lifecycle = $last_system_note ? strip_tags($last_system_note) : __("No automation data available.", "creation-reservoir");
+
+// --- Bandeau « chiffres clés » (même logique que les fiches deal et company) ---
+$next_task      = ISPAG_Entity_Summary::next_task( $activity_detail ?? [] );
+$deals_totals   = ISPAG_Entity_Summary::deals_totals( $transactions_list_full );
+$prio_labels    = [ 'A' => __( 'A - High', 'ispag-crm' ), 'B' => __( 'B - Medium', 'ispag-crm' ), 'C' => __( 'C - Low', 'ispag-crm' ) ];
+$prio_key       = strtoupper( trim( (string) ( $contact->priority_level ?? '' ) ) );
+$summary_tiles  = [
+    ISPAG_Entity_Summary::last_contact_tile( $contact->last_contact_date ?? null ),
+    ISPAG_Entity_Summary::next_task_tile( $next_task ),
+    ISPAG_Entity_Summary::open_deals_tile( $deals_totals ),
+    [
+        'icon'  => 'flag',
+        'label' => __( 'Priority Level', 'ispag-crm' ),
+        'value' => $prio_labels[ $prio_key ] ?? __( 'None', 'ispag-crm' ),
+        'sub'   => $contact_owner ? sprintf( __( 'Owner: %s', 'ispag-crm' ), $contact_owner ) : __( 'Not assigned', 'ispag-crm' ),
+        'level' => '',
+    ],
+];
+$summary_alerts = ( $is_ignored == '1' ) ? [] : ISPAG_Entity_Summary::common_alerts( $contact->last_contact_date ?? null, $next_task );
+if ( $is_ignored != '1' && empty( $contact->email ) ) {
+    $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No email address', 'ispag-crm' ) ];
+}
 
 // ----------------------------------------------------
 // 7. Création et Extraction des variables
@@ -418,7 +445,7 @@ $template_args = compact(
     'company_domain', 'favicon', 'contact_meta_owner', 
     'company_meta_type', 'owner_options_js', 'type_options_js',
     'link_contact_list', 'link_new_contact', 'link_new_project',
-    'linkedin_url', 'linkedin_key',
+    'linkedin_url',
     'transactions_list_full', 'associated_contacts_list_full', 'last_contact_date'
     // ... etc.
 );
@@ -455,7 +482,7 @@ get_header();
                             data-field-type="avatar"  
                             data-contact-id="<?php echo absint($user_id); ?>"
                             style="cursor: pointer;"
-                            title="<?php _e('Modifier l\'avatar', 'ispag-crm'); ?>">
+                            title="<?php _e('Edit avatar', 'ispag-crm'); ?>">
                             <span class="current-value">
                                 <?php 
                                 if ( $avatar_url ){ ?>
@@ -482,9 +509,9 @@ get_header();
                                     data-name="first_name" 
                                     data-contact-ids="<?php echo absint($user_id); ?>"
                                     data-value="<?php echo esc_attr( $contact->first_name ?? '' ); ?>"
-                                    placeholder="<?php _e('Prénom', 'ispag-crm'); ?>"
+                                    placeholder="<?php _e('First name', 'ispag-crm'); ?>"
                                 >
-                                    <?php echo !empty($contact->first_name) ? esc_html($contact->first_name) : '<span class="ispag-placeholder">Prénom</span>'; ?>
+                                    <?php echo !empty($contact->first_name) ? esc_html($contact->first_name) : '<span class="ispag-placeholder">First name</span>'; ?>
                                 </span>
 
                                 <span 
@@ -493,7 +520,7 @@ get_header();
                                     data-name="last_name" 
                                     data-contact-ids="<?php echo absint($user_id); ?>"
                                     data-value="<?php echo esc_attr( $contact->last_name ?? '' ); ?>"
-                                    placeholder="<?php _e('Nom', 'ispag-crm'); ?>"
+                                    placeholder="<?php _e('Last name', 'ispag-crm'); ?>"
                                 >
                                     <?php echo !empty($contact->last_name) ? esc_html($contact->last_name) : '<span class="ispag-placeholder">Nom</span>'; ?>
                                 </span>
@@ -653,13 +680,13 @@ get_header();
                         >
                             <span class="current-value">
                                 <?php 
-                                if ( ! empty( $contact->birthday ) && $contact->birthday !== 'Non renseignée' ) {
+                                if ( ! empty( $contact->birthday ) && $contact->birthday !== 'Not provided' ) {
                                     echo esc_html( $contact->birthday );
                                     if ( ! empty( $contact->age ) ) {
                                         echo ' <span style="color: #666; font-size: 0.9em;">(' . esc_html( $contact->age ) . ')</span>';
                                     }
                                 } else {
-                                    echo '<span style="color: #999; font-style: italic;">' . __( 'Non renseignée', 'ispag-crm' ) . '</span>';
+                                    echo '<span style="color: #999; font-style: italic;">' . __( 'Not provided', 'ispag-crm' ) . '</span>';
                                 }
                                 ?>
                             </span>
@@ -716,31 +743,42 @@ get_header();
                     <button class="ispag-tab-btn" data-tab="intelligence">
                         <?php esc_html_e( 'Intelligence', 'ispag-crm' ); ?>
                     </button>
+                    <?php
+                    // Conversation WhatsApp : visible si le module est configuré (relais + numéro) et que l'utilisateur voit les contacts
+                    $show_whatsapp = function_exists( 'ispag_whatsapp_is_enabled' ) && ispag_whatsapp_is_enabled()
+                        && class_exists( 'ISPAG_Whatsapp_Ajax_Handlers' ) && ISPAG_Whatsapp_Ajax_Handlers::can_use()
+                        && ! empty( $contact->phone );
+                    if ( $show_whatsapp ) : ?>
+                    <button class="ispag-tab-btn" data-tab="whatsapp">
+                        <?php esc_html_e( 'WhatsApp', 'ispag-crm' ); ?>
+                    </button>
+                    <?php endif; ?>
                 </div>
                 <div class="ispag-tabs-content">
                     
                     <div id="ispag-tab-about" class="ispag-tab-pane active">
-                        
+                        <?php echo ISPAG_Entity_Summary::render( $summary_tiles, $summary_alerts ); ?>
+
                         <div class="ispag-card">
                             <h5><?php _e( 'Company Profile', 'ispag-crm' ); ?></h5>
-                            <div data-contact-id="<?php echo $user_id; ?>" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-size: 14px;">
+                            <div class="ispag-entity-details" data-contact-id="<?php echo $user_id; ?>">
                                 
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Street adress', 'ispag-crm' ); ?> :</strong>
+                                    <strong><?php _e( 'Street adress', 'ispag-crm' ); ?></strong>
                                     <p>
                                         <span ><?php echo esc_html($company_address); ?></span>
                                     </p>
                                 </div>
                                 
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'Postal code', 'ispag-crm' ); ?> :</strong>
+                                    <strong><?php _e( 'Postal code', 'ispag-crm' ); ?></strong>
                                     <p>
                                         <span ><?php echo esc_html($company_postal_code); ?></span>
                                     </p>
                                 </div>
 
                                 <div class="ispag-field-container">
-                                    <strong><?php _e( 'City', 'ispag-crm' ); ?> :</strong>
+                                    <strong><?php _e( 'City', 'ispag-crm' ); ?></strong>
                                     <p>
                                         <span ><?php echo esc_html($company_city); ?></span>
                                     </p>
@@ -785,6 +823,12 @@ get_header();
                         ?>
                     </div>
                     
+                    <?php if ( ! empty( $show_whatsapp ) ) : ?>
+                    <div id="ispag-tab-whatsapp" class="ispag-tab-pane">
+                        <?php ( new ISPAG_Whatsapp_Panel_Renderer() )->render( absint( $user_id ), (string) $contact->phone ); ?>
+                    </div>
+                    <?php endif; ?>
+
                     <div id="ispag-tab-intelligence" class="ispag-tab-pane">
                         <div 
                         id="gemini-ai-profil-<?php echo absint($user_id); ?>" 

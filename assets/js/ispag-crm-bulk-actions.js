@@ -81,16 +81,16 @@ jQuery(document).ready(function($) {
         // console.log("DEBUG: IDs récupérés =", projectIds);
 
         if (!stageKey && !contactDate) { 
-            alert('Veuillez choisir une étape ou une date de contact.'); 
+            alert('Please choose a stage or a contact date.'); 
             return; 
         }
 
         if (projectIds.length === 0) {
-            alert('Aucun projet sélectionné.');
+            alert('No project selected.');
             return;
         }
 
-        if (confirm('Appliquer les modifications à ' + projectIds.length + ' projets ?')) {
+        if (confirm('Apply changes to ' + projectIds.length + ' projets ?')) {
             //  console.log("DEBUG: Confirmation OK -> Appel sendBulkUpdate");
              sendBulkUpdate(projectIds, stageKey, contactDate);
         }

@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage du contenu desarticles d'un projet
  * Variables attendues : $datas (array)
@@ -31,11 +32,11 @@ $user_id                    = $datas['user_id']    ?? '';
         if ( $nb_transactions > NB_TRANSACTIONS_RIGHT ) {
             break; // Arrête l'exécution de la boucle foreach
         }
-        $current_stage_label      = $transaction->stage_label ?? __('Non défini', 'ispag-crm');
+        $current_stage_label      = $transaction->stage_label ?? __('Not defined', 'ispag-crm');
         $current_stage_color      = $transaction->stage_color ?? '#cccccc';
 
         // CORRECTION ICI : Le repo injecte stage_label et stage_color
-        $current_stage_label = !empty($transaction->stage_label) ? $transaction->stage_label : __('Non défini', 'ispag-crm');
+        $current_stage_label = !empty($transaction->stage_label) ? $transaction->stage_label : __('Not defined', 'ispag-crm');
         $current_stage_color = !empty($transaction->stage_color) ? $transaction->stage_color : '#cccccc';
         ?>
         <div class="ispag-card" style="font-size: 14px;">
@@ -45,7 +46,7 @@ $user_id                    = $datas['user_id']    ?? '';
                         <a href="<?php echo esc_url($transaction->get_deal_detail_link()); ?>"><?php echo $transaction->project_name; ?></a>
                     </strong>
                     <p><?php _e( 'Amount', 'ispag-crm' ); ?>: <?php echo number_format( (float)$transaction->total_excl_vat, 2, '.', '\'' ) . ' CHF'; ?></p>
-                    <p><?php _e( 'Closing date', 'ispag-crm' ); ?>: <?php echo date_i18n( get_option('date_format'), strtotime( $transaction->closing_date ) ); ?></p>
+                    <p><?php _e( 'Closing date', 'ispag-crm' ); ?>: <?php echo date_i18n( get_option('date_format'), strtotime( $transaction->closing_date ?? '' ) ); ?></p>
                     <p><?php _e( 'Transaction phase', 'ispag-crm' ); ?>: 
                         <span class="ispag-status-badge" style="background-color: <?php echo esc_attr($current_stage_color); ?>; ">
                             <?php echo esc_html($current_stage_label); ?>
