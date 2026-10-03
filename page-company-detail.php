@@ -269,6 +269,11 @@ if ( $is_active == 1 ) {
 }
 
 // Préparation des variables pour le template
+// Variables facultatives (options d'édition construites ailleurs) : valeur vide par défaut, sinon compact() émet un avertissement
+foreach (['owner_options_js', 'type_options_js', 'discount_type_options_string', 'sales_coef_options_string'] as $optional_var) {
+    if (!isset($$optional_var)) { $$optional_var = ''; }
+}
+
 $template_args = compact(
     'company',
     'company_id',

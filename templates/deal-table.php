@@ -3,6 +3,11 @@
  * Template pour l'affichage du tableau des transactions ISPAG
  * Variables attendues : $transactions (array)
  */
+
+// Étapes proposées dans le sélecteur de la colonne « Current stage » (liste vide si le CRM n'est pas actif)
+if (!isset($all_stages)) {
+    $all_stages = class_exists('ISPAG_Crm_Deal_Stages_Repository') ? (new ISPAG_Crm_Deal_Stages_Repository())->get_all_stages() : [];
+}
 ?> 
 
 <?php echo ispag_get_template( 'deal-bulk-edit', [] );  ?>
