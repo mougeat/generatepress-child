@@ -76,6 +76,7 @@ if (!function_exists('ispag_i18n_register_dir')) {
 }
 
 ispag_i18n_register_dir(get_stylesheet_directory() . '/languages');
+require_once get_stylesheet_directory() . '/inc/js-strings.php';
 
 
 /* ==========================================================================

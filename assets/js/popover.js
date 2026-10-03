@@ -1,3 +1,4 @@
+window.ispagT = window.ispagT || function (s) { return s; }; // traductions des textes JS (voir includes/js-strings.php)
 document.addEventListener('DOMContentLoaded', function() {
     const popover = document.getElementById('ispag-field-popover');
     const container = document.getElementById('popover-input-container');
@@ -166,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let valToSave = '';
         if (type === 'phone') {
             if (!itiPopover.isValidNumber()) {
-                alert("Invalid phone number");
+                alert(ispagT("Invalid phone number"));
                 return;
             }
             valToSave = itiPopover.getNumber(); 
@@ -231,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(itiPopover) { itiPopover.destroy(); itiPopover = null; }
                 saveBtn.innerText = '✔';
             } else {
-                alert('Error: ' + (res.data?.message || 'Unable to save'));
+                alert(ispagT('Error: ') + (res.data?.message || 'Unable to save'));
                 saveBtn.innerText = originalBtnText;
             }
         })
@@ -251,8 +252,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const frame = wp.media({
-            title: 'Select an image',
-            button: { text: 'Utiliser cette image' },
+            title: ispagT('Select an image'),
+            button: { text: ispagT('Utiliser cette image') },
             multiple: false
         });
 
@@ -301,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayContainer.innerHTML = `<img src="${imageUrl}" class="ispag-avatar-img" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
                 element.classList.add('has-avatar');
             } else {
-                alert('Error: ' + (res.data?.message || 'Unable to save'));
+                alert(ispagT('Error: ') + (res.data?.message || 'Unable to save'));
                 displayContainer.innerHTML = originalContent;
             }
         })
