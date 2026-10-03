@@ -140,7 +140,7 @@ $link_new_contact = home_url('/add-contact/');
 $link_new_project = home_url('/add-project/');
 $transactions_list_full = [];
 $associated_contacts_list_full = $company->associated_contacts_list_full ?? [];
-$last_activity_date = $company->last_contact_date ? date_i18n('d.m.Y', strtotime($company->last_contact_date)) : __('N/A', 'ispag-crm');
+$last_activity_date = !empty($company->last_contact_date) ? date_i18n('d.m.Y', strtotime($company->last_contact_date)) : __('N/A', 'ispag-crm');
 $coef_value = $company->coef_value ?? null;
 $discount_value = $company->discount_value ?? null;
 

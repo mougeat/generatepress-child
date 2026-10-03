@@ -45,7 +45,7 @@ $user_id                    = $datas['user_id']    ?? '';
                         <a href="<?php echo esc_url($transaction->get_deal_detail_link()); ?>"><?php echo $transaction->project_name; ?></a>
                     </strong>
                     <p><?php _e( 'Amount', 'ispag-crm' ); ?>: <?php echo number_format( (float)$transaction->total_excl_vat, 2, '.', '\'' ) . ' CHF'; ?></p>
-                    <p><?php _e( 'Closing date', 'ispag-crm' ); ?>: <?php echo date_i18n( get_option('date_format'), strtotime( $transaction->closing_date ) ); ?></p>
+                    <p><?php _e( 'Closing date', 'ispag-crm' ); ?>: <?php echo date_i18n( get_option('date_format'), strtotime( $transaction->closing_date ?? '' ) ); ?></p>
                     <p><?php _e( 'Transaction phase', 'ispag-crm' ); ?>: 
                         <span class="ispag-status-badge" style="background-color: <?php echo esc_attr($current_stage_color); ?>; ">
                             <?php echo esc_html($current_stage_label); ?>

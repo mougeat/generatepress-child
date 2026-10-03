@@ -62,7 +62,7 @@ $deal_group_ref                 = $datas['deal_group_ref']    ?? '';
                 </span>
             </div>
             <p style="margin: 5px 0 0;"><?php _e('Function', 'ispag-crm'); ?>: <?php echo esc_html($contact->lead_function ?? ''); ?></p>
-            <p style="margin: 5px 0 0;"><?php _e('Last Contact', 'ispag-crm'); ?>: <?php echo date_i18n(get_option('date_format'), strtotime($contact->last_contact_date)); ?></p>
+            <p style="margin: 5px 0 0;"><?php _e('Last Contact', 'ispag-crm'); ?>: <?php echo (!empty($contact->last_contact_date) ? date_i18n(get_option('date_format'), strtotime($contact->last_contact_date)) : '—'); ?></p>
             <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm'); ?>: <a href="tel:<?php echo esc_html( $contact->phone ); ?>" class="contact_link ispag-phone-display"><?php echo esc_html( $contact->phone ); ?></a></p>
             <p style="margin: 5px 0 0;"><?php _e( 'Email', 'ispag-crm'); ?>: <a href="mailto:<?php echo esc_html( $contact->email ); ?>" class="contact_link"><?php echo esc_html( $contact->email ); ?></a></p>
         </div>

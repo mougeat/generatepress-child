@@ -97,6 +97,8 @@ $contact_lead_function   = esc_html( $contact->lead_function ?? '—' ); // Déj
 // Simulation de la récupération des autres méta-données pour le template
 // NOTE: En production, vous auriez probablement une méthode pour charger TOUTES les métadonnées ici.
 $contact_phone           = esc_html( $contact->phone ?? '' );
+$contact_emails          = $contact->email ?? '';   // listes (séparées par des virgules) transmises à la barre d'actions
+$contact_phones          = $contact->phone ?? '';
 
 $avatar_url              = $contact->avatar_url;
 $linkedin_url            = $contact->linkedin_page ?? '—' ;
@@ -165,6 +167,10 @@ $company_names_arr = [];
 $company_repo = new ISPAG_Crm_Company_Repository();
 $primary_company_priority = '';
 $primary_company_owner = __('Not assigned', 'ispag-crm');
+
+// Contact sans entreprise : valeurs vides plutôt que des variables inexistantes (compact() et gabarits)
+$company = null; $company_id = 0;
+$company_address = $company_postal_code = $company_city = $company_country = '';
 
 foreach ($associated_companies_list_full as $index => $company_id) {
     $company = $company_repo->get_company_by_id($company_id);
@@ -438,7 +444,7 @@ $template_args = compact(
     'company_domain', 'favicon', 'contact_meta_owner', 
     'company_meta_type', 'owner_options_js', 'type_options_js',
     'link_contact_list', 'link_new_contact', 'link_new_project',
-    'linkedin_url', 'linkedin_key',
+    'linkedin_url',
     'transactions_list_full', 'associated_contacts_list_full', 'last_contact_date'
     // ... etc.
 );

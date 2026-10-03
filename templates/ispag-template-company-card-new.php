@@ -81,7 +81,7 @@ $deal_id                         = $datas['deal_id']                         ?? 
                 <?php endif; ?>
                 
                 <?php if (!empty($company->last_contact_date)) : ?>
-                    <p style="margin: 5px 0 0;"><?php _e( 'Last Contact', 'ispag-crm'); ?>: <?php echo date_i18n(get_option('date_format'), strtotime($company->last_contact_date)); ?></p>
+                    <p style="margin: 5px 0 0;"><?php _e( 'Last Contact', 'ispag-crm'); ?>: <?php echo (!empty($company->last_contact_date) ? date_i18n(get_option('date_format'), strtotime($company->last_contact_date)) : '—'); ?></p>
                 <?php endif; ?>
                 
                 <?php if (!empty($company->phone)) : ?>
