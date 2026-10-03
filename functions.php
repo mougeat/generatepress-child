@@ -24,6 +24,25 @@ add_action( 'after_switch_theme', function () { ISPAG_Page_Installer::on_activat
    1. CHARGEMENT DES TRADUCTIONS (TEXTDOMAIN)
    ========================================================================== */
 
+/**
+ * Traductions FR / DE (fichiers dans languages/ : <domaine>-fr_FR.mo, <domaine>-de_DE.mo ; générés par tools/i18n/build.py d'ISPAG Project Manager).
+ * Toute variante de langue du site est couverte : fr_CH, fr_BE… utilisent le français ; de_CH, de_DE_formal, de_AT… l'allemand.
+ * Les textes de base sont en anglais : sans fichier pour la langue du site, l'anglais est affiché.
+ */
+if (!function_exists('ispag_load_translations_from')) {
+    function ispag_load_translations_from($dir) {
+        $locale   = determine_locale();
+        $fallback = ['fr' => 'fr_FR', 'de' => 'de_DE'][substr($locale, 0, 2)] ?? '';
+        if ($fallback === '' || !is_dir($dir)) return;
+        foreach ((array) glob(rtrim($dir, '/\\') . '/*-' . $fallback . '.mo') as $mo) {
+            $domain = basename($mo, '-' . $fallback . '.mo');
+            $exact  = rtrim($dir, '/\\') . '/' . $domain . '-' . $locale . '.mo';
+            load_textdomain($domain, is_readable($exact) ? $exact : $mo);
+        }
+    }
+}
+add_action('after_setup_theme', function () { ispag_load_translations_from(get_stylesheet_directory() . '/languages'); });
+
 // function ispag_load_custom_textdomain() {
 //     // Charge les traductions pour le domaine 'ispag-crm'
 //     load_plugin_textdomain( 'ispag-crm', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );

@@ -1,0 +1,1406 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: generatepress-child\n"
+"Report-Msgid-Bugs-To: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: ispag-crm\n"
+
+#: functions.php:100
+msgid "An error occurred. Please try again."
+msgstr "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+
+#: functions.php:101
+msgid "Open the existing company"
+msgstr "Bestehendes Unternehmen öffnen"
+
+#: functions.php:179
+msgid "Security violation."
+msgstr "Sicherheitsverletzung."
+
+#: functions.php:224
+msgid "Your quote request at ISPAG"
+msgstr "Ihre Offertanfrage bei ISPAG"
+
+#: functions.php:225
+msgid "Hello, we have received your request for the project: "
+msgstr "Guten Tag, wir haben Ihre Anfrage für das Projekt erhalten: "
+
+#: functions.php:321
+msgid "CRM Sidebar"
+msgstr "CRM-Seitenleiste"
+
+#: functions.php:323
+msgid "Widget area dedicated to the CRM."
+msgstr "Widget-Bereich für das CRM."
+
+#: functions.php:98
+msgid "The company name is required."
+msgstr "Der Unternehmensname ist erforderlich."
+
+#: functions.php:99
+msgid "Creating..."
+msgstr "Wird erstellt..."
+
+#: inc/class-ispag-entity-summary.php:33
+msgid "No due date"
+msgstr "Ohne Fälligkeit"
+
+#: inc/class-ispag-entity-summary.php:61
+msgid "Never"
+msgstr "Nie"
+
+#: inc/class-ispag-entity-summary.php:62
+msgid "%d days ago"
+msgstr "vor %d Tagen"
+
+#: inc/class-ispag-entity-summary.php:62
+msgid "No activity logged"
+msgstr "Keine Aktivität erfasst"
+
+#: inc/class-ispag-entity-summary.php:71
+msgid "Next task"
+msgstr "Nächste Aufgabe"
+
+#: inc/class-ispag-entity-summary.php:72
+msgid "None planned"
+msgstr "Keine geplant"
+
+#: inc/class-ispag-entity-summary.php:73
+msgid "Plan the next step"
+msgstr "Nächsten Schritt planen"
+
+#: inc/class-ispag-entity-summary.php:83
+msgid "Open deals"
+msgstr "Offene Deals"
+
+#: inc/class-ispag-entity-summary.php:95
+msgid "No contact for over %d days"
+msgstr "Seit mehr als %d Tagen kein Kontakt"
+
+#: inc/class-ispag-entity-summary.php:98
+msgid "No follow-up task planned"
+msgstr "Keine Nachfassaufgabe geplant"
+
+#: ispag-kanban-viewer.php:133
+msgid "Table view"
+msgstr "Tabellenansicht"
+
+#: ispag-kanban-viewer.php:178
+msgid "No deal"
+msgstr "Kein Deal"
+
+#: ispag-kanban-viewer.php:182
+msgid "Show more (%d)"
+msgstr "Mehr anzeigen (%d)"
+
+#: ispag-kanban-viewer.php:188
+msgid "Total amount"
+msgstr "Gesamtbetrag"
+
+#: ispag-kanban-viewer.php:189
+msgid "Weighted amount"
+msgstr "Gewichteter Betrag"
+
+#: ispag-kanban-viewer.php:196
+msgid "No stages configured for the Kanban board."
+msgstr "Keine Phasen für das Kanban-Board konfiguriert."
+
+#: page-company-detail.php:104
+msgid "Company Datas"
+msgstr "Unternehmensdaten"
+
+#: page-company-detail.php:109
+msgid "Company data is missing or not found for ID: %s"
+msgstr "Die Unternehmensdaten fehlen oder wurden für die ID nicht gefunden: %s"
+
+#: page-company-detail.php:164
+msgid "No registered activity"
+msgstr "Keine erfasste Aktivität"
+
+#: page-company-detail.php:206
+msgid "Not assigned"
+msgstr "Nicht zugewiesen"
+
+#: page-company-detail.php:240
+msgid "Select..."
+msgstr "Auswählen..."
+
+#: page-company-detail.php:253
+msgid "Won"
+msgstr "Gewonnen"
+
+#: page-company-detail.php:255
+msgid "%d deal"
+msgid_plural "%d deals"
+msgstr[0] "%d Deal"
+msgstr[1] "%d Deals"
+
+#: page-company-detail.php:265
+msgid "No company owner assigned"
+msgstr "Kein Verantwortlicher für das Unternehmen zugewiesen"
+
+#: page-company-detail.php:268
+msgid "No contact associated"
+msgstr "Kein Kontakt zugeordnet"
+
+#: page-company-detail.php:31
+msgid "Prospect"
+msgstr "Interessent"
+
+#: page-company-detail.php:32
+msgid "Partner"
+msgstr "Partner"
+
+#: page-company-detail.php:33
+msgid "Reseller"
+msgstr "Wiederverkäufer"
+
+#: page-company-detail.php:34
+msgid "Vendor"
+msgstr "Lieferant"
+
+#: page-company-detail.php:342
+msgid "Edit icon"
+msgstr "Bearbeiten-Symbol"
+
+#: page-company-detail.php:35
+msgid "Engineer"
+msgstr "Ingenieur"
+
+#: page-company-detail.php:36
+msgid "Other"
+msgstr "Andere"
+
+#: page-company-detail.php:400
+msgid "Key information"
+msgstr "Wichtige Informationen"
+
+#: page-company-detail.php:402
+msgid "Company Status"
+msgstr "Unternehmensstatus"
+
+#: page-company-detail.php:414
+msgid "Is Engineer"
+msgstr "Ist Ingenieur"
+
+#: page-company-detail.php:426
+msgid "Phone Number"
+msgstr "Telefonnummer"
+
+#: page-company-detail.php:450
+msgid "Priority Level"
+msgstr "Prioritätsstufe"
+
+#: page-company-detail.php:462
+msgid "High"
+msgstr "Hoch"
+
+#: page-company-detail.php:463
+msgid "Medium"
+msgstr "Mittel"
+
+#: page-company-detail.php:464
+msgid "Low"
+msgstr "Tief"
+
+#: page-company-detail.php:481
+msgid "Company Owner"
+msgstr "Verantwortlicher für das Unternehmen"
+
+#: page-company-detail.php:494
+msgid "Last Contacted"
+msgstr "Letzter Kontakt"
+
+#: page-company-detail.php:500
+msgid "Discount"
+msgstr "Rabatt"
+
+#: page-company-detail.php:522
+msgid "Sales Coefficient"
+msgstr "Verkaufskoeffizient"
+
+#: page-company-detail.php:549
+msgid "About"
+msgstr "Über"
+
+#: page-company-detail.php:552
+msgid "Activities"
+msgstr "Aktivitäten"
+
+#: page-company-detail.php:555
+msgid "Transactions"
+msgstr "Deals"
+
+#: page-company-detail.php:558
+msgid "Intelligence"
+msgstr "Intelligence"
+
+#: page-company-detail.php:568
+msgid "Company Profile"
+msgstr "Unternehmensprofil"
+
+#: page-company-detail.php:573
+msgid "Street Address"
+msgstr "Strassenadresse"
+
+#: page-company-detail.php:574
+msgid "Postal Code"
+msgstr "Postleitzahl"
+
+#: page-company-detail.php:575
+msgid "City"
+msgstr "Ort"
+
+#: page-company-detail.php:576
+msgid "Country"
+msgstr "Land"
+
+#: page-company-detail.php:589
+msgid "Not defined"
+msgstr "Nicht definiert"
+
+#: page-company-detail.php:600
+msgid "Revenue Perspectives"
+msgstr "Umsatzperspektiven"
+
+#: page-company-detail.php:619
+msgid "Transaction Information"
+msgstr "Transaktionsinformationen"
+
+#: page-company-detail.php:651
+msgid "Display / Mask panel"
+msgstr "Panel ein- / ausblenden"
+
+#: page-company-detail.php:652
+msgid "Mask panel"
+msgstr "Panel ausblenden"
+
+#: page-contact-detail-responsive.php:232
+msgid "(No role selected)"
+msgstr "(Keine Rolle ausgewählt)"
+
+#: page-contact-detail-responsive.php:285
+msgid "Ignored"
+msgstr "Ignoriert"
+
+#: page-contact-detail-responsive.php:285
+msgid "Not ignored"
+msgstr "Nicht ignoriert"
+
+#: page-contact-detail-responsive.php:374
+msgid "Phone number"
+msgstr "Telefonnummer"
+
+#: page-contact-detail-responsive.php:381
+msgid "Lead status"
+msgstr "Lead-Status"
+
+#: page-contact-detail-responsive.php:425
+msgid "Street adress"
+msgstr "Strassenadresse"
+
+#: page-contact-detail-responsive.php:442
+msgid "Loading AI summary..."
+msgstr "KI-Zusammenfassung wird geladen..."
+
+#: page-contact-detail-responsive.php:452
+msgid "Add"
+msgstr "Hinzufügen"
+
+#: page-contact-detail-responsive.php:65
+msgid "Contact details"
+msgstr "Kontaktdaten"
+
+#: page-contact-detail-responsive.php:70
+msgid "Contact data are missing or not found for ID : %s"
+msgstr "Die Kontaktdaten fehlen oder wurden für die ID nicht gefunden: %s"
+
+#: page-contact-detail.php:294
+msgid "Selectionner..."
+msgstr "Auswählen..."
+
+#: page-contact-detail.php:412
+msgid "A - High"
+msgstr "A - Hoch"
+
+#: page-contact-detail.php:412
+msgid "B - Medium"
+msgstr "B - Mittel"
+
+#: page-contact-detail.php:412
+msgid "C - Low"
+msgstr "C - Tief"
+
+#: page-contact-detail.php:422
+msgid "Owner: %s"
+msgstr "Verantwortlicher: %s"
+
+#: page-contact-detail.php:428
+msgid "No email address"
+msgstr "Keine E-Mail-Adresse"
+
+#: page-contact-detail.php:485
+msgid "Edit avatar"
+msgstr "Avatar bearbeiten"
+
+#: page-contact-detail.php:512
+msgid "First name"
+msgstr "Vorname"
+
+#: page-contact-detail.php:523
+msgid "Last name"
+msgstr "Nachname"
+
+#: page-contact-detail.php:579
+msgid "Prepare meeting"
+msgstr "Besprechung vorbereiten"
+
+#: page-contact-detail.php:589
+msgid "Ignore health reminder"
+msgstr "Nachfass-Erinnerung ignorieren"
+
+#: page-contact-detail.php:613
+msgid "Role"
+msgstr "Rolle"
+
+#: page-contact-detail.php:625
+msgid "Priority level"
+msgstr "Prioritätsstufe"
+
+#: page-contact-detail.php:659
+msgid "Lifecycle phase"
+msgstr "Phase des Lebenszyklus"
+
+#: page-contact-detail.php:673
+msgid "Birthday"
+msgstr "Geburtstag"
+
+#: page-contact-detail.php:689
+msgid "Not provided"
+msgstr "Nicht angegeben"
+
+#: page-contact-detail.php:696
+msgid "Linkedin page"
+msgstr "LinkedIn-Seite"
+
+#: page-contact-detail.php:709
+msgid "Contact owner"
+msgstr "Verantwortlicher für den Kontakt"
+
+#: page-contact-detail.php:753
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: page-contact-detail.php:774
+msgid "Postal code"
+msgstr "Postleitzahl"
+
+#: page-contact-detail.php:818
+msgid "Transaction information"
+msgstr "Deal-Informationen"
+
+#: page-contact-detail.php:905
+msgid "Warning"
+msgstr "Warnung"
+
+#: page-contact-detail.php:906
+msgid "Warning: Consistency issues detected!"
+msgstr "Achtung: Konsistenzprobleme erkannt!"
+
+#: page-contact-detail.php:915
+msgid "- Priority mismatch:"
+msgstr "- Abweichende Priorität:"
+
+#: page-contact-detail.php:921
+msgid "- Owner mismatch:"
+msgstr "- Abweichender Verantwortlicher:"
+
+#: page-deal-detail-viewer.php:241
+msgid "Amount"
+msgstr "Betrag"
+
+#: page-deal-detail-viewer.php:243
+msgid "Weighted %s CHF (%s%%)"
+msgstr "Gewichtet %s CHF (%s %%)"
+
+#: page-deal-detail-viewer.php:248
+msgid "Close date"
+msgstr "Abschlussdatum"
+
+#: page-deal-detail-viewer.php:250
+msgid "In %d d"
+msgstr "In %d T."
+
+#: page-deal-detail-viewer.php:250
+msgid "Overdue by %d d"
+msgstr "%d T. überfällig"
+
+#: page-deal-detail-viewer.php:260
+msgid "Closing date is past: update it or move the deal"
+msgstr "Das Abschlussdatum ist überschritten: Aktualisieren Sie es oder verschieben Sie den Deal"
+
+#: page-deal-detail-viewer.php:298
+msgid "Stage"
+msgstr "Phase"
+
+#: page-deal-detail-viewer.php:311
+msgid "Select current stage"
+msgstr "Aktuelle Phase auswählen"
+
+#: page-deal-detail-viewer.php:361
+msgid "Automation"
+msgstr "Automatisierung"
+
+#: page-deal-detail-viewer.php:374
+msgid "Enroll in Sequence"
+msgstr "In Sequenz aufnehmen"
+
+#: page-deal-detail-viewer.php:377
+msgid "Deal owner"
+msgstr "Verantwortlicher für den Deal"
+
+#: page-deal-detail-viewer.php:383
+msgid "Click to edit"
+msgstr "Zum Bearbeiten klicken"
+
+#: page-deal-detail-viewer.php:393
+msgid "Last contacted"
+msgstr "Letzter Kontakt"
+
+#: page-deal-detail-viewer.php:401
+msgid "Record source"
+msgstr "Quelle des Datensatzes"
+
+#: page-deal-detail-viewer.php:423
+msgid "Overview"
+msgstr "Übersicht"
+
+#: page-deal-detail-viewer.php:430
+msgid "Articles"
+msgstr "Artikel"
+
+#: page-deal-detail-viewer.php:441
+msgid "Details"
+msgstr "Details"
+
+#: page-deal-detail-viewer.php:444
+msgid "Create date"
+msgstr "Erstellungsdatum"
+
+#: page-deal-detail-viewer.php:448
+msgid "Offer number"
+msgstr "Offertnummer"
+
+#: page-deal-detail-viewer.php:452
+msgid "Project number"
+msgstr "Projektnummer"
+
+#: page-deal-detail-viewer.php:464
+msgid "Companies"
+msgstr "Unternehmen"
+
+#: page-deal-detail-viewer.php:491
+msgid "View project details"
+msgstr "Projektdetails anzeigen"
+
+#: page-deal-detail-viewer.php:52
+msgid "Deal details"
+msgstr "Deal-Details"
+
+#: page-deal-detail-viewer.php:57
+msgid "Deal data are missing or not found for ID : %s"
+msgstr "Die Deal-Daten fehlen oder wurden für die ID nicht gefunden: %s"
+
+#: page-formulaire-cuve.php:100
+msgid "Technical Specifications"
+msgstr "Technische Spezifikationen"
+
+#: page-formulaire-cuve.php:105
+msgid "Diameter (mm)"
+msgstr "Durchmesser (mm)"
+
+#: page-formulaire-cuve.php:109
+msgid "Height (mm)"
+msgstr "Höhe (mm)"
+
+#: page-formulaire-cuve.php:113
+msgid "Volume (L)"
+msgstr "Volumen (L)"
+
+#: page-formulaire-cuve.php:117
+msgid "Pressure (bar)"
+msgstr "Druck (bar)"
+
+#: page-formulaire-cuve.php:124
+msgid "Material Selection"
+msgstr "Materialauswahl"
+
+#: page-formulaire-cuve.php:141
+msgid "Insulation"
+msgstr "Isolation"
+
+#: page-formulaire-cuve.php:143
+msgid "None"
+msgstr "Keine"
+
+#: page-formulaire-cuve.php:144
+msgid "Rockwool"
+msgstr "Steinwolle"
+
+#: page-formulaire-cuve.php:145
+msgid "Armaflex"
+msgstr "Armaflex"
+
+#: page-formulaire-cuve.php:146
+msgid "PUR Foam"
+msgstr "PUR-Schaum"
+
+#: page-formulaire-cuve.php:150
+msgid "On-site welding required?"
+msgstr "Schweissung vor Ort erforderlich?"
+
+#: page-formulaire-cuve.php:160
+msgid "Finalize Request"
+msgstr "Anfrage abschliessen"
+
+#: page-formulaire-cuve.php:161
+msgid "Our team will analyze your data and send you a formal offer via email."
+msgstr "Unser Team analysiert Ihre Daten und sendet Ihnen per E-Mail eine formelle Offerte."
+
+#: page-formulaire-cuve.php:164
+msgid "Send Quote Request"
+msgstr "Offertanfrage senden"
+
+#: page-formulaire-cuve.php:29
+msgid "Technical Configurator"
+msgstr "Technischer Konfigurator"
+
+#: page-formulaire-cuve.php:42
+msgid "Save as PDF"
+msgstr "Als PDF speichern"
+
+#: page-formulaire-cuve.php:55
+msgid "Success!"
+msgstr "Erfolgreich!"
+
+#: page-formulaire-cuve.php:56
+msgid "Your request has been sent to our technical department."
+msgstr "Ihre Anfrage wurde an unsere technische Abteilung weitergeleitet."
+
+#: page-formulaire-cuve.php:62
+msgid "Custom Tank Quote Request"
+msgstr "Offertanfrage für Behälter nach Mass"
+
+#: page-formulaire-cuve.php:63
+msgid "Tailored solutions for engineers and installers."
+msgstr "Massgeschneiderte Lösungen für Ingenieure und Installateure."
+
+#: page-formulaire-cuve.php:74
+msgid "Company Details"
+msgstr "Unternehmensdaten"
+
+#: page-formulaire-cuve.php:78
+msgid "Company *"
+msgstr "Unternehmen *"
+
+#: page-formulaire-cuve.php:82
+msgid "Email *"
+msgstr "E-Mail *"
+
+#: page-formulaire-cuve.php:86
+msgid "Project Name"
+msgstr "Projektname"
+
+#: page-formulaire-cuve.php:90
+msgid "Phone"
+msgstr "Telefon"
+
+#: page-list-companies.php:107
+msgid "Company List"
+msgstr "Unternehmensliste"
+
+#: page-list-companies.php:113
+msgid "Create company"
+msgstr "Unternehmen erstellen"
+
+#: page-list-companies.php:126
+msgid "Owner (All)"
+msgstr "Verantwortlicher (alle)"
+
+#: page-list-companies.php:135
+msgid "Priority (All)"
+msgstr "Priorität (alle)"
+
+#: page-list-companies.php:142
+msgid "City (All)"
+msgstr "Ort (alle)"
+
+#: page-list-companies.php:148
+msgid "Filter"
+msgstr "Filtern"
+
+#: page-list-companies.php:151
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: page-list-companies.php:179
+msgid "Name"
+msgstr "Name"
+
+#: page-list-companies.php:185
+msgid "Active"
+msgstr "Aktiv"
+
+#: page-list-companies.php:197
+msgid "Domain"
+msgstr "Domain"
+
+#: page-list-companies.php:209
+msgid "Last Contact"
+msgstr "Letzter Kontakt"
+
+#: page-list-companies.php:231
+msgid "Deals"
+msgstr "Deals"
+
+#: page-list-companies.php:292
+msgid "No results found."
+msgstr "Keine Ergebnisse gefunden."
+
+#: page-list-companies.php:56
+msgid "« Previous"
+msgstr "« Zurück"
+
+#: page-list-companies.php:57
+msgid "Next »"
+msgstr "Weiter »"
+
+#: page-list-contacts.php:100
+msgid "Name or Email"
+msgstr "Name oder E-Mail"
+
+#: page-list-contacts.php:103
+msgid "All Owners"
+msgstr "Alle Besitzer"
+
+#: page-list-contacts.php:114
+msgid "Filter / Search"
+msgstr "Filtern / Suchen"
+
+#: page-list-contacts.php:117
+msgid "Reset filters"
+msgstr "Filter zurücksetzen"
+
+#: page-list-contacts.php:126
+msgid "No contacts found."
+msgstr "Keine Kontakte gefunden."
+
+#: page-list-contacts.php:14
+msgid "Technical error: Required CRM classes are missing."
+msgstr "Technischer Fehler: Die erforderlichen CRM-Klassen fehlen."
+
+#: page-list-contacts.php:153
+msgid "Contact Name"
+msgstr "Kontaktname"
+
+#: page-list-contacts.php:154
+msgid "Function"
+msgstr "Funktion"
+
+#: page-list-contacts.php:155
+msgid "Priority"
+msgstr "Priorität"
+
+#: page-list-contacts.php:156
+msgid "Company"
+msgstr "Unternehmen"
+
+#: page-list-contacts.php:157
+msgid "Status"
+msgstr "Status"
+
+#: page-list-contacts.php:158
+msgid "Lifecycle"
+msgstr "Lebenszyklus"
+
+#: page-list-contacts.php:159
+msgid "Last contact"
+msgstr "Letzter Kontakt"
+
+#: page-list-contacts.php:160
+msgid "Owner"
+msgstr "Verantwortlicher"
+
+#: page-list-contacts.php:161
+msgid "Email"
+msgstr "E-Mail"
+
+#: page-list-contacts.php:202
+msgid "Unassigned"
+msgstr "Nicht zugewiesen"
+
+#: page-list-contacts.php:203
+msgid "N/A"
+msgstr "k. A."
+
+#: page-list-contacts.php:69
+msgid "Contacts"
+msgstr "Kontakte"
+
+#: page-list-contacts.php:90
+msgid "Create contact"
+msgstr "Kontakt erstellen"
+
+#: page-list-deals.php:105
+msgid "Project tracking (list)"
+msgstr "Projektverfolgung (Liste)"
+
+#: page-list-deals.php:115
+msgid "Kanban view"
+msgstr "Kanban-Ansicht"
+
+#: page-project-detail-viewer.php:214
+msgid "Creation date"
+msgstr "Erstellungsdatum"
+
+#: page-project-detail-viewer.php:218
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: page-project-detail-viewer.php:222
+msgid "Project Manager"
+msgstr "Projektleiter"
+
+#: page-project-detail-viewer.php:235
+msgid "Next step"
+msgstr "Nächster Schritt"
+
+#: page-project-detail-viewer.php:26
+msgid "Restricted access"
+msgstr "Eingeschränkter Zugriff"
+
+#: page-project-detail-viewer.php:261
+msgid "Force price display"
+msgstr "Preisanzeige erzwingen"
+
+#: page-project-detail-viewer.php:264
+msgid "Hide prices"
+msgstr "Preise ausblenden"
+
+#: page-project-detail-viewer.php:27
+msgid "You do not have the necessary rights to view this order."
+msgstr "Sie haben nicht die erforderlichen Rechte, um diese Bestellung anzuzeigen."
+
+#: page-project-detail-viewer.php:284
+msgid "To purchase"
+msgstr "Zu bestellen"
+
+#: page-project-detail-viewer.php:318
+msgid "Follow up"
+msgstr "Nachverfolgung"
+
+#: page-project-detail-viewer.php:321
+msgid "Documents"
+msgstr "Dokumente"
+
+#: page-project-detail-viewer.php:64
+msgid "Error while creating page for deal ID : %s"
+msgstr "Fehler beim Erstellen der Seite für die Deal-ID: %s"
+
+#: page-project-detail-viewer.php:86
+msgid "Project not found"
+msgstr "Projekt nicht gefunden"
+
+#: page-project-detail-viewer.php:87
+msgid "No project matches the deal ID %s. It may have been deleted or the link is incorrect."
+msgstr "Kein Projekt entspricht der Deal-ID %s. Es wurde möglicherweise gelöscht oder der Link ist falsch."
+
+#: page-task-dashboard.php:10
+msgid "Please log in to view your tasks."
+msgstr "Bitte melden Sie sich an, um Ihre Aufgaben zu sehen."
+
+#: page-task-dashboard.php:20
+msgid "Task dashboard"
+msgstr "Aufgaben-Dashboard"
+
+#: page-task-dashboard.php:35
+msgid "Active tasks"
+msgstr "Aktive Aufgaben"
+
+#: page-task-dashboard.php:41
+msgid "Search..."
+msgstr "Suchen..."
+
+#: page-task-dashboard.php:44
+msgid "New task"
+msgstr "Neue Aufgabe"
+
+#: page-task-dashboard.php:51
+msgid "All"
+msgstr "Alle"
+
+#: page-task-dashboard.php:52
+msgid "Overdue"
+msgstr "Überfällig"
+
+#: page-task-dashboard.php:53
+msgid "Today"
+msgstr "Heute"
+
+#: page-task-dashboard.php:54
+msgid "This week"
+msgstr "Diese Woche"
+
+#: page-task-dashboard.php:57
+msgid "Type"
+msgstr "Typ"
+
+#: page-task-dashboard.php:58
+msgid "All types"
+msgstr "Alle Typen"
+
+#: page-task-dashboard.php:75
+msgid "Later"
+msgstr "Später"
+
+#: page-task-dashboard.php:76
+msgid "Task completed"
+msgstr "Aufgabe erledigt"
+
+#: page-task-dashboard.php:77
+msgid "Task postponed"
+msgstr "Aufgabe verschoben"
+
+#: page-task-dashboard.php:78
+msgid "Something went wrong"
+msgstr "Etwas ist schiefgelaufen"
+
+#: page-task-dashboard.php:83
+msgid "Task"
+msgstr "Aufgabe"
+
+#: page-task-dashboard.php:84
+msgid "Relationships"
+msgstr "Beziehungen"
+
+#: page-task-dashboard.php:86
+msgid "Due date"
+msgstr "Fälligkeitsdatum"
+
+#: page-task-dashboard.php:97
+msgid "No active tasks at the moment."
+msgstr "Derzeit keine aktiven Aufgaben."
+
+#: page-template-table.php:113
+msgid "ago"
+msgstr "vor"
+
+#: page-template-table.php:119
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: page-template-table.php:128
+msgid "No templates found."
+msgstr "Keine Vorlagen gefunden."
+
+#: page-template-table.php:13
+msgid "You must be logged in to view templates."
+msgstr "Sie müssen angemeldet sein, um Vorlagen zu sehen."
+
+#: page-template-table.php:154
+msgid "Create New Folder"
+msgstr "Neuen Ordner erstellen"
+
+#: page-template-table.php:159
+msgid "Folder Name"
+msgstr "Ordnername"
+
+#: page-template-table.php:171
+msgid "Private Folder"
+msgstr "Privater Ordner"
+
+#: page-template-table.php:178
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: page-template-table.php:179
+msgid "Create"
+msgstr "Erstellen"
+
+#: page-template-table.php:44
+msgid "Search templates..."
+msgstr "Vorlagen suchen..."
+
+#: page-template-table.php:51
+msgid "Shared (Admin)"
+msgstr "Geteilt (Admin)"
+
+#: page-template-table.php:52
+msgid "My Templates"
+msgstr "Meine Vorlagen"
+
+#: page-template-table.php:57
+msgid "New Folder"
+msgstr "Neuer Ordner"
+
+#: page-template-table.php:62
+msgid "Add New Template"
+msgstr "Neue Vorlage hinzufügen"
+
+#: page-template-table.php:71
+msgid "Template Name"
+msgstr "Vorlagenname"
+
+#: page-template-table.php:72
+msgid "Folder"
+msgstr "Ordner"
+
+#: page-template-table.php:73
+msgid "Language"
+msgstr "Sprache"
+
+#: page-template-table.php:75
+msgid "Last Modified"
+msgstr "Zuletzt geändert"
+
+#: page-user-profil.php:105
+msgid "New Password"
+msgstr "Neues Passwort"
+
+#: page-user-profil.php:108
+msgid "Use a strong password."
+msgstr "Verwenden Sie ein starkes Passwort."
+
+#: page-user-profil.php:112
+msgid "Confirm New Password"
+msgstr "Neues Passwort bestätigen"
+
+#: page-user-profil.php:131
+msgid "Avatar"
+msgstr "Avatar"
+
+#: page-user-profil.php:135
+msgid "Current Avatar"
+msgstr "Aktueller Avatar"
+
+#: page-user-profil.php:141
+msgid "Upload New Avatar"
+msgstr "Neuen Avatar hochladen"
+
+#: page-user-profil.php:144
+msgid "Files must be in JPG, PNG, or GIF format."
+msgstr "Die Dateien müssen im Format JPG, PNG oder GIF vorliegen."
+
+#: page-user-profil.php:150
+msgid "Update Avatar"
+msgstr "Avatar aktualisieren"
+
+#: page-user-profil.php:161
+msgid "Notification Preferences"
+msgstr "Benachrichtigungseinstellungen"
+
+#: page-user-profil.php:163
+msgid "Choose the method(s) by which you wish to receive each type of notification."
+msgstr "Wählen Sie die Methode(n), mit denen Sie jede Art von Benachrichtigung erhalten möchten."
+
+#: page-user-profil.php:171
+msgid "Notification type"
+msgstr "Benachrichtigungstyp"
+
+#: page-user-profil.php:208
+msgid "Right to Disconnect"
+msgstr "Recht auf Nichterreichbarkeit"
+
+#: page-user-profil.php:21
+msgid "Your profile has been updated successfully!"
+msgstr "Ihr Profil wurde erfolgreich aktualisiert!"
+
+#: page-user-profil.php:216
+msgid "Receive notifications on weekends (Saturday and Sunday)"
+msgstr "Benachrichtigungen am Wochenende erhalten (Samstag und Sonntag)"
+
+#: page-user-profil.php:219
+msgid "If unchecked, notifications will be delayed until Monday."
+msgstr "Ist das Kontrollkästchen deaktiviert, werden Benachrichtigungen bis Montag verzögert."
+
+#: page-user-profil.php:224
+msgid "Holiday Periods"
+msgstr "Ferienzeiten"
+
+#: page-user-profil.php:226
+msgid "Add periods during which you do not want to receive notifications."
+msgstr "Fügen Sie Zeiträume hinzu, in denen Sie keine Benachrichtigungen erhalten möchten."
+
+#: page-user-profil.php:234
+msgid "Start Date:"
+msgstr "Startdatum:"
+
+#: page-user-profil.php:240
+msgid "End Date:"
+msgstr "Enddatum:"
+
+#: page-user-profil.php:246
+msgid "Remove"
+msgstr "Entfernen"
+
+#: page-user-profil.php:270
+msgid "Add Holiday Period"
+msgstr "Ferienzeit hinzufügen"
+
+#: page-user-profil.php:276
+msgid "Save preferences"
+msgstr "Einstellungen speichern"
+
+#: page-user-profil.php:38
+msgid "General"
+msgstr "Allgemein"
+
+#: page-user-profil.php:49
+msgid "My Profile"
+msgstr "Mein Profil"
+
+#: page-user-profil.php:65
+msgid "Basic Information"
+msgstr "Grundinformationen"
+
+#: page-user-profil.php:69
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#: page-user-profil.php:78
+msgid "Make sure to use a valid email address."
+msgstr "Achten Sie darauf, eine gültige E-Mail-Adresse zu verwenden."
+
+#: page-user-profil.php:84
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: page-user-profil.php:95
+msgid "Change Password"
+msgstr "Passwort ändern"
+
+#: page-user-profil.php:99
+msgid "Current Password"
+msgstr "Aktuelles Passwort"
+
+#: templates/action-bar.php:103
+msgid "Create Task"
+msgstr "Aufgabe erstellen"
+
+#: templates/action-bar.php:117
+msgid "Log Meeting"
+msgstr "Besprechung erfassen"
+
+#: templates/action-bar.php:120
+msgid "Meeting"
+msgstr "Besprechung"
+
+#: templates/action-bar.php:124
+msgid "More actions"
+msgstr "Weitere Aktionen"
+
+#: templates/action-bar.php:126
+msgid "More"
+msgstr "Mehr"
+
+#: templates/action-bar.php:138
+msgid "Log an email"
+msgstr "E-Mail erfassen"
+
+#: templates/action-bar.php:159
+msgid "Send Whatsapp"
+msgstr "WhatsApp senden"
+
+#: templates/action-bar.php:177
+msgid "Log SMS"
+msgstr "SMS erfassen"
+
+#: templates/action-bar.php:191
+msgid "Log a LinkedIn message"
+msgstr "LinkedIn-Nachricht erfassen"
+
+#: templates/action-bar.php:209
+msgid "Delete"
+msgstr "Löschen"
+
+#: templates/action-bar.php:35
+msgid "Add Note"
+msgstr "Notiz hinzufügen"
+
+#: templates/action-bar.php:38
+msgid "Note"
+msgstr "Notiz"
+
+#: templates/action-bar.php:44
+msgid "Call this number"
+msgstr "Diese Nummer anrufen"
+
+#: templates/action-bar.php:54
+msgid "Make a phone call"
+msgstr "Anruf tätigen"
+
+#: templates/action-bar.php:57
+msgid "Call"
+msgstr "Anruf"
+
+#: templates/action-bar.php:69
+msgid "Log a call"
+msgstr "Anruf erfassen"
+
+#: templates/action-bar.php:89
+msgid "Send an Email"
+msgstr "E-Mail senden"
+
+#: templates/ai-loader.php:10
+msgid "AI Analysis..."
+msgstr "KI-Analyse..."
+
+#: templates/control-notif-modal.php:20
+msgid "Notification"
+msgstr "Benachrichtigung"
+
+#: templates/deal-bulk-edit.php:12
+msgid "Move to stage :"
+msgstr "In Phase verschieben:"
+
+#: templates/deal-bulk-edit.php:18
+msgid "Select a stage"
+msgstr "Phase auswählen"
+
+#: templates/deal-bulk-edit.php:34
+msgid "Last contact :"
+msgstr "Letzter Kontakt:"
+
+#: templates/deal-bulk-edit.php:39
+msgid "Apply to selected items"
+msgstr "Auf ausgewählte Elemente anwenden"
+
+#: templates/deal-bulk-edit.php:9
+msgid "%s selected projects"
+msgstr "%s Projekte ausgewählt"
+
+#: templates/deal-export-btn.php:11
+msgid "Export list"
+msgstr "Liste exportieren"
+
+#: templates/deal-export-btn.php:17
+msgid "Export Settings"
+msgstr "Exporteinstellungen"
+
+#: templates/deal-export-btn.php:21
+msgid "Filename"
+msgstr "Dateiname"
+
+#: templates/deal-export-btn.php:25
+msgid "Format"
+msgstr "Format"
+
+#: templates/deal-export-btn.php:33
+msgid "Download"
+msgstr "Herunterladen"
+
+#: templates/deal-reason-for-rejection-modal.php:31
+msgid "Reason for loss"
+msgstr "Verlustgrund"
+
+#: templates/deal-reason-for-rejection-modal.php:32
+msgid "Why was this project lost?"
+msgstr "Warum wurde dieses Projekt verloren?"
+
+#: templates/deal-reason-for-rejection-modal.php:40
+msgid "-- Select a reason --"
+msgstr "-- Grund auswählen --"
+
+#: templates/deal-reason-for-rejection-modal.php:53
+msgid "Save"
+msgstr "Speichern"
+
+#: templates/deal-search.php:11
+msgid "Search Project, Ref or Company..."
+msgstr "Projekt, Ref. oder Unternehmen suchen..."
+
+#: templates/deal-search.php:18
+msgid "Older than last year"
+msgstr "Älter als letztes Jahr"
+
+#: templates/deal-search.php:19
+msgid "Last year"
+msgstr "Letztes Jahr"
+
+#: templates/deal-search.php:20
+msgid "Last month"
+msgstr "Letzten Monat"
+
+#: templates/deal-search.php:21
+msgid "Last week"
+msgstr "Letzte Woche"
+
+#: templates/deal-search.php:22
+msgid "Yesterday"
+msgstr "Gestern"
+
+#: templates/deal-search.php:25
+msgid "Next week"
+msgstr "Nächste Woche"
+
+#: templates/deal-search.php:26
+msgid "This month"
+msgstr "Diesen Monat"
+
+#: templates/deal-search.php:27
+msgid "Next month"
+msgstr "Nächsten Monat"
+
+#: templates/deal-search.php:47
+msgid "All deals Owners"
+msgstr "Alle Deal-Verantwortlichen"
+
+#: templates/deal-search.php:83
+msgid "Clear Filters"
+msgstr "Filter löschen"
+
+#: templates/deal-table.php:116
+msgid "No deal found."
+msgstr "Kein Deal gefunden."
+
+#: templates/deal-table.php:23
+msgid "Project & ref"
+msgstr "Projekt und Ref."
+
+#: templates/deal-table.php:24
+msgid "Company & contact"
+msgstr "Unternehmen und Kontakt"
+
+#: templates/deal-table.php:24
+msgid "Current stage"
+msgstr "Aktuelle Phase"
+
+#: templates/deal-table.php:25
+msgid "Amount (CHF)"
+msgstr "Betrag (CHF)"
+
+#: templates/deal-table.php:33
+msgid "No name"
+msgstr "Ohne Namen"
+
+#: templates/deal-table.php:39
+msgid "Unknow"
+msgstr "Unbekannt"
+
+#: templates/ispag-create-company-sidebar.php:11
+msgid "Create a new company"
+msgstr "Neues Unternehmen erstellen"
+
+#: templates/ispag-create-company-sidebar.php:12
+msgid "Close"
+msgstr "Schliessen"
+
+#: templates/ispag-create-company-sidebar.php:19
+msgid "Company name"
+msgstr "Unternehmensname"
+
+#: templates/ispag-create-company-sidebar.php:24
+msgid "Website / domain"
+msgstr "Website / Domain"
+
+#: templates/ispag-create-company-sidebar.php:25
+msgid "ex: company.com"
+msgstr "z. B.: unternehmen.ch"
+
+#: templates/ispag-create-company-sidebar.php:26
+msgid "Used to link contacts by their email domain and to avoid duplicates."
+msgstr "Dient dazu, Kontakte über ihre E-Mail-Domain zuzuordnen und Duplikate zu vermeiden."
+
+#: templates/ispag-create-company-sidebar.php:46
+msgid "Engineering office"
+msgstr "Ingenieurbüro"
+
+#: templates/ispag-create-contact-sidebar.php:13
+msgid "Create a new contact"
+msgstr "Neuen Kontakt erstellen"
+
+#: templates/ispag-create-contact-sidebar.php:21
+msgid "ex: john.doe@company.com"
+msgstr "z. B.: hans.muster@unternehmen.ch"
+
+#: templates/ispag-create-contact-sidebar.php:58
+msgid "Job title / Function"
+msgstr "Titel / Funktion"
+
+#: templates/ispag-create-contact-sidebar.php:59
+msgid "ex: Technical Director"
+msgstr "z. B.: Technischer Leiter"
+
+#: templates/ispag-sequence-modal.php:11
+msgid "Start"
+msgstr "Starten"
+
+#: templates/ispag-template-company-card-new.php:62
+msgid "Remove association"
+msgstr "Zuordnung entfernen"
+
+#: templates/ispag-template-company-card-new.php:77
+msgid "Address"
+msgstr "Adresse"
+
+#: templates/ispag-template-company-card-new.php:81
+msgid "Website"
+msgstr "Website"
+
+#: templates/ispag-template-company-card-new.php:99
+msgid "No associated company."
+msgstr "Keine zugeordnete Firma."
+
+#: templates/ispag-template-contact-card.php:76
+msgid "Show all contacts"
+msgstr "Alle Kontakte anzeigen"
+
+#: templates/ispag-template-deal-card.php:50
+msgid "Transaction phase"
+msgstr "Deal-Phase"
+
+#: templates/ispag-template-deal-card.php:65
+msgid "Show all transactions"
+msgstr "Alle Deals anzeigen"
+
+#: templates/kanban-card.php:30
+msgid "Closing date"
+msgstr "Abschlussdatum"
+
+#: templates/task-row.php:16
+msgid "%d day late"
+msgid_plural "%d days late"
+msgstr[0] "%d Tag Verspätung"
+msgstr[1] "%d Tage Verspätung"
+
+#: templates/task-row.php:18
+msgid "Tomorrow"
+msgstr "Morgen"
+
+#: templates/task-row.php:37
+msgid "Mark as done"
+msgstr "Als erledigt markieren"
+
+#: templates/task-row.php:42
+msgid "(no title)"
+msgstr "(ohne Titel)"
+
+#: templates/task-row.php:78
+msgid "Actions"
+msgstr "Aktionen"
+
+#: templates/task-row.php:81
+msgid "Postpone"
+msgstr "Verschieben"
+
+#: templates/task-row.php:86
+msgid "In 3 days"
+msgstr "In 3 Tagen"
+
+#: templates/task-row.php:87
+msgid "In 1 week"
+msgstr "In 1 Woche"

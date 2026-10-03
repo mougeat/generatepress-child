@@ -1,0 +1,114 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: generatepress-child\n"
+"Report-Msgid-Bugs-To: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: creation-reservoir\n"
+
+#: page-contact-detail-responsive.php:299
+msgid "No automation data available."
+msgstr "Keine Automatisierungsdaten verfügbar."
+
+#: page-formulaire-cuve.php:35
+msgid "Special tanks"
+msgstr "Spezialbehälter"
+
+#: page-formulaire-cuve.php:38
+msgid "Add product"
+msgstr "Produkt hinzufügen"
+
+#: page-ispag-fiche-technique.php:105
+msgid "Documentation"
+msgstr "Dokumentation"
+
+#: page-ispag-fiche-technique.php:111
+msgid "Technical Drawing"
+msgstr "Technische Zeichnung"
+
+#: page-ispag-fiche-technique.php:121
+msgid "Maintenance Manual"
+msgstr "Wartungshandbuch"
+
+#: page-ispag-fiche-technique.php:129
+msgid "Need Assistance?"
+msgstr "Brauchen Sie Hilfe?"
+
+#: page-ispag-fiche-technique.php:130
+msgid "Our technical team in Vaulruz is here to help you."
+msgstr "Unser technisches Team in Vaulruz hilft Ihnen gerne weiter."
+
+#: page-ispag-fiche-technique.php:132
+msgid "Call Now"
+msgstr "Jetzt anrufen"
+
+#: page-ispag-fiche-technique.php:133
+msgid "Email Support"
+msgstr "Support per E-Mail"
+
+#: page-ispag-fiche-technique.php:140
+msgid "Product Not Found"
+msgstr "Produkt nicht gefunden"
+
+#: page-ispag-fiche-technique.php:141
+msgid "The serial number is invalid or not found in our database."
+msgstr "Die Seriennummer ist ungültig oder in unserer Datenbank nicht zu finden."
+
+#: page-ispag-fiche-technique.php:142
+msgid "Back to Home"
+msgstr "Zurück zur Startseite"
+
+#: page-ispag-fiche-technique.php:52
+msgid "Active Warranty (%s days left)"
+msgstr "Garantie aktiv (noch %s Tage)"
+
+#: page-ispag-fiche-technique.php:54
+msgid "Warranty Expired"
+msgstr "Garantie abgelaufen"
+
+#: page-ispag-fiche-technique.php:72
+msgid "Project"
+msgstr "Projekt"
+
+#: page-ispag-fiche-technique.php:79
+msgid "Delivery date"
+msgstr "Lieferdatum"
+
+#: page-ispag-fiche-technique.php:86
+msgid "Technical Specifications"
+msgstr "Technische Daten"
+
+#: page-ispag-fiche-technique.php:90
+msgid "Nominal Volume"
+msgstr "Nennvolumen"
+
+#: page-ispag-fiche-technique.php:91
+msgid "Material"
+msgstr "Material"
+
+#: page-ispag-fiche-technique.php:92
+msgid "Operating Pressure"
+msgstr "Betriebsdruck"
+
+#: page-ispag-fiche-technique.php:93
+msgid "Article ID"
+msgstr "Artikel-ID"
+
+#: page-project-detail-viewer.php:207
+msgid "version"
+msgstr "Version"
+
+#: page-project-detail-viewer.php:249
+msgid "Completed"
+msgstr "Abgeschlossen"
+
+#: page-project-detail-viewer.php:334
+msgid "Project Dashboard"
+msgstr "Projekt-Dashboard"
+
+#: page-project-detail-viewer.php:381
+msgid "Select all"
+msgstr "Alle auswählen"
