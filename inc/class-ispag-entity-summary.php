@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Aide au bandeau « chiffres clés » partagé par les fiches deal, company et contact.
  * Les calculs sont faits ici pour que les trois pages restent alignées (mêmes seuils, mêmes libellés).

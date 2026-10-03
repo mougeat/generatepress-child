@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage des entreprises associées à un projet/deal
  * Variables attendues : $datas (array)

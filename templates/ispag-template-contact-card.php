@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage du contenu desarticles d'un projet
  * Variables attendues : $datas (array)

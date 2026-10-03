@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Bandeau « chiffres clés » générique (deal, company, contact).
  * Variables attendues : $tiles (array de [icon,label,value,sub,level]), $alerts (array de [level,text])

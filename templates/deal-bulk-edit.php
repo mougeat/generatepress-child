@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage du bulk edit
  * Variables attendues : $transactions (array)

@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage du contenu de l'action bar
  * Variables attendues : $actions (array)

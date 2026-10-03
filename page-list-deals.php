@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template Name: ISPAG Deals List Viewer
  * Description: Affiche la liste des transactions ISPAG sous forme de tableau sécurisé.

@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage d'un bouton d'export et de la modal
  * Variables attendues : $transactions (array)

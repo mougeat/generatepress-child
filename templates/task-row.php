@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Ligne du tableau des tâches.
  * Variable attendue : $task (objet formaté par ISPAG_Note_Repository::format_tasks)

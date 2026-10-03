@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Carte d'un deal dans le Kanban.
  * Variables attendues : $deal (ISPAG_Crm_Deal_Model), $stage_color (string déjà échappée)

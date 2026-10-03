@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour les champs de recherche de deal
  * Variables attendues : $kanban_filters (array)

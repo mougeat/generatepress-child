@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour l'affichage des contacts d'un deal
  * Variables attendues : $datas (array)

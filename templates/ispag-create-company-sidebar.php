@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Panneau latéral « Créer une entreprise » (page publique du CRM).
  * Affiché dans le pied de page pour les utilisateurs autorisés (voir ispag_add_global_company_sidebar()).

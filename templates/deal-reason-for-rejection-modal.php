@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour afficher une modal de selection des raisons de pertes du projet
  * Variables attendues : ???

@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 /**
  * Template pour afficher une modal lors de contrôle de contact / company / deal
  * Variables attendues : 
