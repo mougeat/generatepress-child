@@ -1,5 +1,9 @@
 window.ispagT = window.ispagT || function (s) { return s; }; // traductions des textes JS (voir includes/js-strings.php)
-document.addEventListener('DOMContentLoaded', function() {
+// Démarre tout de suite si la page est déjà chargée : les extensions d'optimisation (cache, « différer / retarder le JavaScript »)
+// exécutent parfois le script après DOMContentLoaded, et l'édition des champs ne démarrait alors jamais.
+function ispagPopoverBoot() {
+    if (window.__ispagPopoverBooted) return;
+    window.__ispagPopoverBooted = true;
     const popover = document.getElementById('ispag-field-popover');
     const container = document.getElementById('popover-input-container');
     let currentTarget = null;
@@ -327,4 +331,9 @@ document.addEventListener('DOMContentLoaded', function() {
             displayContainer.style.opacity = '1';
         });
     }
-});
+}
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ispagPopoverBoot);
+} else {
+    ispagPopoverBoot();
+}
