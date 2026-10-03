@@ -79,6 +79,75 @@ ispag_i18n_register_dir(get_stylesheet_directory() . '/languages');
 require_once get_stylesheet_directory() . '/inc/js-strings.php';
 
 
+/** Numéro de version d'un fichier du thème = sa date de modification : une mise à jour change l'adresse, donc les caches (navigateur, CDN, extension de cache) ne servent jamais l'ancienne version. */
+if (!function_exists('ispag_theme_asset_ver')) {
+    function ispag_theme_asset_ver($relative_path) {
+        $file = get_stylesheet_directory() . $relative_path;
+        return file_exists($file) ? (string) filemtime($file) : wp_get_theme()->get('Version');
+    }
+}
+
+/* ==========================================================================
+   2. CHARGEMENT DES SCRIPTS ET STYLES (ASSETS)
+   ========================================================================== */
+
+add_action( 'wp_enqueue_scripts', 'theme_enqueue_styles', 30 );
+
+function theme_enqueue_styles() {
+    // 1. Styles de base du thème parent
+    wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
+
+    // Dépendances communes CRM
+    $crm_deps = array( 'jquery');
+
+    // 2. Librairies tiers (Intl-Tel-Input)
+    wp_enqueue_style( 'intl-tel-input-css', 'https://cdn.jsdelivr.net/npm/intl-tel-input@20.0.5/build/css/intlTelInput.css', array(), '20.0.5' );
+    wp_enqueue_script( 'intl-tel-input-js', 'https://cdn.jsdelivr.net/npm/intl-tel-input@20.0.5/build/js/intlTelInput.min.js', array(), '20.0.5', true );
+
+    // 3a. Socle skeleton + chargement AJAX partagé (ISPAGSkeleton / ISPAGLoad)
+    wp_enqueue_script( 'ispag-skeleton', get_stylesheet_directory_uri() . '/assets/js/ispag-skeleton.js', array( 'jquery' ), wp_get_theme()->get( 'Version' ), true );
+    wp_localize_script( 'ispag-skeleton', 'ispagSkeletonVars', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+
+    // 3. Scripts de navigation et utilitaires
+    wp_enqueue_script( 'ispag-navigation-script', get_stylesheet_directory_uri() . '/assets/js/navigation-script.js', array( 'jquery' ), wp_get_theme()->get( 'Version' ), true );
+    wp_enqueue_script( 'ispag-select2-script', get_stylesheet_directory_uri() . '/assets/js/select2.min.js', array( 'jquery' ), wp_get_theme()->get( 'Version' ), true );
+
+    // 4. Scripts CRM spécifiques
+    wp_enqueue_script( 'ispag-crm-bulk', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-bulk-actions.js', array( 'jquery' ), ispag_theme_asset_ver('/assets/js/ispag-crm-bulk-actions.js'), true );
+    wp_enqueue_script( 'ispag-crm-contact-bulk', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-contact-bulk-actions.js', array( 'jquery', 'ispag-crm-bulk' ), ispag_theme_asset_ver('/assets/js/ispag-crm-contact-bulk-actions.js'), true );
+    wp_enqueue_script( 'ispag-crm-create-contact', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-create-contact.js', array( 'jquery', 'intl-tel-input-js' ), ispag_theme_asset_ver('/assets/js/ispag-crm-create-contact.js'), true );
+    wp_enqueue_script( 'ispag-crm-popover', get_stylesheet_directory_uri() . '/assets/js/popover.js', array( 'jquery', 'intl-tel-input-js' ), ispag_theme_asset_ver('/assets/js/popover.js'), true );
+    wp_enqueue_script( 'ispag-crm-deal-select', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-deal-list-select.js', array( 'jquery' ), ispag_theme_asset_ver('/assets/js/ispag-crm-deal-list-select.js'), true );
+
+    // Tableau des tâches : regroupement, filtres, report rapide (uniquement sur cette page)
+    if ( is_page_template( 'page-task-dashboard.php' ) ) {
+        $task_js = get_stylesheet_directory() . '/assets/js/ispag-task-dashboard.js';
+        wp_enqueue_script( 'ispag-task-dashboard-theme', get_stylesheet_directory_uri() . '/assets/js/ispag-task-dashboard.js', array( 'jquery' ), (int) @filemtime( $task_js ), true );
+    }
+
+    // Création d'entreprise depuis la page publique : script chargé seulement pour les utilisateurs autorisés
+    if ( class_exists( 'ISPAG_Crm_Company_Creator' ) && ISPAG_Crm_Company_Creator::can_create() ) {
+        wp_enqueue_script( 'ispag-crm-create-company', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-create-company.js', array( 'jquery' ), ispag_theme_asset_ver('/assets/js/ispag-crm-create-company.js'), true );
+        wp_localize_script( 'ispag-crm-create-company', 'ispag_company_params', array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'nonce'    => wp_create_nonce( ISPAG_Crm_Company_Creator::NONCE_ACTION ),
+            'i18n'     => array(
+                'name_required' => __( 'The company name is required.', 'ispag-crm' ),
+                'creating'      => __( 'Creating...', 'ispag-crm' ),
+                'error'         => __( 'An error occurred. Please try again.', 'ispag-crm' ),
+                'open_existing' => __( 'Open the existing company', 'ispag-crm' ),
+            ),
+        ) );
+    }
+
+    // Localisation AJAX pour la création de contact
+    wp_localize_script( 'ispag-crm-create-contact', 'ispag_params', array(
+        'ajax_url'  => admin_url( 'admin-ajax.php' ),
+        'nonce'     => wp_create_nonce( 'ispag_new_contact_nonce' ),
+        'utils_url' => 'https://cdn.jsdelivr.net/npm/intl-tel-input@20.0.5/build/js/utils.js'
+    ) );
+}
+
 /* ==========================================================================
    3. CONFIGURATION DES TEMPLATES ET UPLOADS
    ========================================================================== */
