@@ -117,6 +117,8 @@ function theme_enqueue_styles() {
     wp_enqueue_script( 'ispag-crm-contact-bulk', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-contact-bulk-actions.js', array( 'jquery', 'ispag-crm-bulk' ), ispag_theme_asset_ver('/assets/js/ispag-crm-contact-bulk-actions.js'), true );
     wp_enqueue_script( 'ispag-crm-create-contact', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-create-contact.js', array( 'jquery', 'intl-tel-input-js' ), ispag_theme_asset_ver('/assets/js/ispag-crm-create-contact.js'), true );
     wp_enqueue_script( 'ispag-crm-popover', get_stylesheet_directory_uri() . '/assets/js/popover.js', array( 'jquery', 'intl-tel-input-js' ), ispag_theme_asset_ver('/assets/js/popover.js'), true );
+    // Tous les champs téléphone : drapeau + indicatif, puis mise en forme internationale
+    wp_enqueue_script( 'ispag-phone-fields', get_stylesheet_directory_uri() . '/assets/js/ispag-phone-fields.js', array( 'jquery', 'intl-tel-input-js' ), ispag_theme_asset_ver('/assets/js/ispag-phone-fields.js'), true );
     wp_enqueue_script( 'ispag-crm-deal-select', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-deal-list-select.js', array( 'jquery' ), ispag_theme_asset_ver('/assets/js/ispag-crm-deal-list-select.js'), true );
 
     // Tableau des tâches : regroupement, filtres, report rapide (uniquement sur cette page)
