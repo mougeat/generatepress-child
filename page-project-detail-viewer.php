@@ -483,6 +483,7 @@ if(class_exists('ISPAG_Projet_Repository')){
                 </button>
                 <div class="ispag-right-panel" data-panel="right">
 
+                    <?php if ( current_user_can( 'view_company' ) ) : // les utilisateurs standard ne voient pas la fiche entreprise ?>
                     <div class="ispag-card ispag-company-card" data-deal-id="<?php echo absint($deal_id); ?>">
                         <h5>
                             <?php _e( 'Company', 'ispag-crm' ); ?> 
@@ -501,6 +502,8 @@ if(class_exists('ISPAG_Projet_Repository')){
                         
                     </div>
                     
+                    <?php endif; ?>
+
                     <?php
                     // $datas['associated_companies_list_full'] = $associated_companies_list_full;
                     // $datas['deal_id'] = $deal_id;
@@ -508,6 +511,7 @@ if(class_exists('ISPAG_Projet_Repository')){
                     ?> 
 
 
+                    <?php if ( current_user_can( 'view_contact' ) ) : // idem pour les contacts ?>
                     <div class="ispag-card ispag-contact-card" data-deal-id="<?php echo absint($deal_id); ?>">
                         <h5>
                             <?php _e('Contacts', 'ispag-crm'); ?>
@@ -523,6 +527,8 @@ if(class_exists('ISPAG_Projet_Repository')){
                             <div class="ispag-skeleton-line ispag-w-60"></div>
                         </div>
                     </div>
+                    <?php endif; ?>
+
                     <?php
                     // $datas['associated_contacts_list_full'] = $contacts;
                     // $datas['company_id'] = $company_id;
