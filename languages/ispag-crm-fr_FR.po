@@ -9,23 +9,39 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: ispag-crm\n"
 
-#: functions.php:146
+#: functions.php:135
+msgid "The company name is required."
+msgstr "Le nom de l'entreprise est obligatoire."
+
+#: functions.php:136
+msgid "Creating..."
+msgstr "Création en cours..."
+
+#: functions.php:137
+msgid "An error occurred. Please try again."
+msgstr "Une erreur s'est produite. Veuillez réessayer."
+
+#: functions.php:138
+msgid "Open the existing company"
+msgstr "Ouvrir l'entreprise existante"
+
+#: functions.php:215
 msgid "Security violation."
 msgstr "Violation de sécurité."
 
-#: functions.php:191
+#: functions.php:260
 msgid "Your quote request at ISPAG"
 msgstr "Votre demande de devis chez ISPAG"
 
-#: functions.php:192
+#: functions.php:261
 msgid "Hello, we have received your request for the project: "
 msgstr "Bonjour, nous avons bien reçu votre demande pour le projet : "
 
-#: functions.php:288
+#: functions.php:357
 msgid "CRM Sidebar"
 msgstr "Barre latérale CRM"
 
-#: functions.php:290
+#: functions.php:359
 msgid "Widget area dedicated to the CRM."
 msgstr "Zone de widgets dédiée au CRM."
 
@@ -809,7 +825,7 @@ msgstr "Vous n'avez pas les droits nécessaires pour voir cette commande."
 
 #: page-project-detail-viewer.php:284
 msgid "To purchase"
-msgstr "À acheter"
+msgstr "Vers achats"
 
 #: page-project-detail-viewer.php:318
 msgid "Follow up"
