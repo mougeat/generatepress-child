@@ -402,7 +402,8 @@ get_header();
                             class="<?php echo $can_edit_dd ? 'ispag-editable-field' : ''; ?>"
                             data-name="expected_decision_date"
                             data-type="date"
-                            data-value="<?php echo ( $decision['source'] === 'expected' ) ? esc_attr( $decision['date'] ) : ''; ?>"
+                            data-value="<?php echo esc_attr( $decision['date'] ); ?>"
+                            data-nonce="<?php echo esc_attr( wp_create_nonce( ISPAG_Crm_Decision_Date::NONCE ) ); ?>"
                             title="<?php echo $can_edit_dd ? esc_attr__( 'Click to edit', 'ispag-crm' ) : ''; ?>"
                         >
                             <?php echo $decision['date'] ? esc_html( date_i18n( 'd.m.Y', strtotime( $decision['date'] ) ) ) : '—'; ?>
