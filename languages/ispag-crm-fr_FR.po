@@ -9,81 +9,81 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: ispag-crm\n"
 
-#: functions.php:137
+#: functions.php:139
 msgid "The company name is required."
 msgstr "Le nom de l'entreprise est obligatoire."
 
-#: functions.php:138
+#: functions.php:140
 msgid "Creating..."
 msgstr "Création en cours..."
 
-#: functions.php:139
+#: functions.php:141
 msgid "An error occurred. Please try again."
 msgstr "Une erreur s'est produite. Veuillez réessayer."
 
-#: functions.php:140
+#: functions.php:142
 msgid "Open the existing company"
 msgstr "Ouvrir l'entreprise existante"
 
-#: functions.php:217
+#: functions.php:219
 msgid "Security violation."
 msgstr "Violation de sécurité."
 
-#: functions.php:262
+#: functions.php:264
 msgid "Your quote request at ISPAG"
 msgstr "Votre demande de devis chez ISPAG"
 
-#: functions.php:263
+#: functions.php:265
 msgid "Hello, we have received your request for the project: "
 msgstr "Bonjour, nous avons bien reçu votre demande pour le projet : "
 
-#: functions.php:359
+#: functions.php:361
 msgid "CRM Sidebar"
 msgstr "Barre latérale CRM"
 
-#: functions.php:361
+#: functions.php:363
 msgid "Widget area dedicated to the CRM."
 msgstr "Zone de widgets dédiée au CRM."
 
-#: inc/class-ispag-entity-summary.php:33
-msgid "No due date"
-msgstr "Sans échéance"
-
-#: inc/class-ispag-entity-summary.php:61
-msgid "Never"
-msgstr "Jamais"
-
-#: inc/class-ispag-entity-summary.php:62
-msgid "%d days ago"
-msgstr "il y a %d jours"
-
-#: inc/class-ispag-entity-summary.php:62
-msgid "No activity logged"
-msgstr "Aucune activité enregistrée"
-
-#: inc/class-ispag-entity-summary.php:71
-msgid "Next task"
-msgstr "Prochaine tâche"
-
-#: inc/class-ispag-entity-summary.php:72
-msgid "None planned"
-msgstr "Aucune prévue"
-
-#: inc/class-ispag-entity-summary.php:73
-msgid "Plan the next step"
-msgstr "Planifier la prochaine étape"
-
-#: inc/class-ispag-entity-summary.php:83
-msgid "Open deals"
-msgstr "Transactions ouvertes"
-
-#: inc/class-ispag-entity-summary.php:95
+#: inc/class-ispag-entity-summary.php:111
 msgid "No contact for over %d days"
 msgstr "Aucun contact depuis plus de %d jours"
 
-#: inc/class-ispag-entity-summary.php:98
+#: inc/class-ispag-entity-summary.php:114
 msgid "No follow-up task planned"
 msgstr "Aucune tâche de suivi planifiée"
+
+#: inc/class-ispag-entity-summary.php:46
+msgid "No due date"
+msgstr "Sans échéance"
+
+#: inc/class-ispag-entity-summary.php:76
+msgid "Never"
+msgstr "Jamais"
+
+#: inc/class-ispag-entity-summary.php:77
+msgid "%d days ago"
+msgstr "il y a %d jours"
+
+#: inc/class-ispag-entity-summary.php:77
+msgid "No activity logged"
+msgstr "Aucune activité enregistrée"
+
+#: inc/class-ispag-entity-summary.php:86
+msgid "Next task"
+msgstr "Prochaine tâche"
+
+#: inc/class-ispag-entity-summary.php:87
+msgid "None planned"
+msgstr "Aucune prévue"
+
+#: inc/class-ispag-entity-summary.php:88
+msgid "Plan the next step"
+msgstr "Planifier la prochaine étape"
+
+#: inc/class-ispag-entity-summary.php:98
+msgid "Open deals"
+msgstr "Transactions ouvertes"
 
 #: inc/js-strings.php:13
 msgid "Apply changes to "
@@ -1115,73 +1115,73 @@ msgstr "Changer le mot de passe"
 msgid "Current Password"
 msgstr "Mot de passe actuel"
 
-#: templates/action-bar.php:103
+#: templates/action-bar.php:110
+msgid "Send an Email"
+msgstr "Envoyer un e-mail"
+
+#: templates/action-bar.php:124
 msgid "Create Task"
 msgstr "Créer une tâche"
 
-#: templates/action-bar.php:117
+#: templates/action-bar.php:138
 msgid "Log Meeting"
 msgstr "Consigner une réunion"
 
-#: templates/action-bar.php:120
+#: templates/action-bar.php:141
 msgid "Meeting"
 msgstr "Réunion"
 
-#: templates/action-bar.php:124
+#: templates/action-bar.php:145
 msgid "More actions"
 msgstr "Plus d'actions"
 
-#: templates/action-bar.php:126
+#: templates/action-bar.php:147
 msgid "More"
 msgstr "Plus"
 
-#: templates/action-bar.php:138
+#: templates/action-bar.php:159
 msgid "Log an email"
 msgstr "Consigner un e-mail"
 
-#: templates/action-bar.php:159
+#: templates/action-bar.php:173
 msgid "Send Whatsapp"
 msgstr "Envoyer un WhatsApp"
 
-#: templates/action-bar.php:177
+#: templates/action-bar.php:187
 msgid "Log SMS"
 msgstr "Consigner un SMS"
 
-#: templates/action-bar.php:191
+#: templates/action-bar.php:201
 msgid "Log a LinkedIn message"
 msgstr "Consigner un message LinkedIn"
 
-#: templates/action-bar.php:209
+#: templates/action-bar.php:215
 msgid "Delete"
 msgstr "Supprimer"
 
-#: templates/action-bar.php:35
+#: templates/action-bar.php:56
 msgid "Add Note"
 msgstr "Ajouter une note"
 
-#: templates/action-bar.php:38
+#: templates/action-bar.php:59
 msgid "Note"
 msgstr "Note"
 
-#: templates/action-bar.php:44
+#: templates/action-bar.php:65
 msgid "Call this number"
 msgstr "Appeler ce numéro"
 
-#: templates/action-bar.php:54
+#: templates/action-bar.php:75
 msgid "Make a phone call"
 msgstr "Passer un appel"
 
-#: templates/action-bar.php:57
+#: templates/action-bar.php:78
 msgid "Call"
 msgstr "Appel"
 
-#: templates/action-bar.php:69
+#: templates/action-bar.php:90
 msgid "Log a call"
 msgstr "Consigner un appel"
-
-#: templates/action-bar.php:89
-msgid "Send an Email"
-msgstr "Envoyer un e-mail"
 
 #: templates/ai-loader.php:10
 msgid "AI Analysis..."

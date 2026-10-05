@@ -412,7 +412,7 @@ $deals_totals   = ISPAG_Entity_Summary::deals_totals( $transactions_list_full );
 $prio_labels    = [ 'A' => __( 'A - High', 'ispag-crm' ), 'B' => __( 'B - Medium', 'ispag-crm' ), 'C' => __( 'C - Low', 'ispag-crm' ) ];
 $prio_key       = strtoupper( trim( (string) ( $contact->priority_level ?? '' ) ) );
 $summary_tiles  = [
-    ISPAG_Entity_Summary::last_contact_tile( $contact->last_contact_date ?? null ),
+    ISPAG_Entity_Summary::last_contact_tile( $contact->last_contact_date ?? null, $prio_key ),
     ISPAG_Entity_Summary::next_task_tile( $next_task ),
     ISPAG_Entity_Summary::open_deals_tile( $deals_totals ),
     [
@@ -423,7 +423,7 @@ $summary_tiles  = [
         'level' => '',
     ],
 ];
-$summary_alerts = ( $is_ignored == '1' ) ? [] : ISPAG_Entity_Summary::common_alerts( $contact->last_contact_date ?? null, $next_task );
+$summary_alerts = ( $is_ignored == '1' ) ? [] : ISPAG_Entity_Summary::common_alerts( $contact->last_contact_date ?? null, $next_task, $prio_key );
 if ( $is_ignored != '1' && empty( $contact->email ) ) {
     $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No email address', 'ispag-crm' ) ];
 }

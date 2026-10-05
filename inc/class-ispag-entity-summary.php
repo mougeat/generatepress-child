@@ -8,8 +8,21 @@ if ( ! class_exists( 'ISPAG_Entity_Summary' ) ) :
 
 class ISPAG_Entity_Summary {
 
-    const CONTACT_WARN_DAYS   = 14;
-    const CONTACT_DANGER_DAYS = 30;
+    const CONTACT_WARN_DAYS   = 14;   // valeurs de secours si le CRM n'est pas actif ; sinon : Réglages → Relances CRM
+    const CONTACT_DANGER_DAYS = 90;
+
+    /** Délai (jours) au-delà duquel l'alerte devient rouge ; $priority = A/B/C pour un contact, null pour une entreprise / un deal. */
+    public static function danger_days( $priority = null ) {
+        if ( class_exists( 'ISPAG_Crm_Follow_Up_Settings' ) ) {
+            return $priority === null ? ISPAG_Crm_Follow_Up_Settings::days_for_entity() : ISPAG_Crm_Follow_Up_Settings::days_for_priority( $priority );
+        }
+        return self::CONTACT_DANGER_DAYS;
+    }
+
+    /** Orange à partir des deux tiers du délai. */
+    public static function warn_days( $priority = null ) {
+        return max( 1, (int) round( self::danger_days( $priority ) * 2 / 3 ) );
+    }
 
     /** Nombre de jours entiers entre une date passée et aujourd'hui (null si pas de date). */
     public static function days_since( $datetime ) {
@@ -52,15 +65,17 @@ class ISPAG_Entity_Summary {
         return $t;
     }
 
-    /** Tuile « Dernier contact » (orange > 14 j, rouge > 30 j ou jamais). */
-    public static function last_contact_tile( $datetime ) {
-        $days = self::days_since( $datetime );
+    /** Tuile « Dernier contact » (orange > 2/3 du délai de relance, rouge au-delà ou jamais ; délai réglable). */
+    public static function last_contact_tile( $datetime, $priority = null ) {
+        $days   = self::days_since( $datetime );
+        $danger = self::danger_days( $priority );
+        $warn   = self::warn_days( $priority );
         return [
             'icon'  => 'backup',
             'label' => __( 'Last contacted', 'ispag-crm' ),
             'value' => $datetime ? date_i18n( 'd.m.Y', strtotime( $datetime ) ) : __( 'Never', 'ispag-crm' ),
             'sub'   => $days === null ? __( 'No activity logged', 'ispag-crm' ) : sprintf( __( '%d days ago', 'ispag-crm' ), $days ),
-            'level' => ( $days === null || $days > self::CONTACT_DANGER_DAYS ) ? 'danger' : ( $days > self::CONTACT_WARN_DAYS ? 'warn' : '' ),
+            'level' => ( $days === null || $days > $danger ) ? 'danger' : ( $days > $warn ? 'warn' : '' ),
         ];
     }
 
@@ -88,11 +103,12 @@ class ISPAG_Entity_Summary {
     }
 
     /** Alertes communes : contact trop ancien, pas de tâche. */
-    public static function common_alerts( $datetime, $task ) {
+    public static function common_alerts( $datetime, $task, $priority = null ) {
         $alerts = [];
         $days   = self::days_since( $datetime );
-        if ( $days === null || $days > self::CONTACT_DANGER_DAYS ) {
-            $alerts[] = [ 'level' => 'danger', 'text' => sprintf( __( 'No contact for over %d days', 'ispag-crm' ), self::CONTACT_DANGER_DAYS ) ];
+        $danger = self::danger_days( $priority );
+        if ( $days === null || $days > $danger ) {
+            $alerts[] = [ 'level' => 'danger', 'text' => sprintf( __( 'No contact for over %d days', 'ispag-crm' ), $danger ) ];
         }
         if ( ! $task ) {
             $alerts[] = [ 'level' => 'warn', 'text' => __( 'No follow-up task planned', 'ispag-crm' ) ];
