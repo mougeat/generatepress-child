@@ -265,6 +265,17 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
             ISPAG_Entity_Summary::next_task_tile( $next_task ),
         ];
 
+        // Offre terminée (gagnée / perdue) : plus de retard ni de relance à signaler → la tuile de décision devient « Gagné » (vert) ou « Perdu » (neutre)
+        if ( ! $is_open_deal ) {
+            $is_lost = (int) $deal->project_db_status === 2;
+            $summary_tiles[1]['label'] = __( 'Decision', 'ispag-crm' );
+            $summary_tiles[1]['sub']   = $is_lost ? __( 'Lost', 'ispag-crm' ) : __( 'Won', 'ispag-crm' );
+            $summary_tiles[1]['level'] = $is_lost ? '' : 'success';
+            $summary_tiles[2]['level'] = '';   // dernier contact / prochaine tâche : sans alerte sur une offre terminée
+            $summary_tiles[3]['level'] = '';
+            if ( $summary_tiles[3]['sub'] === __( 'Plan the next step', 'ispag-crm' ) ) $summary_tiles[3]['sub'] = '';
+        }
+
         $summary_alerts = [];
         if ( $is_open_deal ) {
             if ( $closing_days !== null && $closing_days < 0 ) {
@@ -305,29 +316,6 @@ get_header();
                             <p>
                                 <?php echo __('Close date', 'ispag-crm'); ?> <?php echo ! empty( $deal->closing_date ) ? date_i18n( 'd.m.Y', strtotime( $deal->closing_date ) ) : '—'; ?> 
                             </p>
-                            <?php if ( class_exists( 'ISPAG_Crm_Decision_Date' ) ) : ?>
-                            <p class="ispag-decision-date" data-deal-id="<?php echo (int) $deal->id; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( ISPAG_Crm_Decision_Date::NONCE ) ); ?>" data-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>">
-                                <label for="ispag-decision-date-input"><?php esc_html_e( 'Expected decision', 'ispag-crm' ); ?></label>
-                                <input type="date" id="ispag-decision-date-input" value="<?php echo ( $decision['source'] === 'expected' ) ? esc_attr( $decision['date'] ) : ''; ?>" <?php disabled( ! current_user_can( 'manage_order' ) ); ?>>
-                                <small class="ispag-decision-hint" style="display:block;color:#6b7280"><?php echo $decision['source'] === 'expected' ? '' : esc_html( $decision_src ? sprintf( __( 'Optional — otherwise: %s', 'ispag-crm' ), $decision_src ) : __( 'Optional', 'ispag-crm' ) ); ?></small>
-                            </p>
-                            <script>
-                            (function () {
-                                var box = document.querySelector('.ispag-decision-date'); if (!box) return;
-                                var input = box.querySelector('input'), hint = box.querySelector('.ispag-decision-hint');
-                                input.addEventListener('change', function () {
-                                    var fd = new FormData(); fd.append('action', <?php echo wp_json_encode( ISPAG_Crm_Decision_Date::ACTION ); ?>); fd.append('nonce', box.dataset.nonce); fd.append('deal_id', box.dataset.dealId); fd.append('date', input.value);
-                                    input.disabled = true;
-                                    fetch(box.dataset.ajax, { method: 'POST', body: fd, credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (res) {
-                                        input.disabled = false;
-                                        if (!res.success) { alert((res.data && res.data.message) || 'Error'); return; }
-                                        hint.textContent = input.value ? '✓' : '';
-                                        location.reload();
-                                    }).catch(function () { input.disabled = false; });
-                                });
-                            })();
-                            </script>
-                            <?php endif; ?>
                             <p>
                                 <?php echo __('Stage', 'ispag-crm'); ?> 
 
@@ -408,6 +396,20 @@ get_header();
                                 ⚡ <?php _e( 'Enroll in Sequence', 'ispag-crm' ); ?>
                             </button>
                         </dd>                -->
+                        <?php if ( class_exists( 'ISPAG_Crm_Decision_Date' ) ) : $can_edit_dd = current_user_can( 'manage_order' ); ?>
+                        <dt><?php esc_html_e( 'Expected decision', 'ispag-crm' ); ?></dt>
+                        <dd
+                            class="<?php echo $can_edit_dd ? 'ispag-editable-field' : ''; ?>"
+                            data-name="expected_decision_date"
+                            data-type="date"
+                            data-value="<?php echo ( $decision['source'] === 'expected' ) ? esc_attr( $decision['date'] ) : ''; ?>"
+                            title="<?php echo $can_edit_dd ? esc_attr__( 'Click to edit', 'ispag-crm' ) : ''; ?>"
+                        >
+                            <?php echo $decision['date'] ? esc_html( date_i18n( 'd.m.Y', strtotime( $decision['date'] ) ) ) : '—'; ?>
+                            <?php if ( $decision['source'] !== 'expected' && $decision_src ) : ?><small style="color:#6b7280">(<?php echo esc_html( $decision_src ); ?>)</small><?php endif; ?>
+                            <?php if ( $can_edit_dd ) : ?><span class="edit-icon">✏️</span><?php endif; ?>
+                        </dd>
+                        <?php endif; ?>
                         <dt><?php _e( 'Deal owner', 'ispag-crm' ); ?></dt>
                         <dd 
                             class="<?php echo current_user_can('manage_order') ? 'ispag-editable-field' : ''; ?>" 

@@ -53,10 +53,6 @@ msgstr "Nächste Aufgabe"
 msgid "None planned"
 msgstr "Keine geplant"
 
-#: inc/class-ispag-entity-summary.php:103
-msgid "Plan the next step"
-msgstr "Nächsten Schritt planen"
-
 #: inc/class-ispag-entity-summary.php:113
 msgid "Open deals"
 msgstr "Offene Deals"
@@ -476,78 +472,90 @@ msgid "Overdue by %d d"
 msgstr "%d T. überfällig"
 
 #: page-deal-detail-viewer.php:271
+msgid "Decision"
+msgstr "Entscheid"
+
+#: page-deal-detail-viewer.php:272
+msgid "Lost"
+msgstr "Verloren"
+
+#: page-deal-detail-viewer.php:276
+msgid "Plan the next step"
+msgstr "Nächsten Schritt planen"
+
+#: page-deal-detail-viewer.php:282
 msgid "Expected decision date is past: update it or move the deal"
 msgstr "Das erwartete Entscheidungsdatum ist überschritten: aktualisieren Sie es oder verschieben Sie den Deal"
 
-#: page-deal-detail-viewer.php:306
+#: page-deal-detail-viewer.php:317
 msgid "Close date"
 msgstr "Abschlussdatum"
 
-#: page-deal-detail-viewer.php:312
+#: page-deal-detail-viewer.php:323
 msgid "Optional"
 msgstr "Optional"
 
-#: page-deal-detail-viewer.php:312
+#: page-deal-detail-viewer.php:323
 msgid "Optional — otherwise: %s"
 msgstr "Optional — sonst: %s"
 
-#: page-deal-detail-viewer.php:332
+#: page-deal-detail-viewer.php:343
 msgid "Stage"
 msgstr "Phase"
 
-#: page-deal-detail-viewer.php:345
+#: page-deal-detail-viewer.php:356
 msgid "Select current stage"
 msgstr "Aktuelle Phase auswählen"
 
-#: page-deal-detail-viewer.php:395
+#: page-deal-detail-viewer.php:406
 msgid "Automation"
 msgstr "Automatisierung"
 
-#: page-deal-detail-viewer.php:408
+#: page-deal-detail-viewer.php:419
 msgid "Enroll in Sequence"
 msgstr "In Sequenz aufnehmen"
 
-#: page-deal-detail-viewer.php:411
+#: page-deal-detail-viewer.php:422
 msgid "Deal owner"
 msgstr "Verantwortlicher für den Deal"
 
-#: page-deal-detail-viewer.php:417
+#: page-deal-detail-viewer.php:428
 msgid "Click to edit"
 msgstr "Zum Bearbeiten klicken"
 
-#: page-deal-detail-viewer.php:427
+#: page-deal-detail-viewer.php:438
 msgid "Last contacted"
 msgstr "Letzter Kontakt"
 
-#: page-deal-detail-viewer.php:435
+#: page-deal-detail-viewer.php:446
 msgid "Record source"
 msgstr "Quelle des Datensatzes"
 
-#: page-deal-detail-viewer.php:457
+#: page-deal-detail-viewer.php:468
 msgid "Overview"
 msgstr "Übersicht"
 
-#: page-deal-detail-viewer.php:464
+#: page-deal-detail-viewer.php:475
 msgid "Articles"
 msgstr "Artikel"
 
-#: page-deal-detail-viewer.php:475
+#: page-deal-detail-viewer.php:486
 msgid "Details"
 msgstr "Details"
 
-#: page-deal-detail-viewer.php:478
+#: page-deal-detail-viewer.php:489
 msgid "Create date"
 msgstr "Erstellungsdatum"
 
-#: page-deal-detail-viewer.php:482
+#: page-deal-detail-viewer.php:493
 msgid "Offer number"
 msgstr "Offertnummer"
 
-#: page-deal-detail-viewer.php:486
+#: page-deal-detail-viewer.php:497
 msgid "Project number"
 msgstr "Projektnummer"
 
-#: page-deal-detail-viewer.php:498
+#: page-deal-detail-viewer.php:509
 msgid "Companies"
 msgstr "Unternehmen"
 
@@ -555,7 +563,7 @@ msgstr "Unternehmen"
 msgid "Deal details"
 msgstr "Deal-Details"
 
-#: page-deal-detail-viewer.php:525
+#: page-deal-detail-viewer.php:536
 msgid "View project details"
 msgstr "Projektdetails anzeigen"
 
