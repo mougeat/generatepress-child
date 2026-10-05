@@ -265,6 +265,17 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
             ISPAG_Entity_Summary::next_task_tile( $next_task ),
         ];
 
+        // Offre terminée (gagnée / perdue) : plus de retard ni de relance à signaler → la tuile de décision devient « Gagné » (vert) ou « Perdu » (neutre)
+        if ( ! $is_open_deal ) {
+            $is_lost = (int) $deal->project_db_status === 2;
+            $summary_tiles[1]['label'] = __( 'Decision', 'ispag-crm' );
+            $summary_tiles[1]['sub']   = $is_lost ? __( 'Lost', 'ispag-crm' ) : __( 'Won', 'ispag-crm' );
+            $summary_tiles[1]['level'] = $is_lost ? '' : 'success';
+            $summary_tiles[2]['level'] = '';   // dernier contact / prochaine tâche : sans alerte sur une offre terminée
+            $summary_tiles[3]['level'] = '';
+            if ( $summary_tiles[3]['sub'] === __( 'Plan the next step', 'ispag-crm' ) ) $summary_tiles[3]['sub'] = '';
+        }
+
         $summary_alerts = [];
         if ( $is_open_deal ) {
             if ( $closing_days !== null && $closing_days < 0 ) {

@@ -43,6 +43,8 @@
 
 .ispag-kpi.is-warn   { border-left-color: var(--ispag-orange); }
 .ispag-kpi.is-danger { border-left-color: var(--ispag-danger-color); }
+.ispag-kpi.is-success { border-left-color: var(--ispag-success-color); }
+.ispag-kpi.is-success .ispag-kpi-sub { color: var(--ispag-success-color); font-weight: 600; }
 .ispag-kpi.is-warn .ispag-kpi-sub   { color: #b07d00; font-weight: 600; }
 .ispag-kpi.is-danger .ispag-kpi-sub { color: var(--ispag-danger-color); font-weight: 600; }
 
