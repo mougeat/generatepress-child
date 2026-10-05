@@ -788,12 +788,7 @@ get_header();
                             
 
                         </div>
-                        <?php if ( isset( $revenue_stats ) ) : ?>
-                            <div class="ispag-card ispag-revenue-dashboard">
-                                <h5><?php _e( 'Revenue Perspectives', 'ispag-crm' ); ?></h5>
-                                <?php echo $revenue_stats->render_perspective_cards( $user_id, 'contact' ); ?>
-                            </div>
-                        <?php endif; ?>
+                        <?php /* Bloc « Perspectives de chiffre d'affaires » retiré de la fiche contact : doublon du bandeau du haut */ ?>
 
                         <div 
                             id="gemini-ai-summary-<?php echo absint($user_id); ?>" 

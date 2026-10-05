@@ -331,11 +331,11 @@ msgstr "Lead-Status"
 msgid "Street adress"
 msgstr "Strassenadresse"
 
-#: page-contact-detail-responsive.php:442
+#: page-contact-detail-responsive.php:438
 msgid "Loading AI summary..."
 msgstr "KI-Zusammenfassung wird geladen..."
 
-#: page-contact-detail-responsive.php:452
+#: page-contact-detail-responsive.php:448
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -427,117 +427,137 @@ msgstr "WhatsApp"
 msgid "Postal code"
 msgstr "Postleitzahl"
 
-#: page-contact-detail.php:818
+#: page-contact-detail.php:813
 msgid "Transaction information"
 msgstr "Deal-Informationen"
 
-#: page-contact-detail.php:905
+#: page-contact-detail.php:900
 msgid "Warning"
 msgstr "Warnung"
 
-#: page-contact-detail.php:906
+#: page-contact-detail.php:901
 msgid "Warning: Consistency issues detected!"
 msgstr "Achtung: Konsistenzprobleme erkannt!"
 
-#: page-contact-detail.php:915
+#: page-contact-detail.php:910
 msgid "- Priority mismatch:"
 msgstr "- Abweichende Priorität:"
 
-#: page-contact-detail.php:921
+#: page-contact-detail.php:916
 msgid "- Owner mismatch:"
 msgstr "- Abweichender Verantwortlicher:"
 
-#: page-deal-detail-viewer.php:241
+#: page-deal-detail-viewer.php:244
+msgid "closing date"
+msgstr "Abschlussdatum"
+
+#: page-deal-detail-viewer.php:244
+msgid "offer date + 30 days"
+msgstr "Offertdatum + 30 Tage"
+
+#: page-deal-detail-viewer.php:252
 msgid "Amount"
 msgstr "Betrag"
 
-#: page-deal-detail-viewer.php:243
+#: page-deal-detail-viewer.php:254
 msgid "Weighted %s CHF (%s%%)"
 msgstr "Gewichtet %s CHF (%s %%)"
 
-#: page-deal-detail-viewer.php:248
-msgid "Close date"
-msgstr "Abschlussdatum"
+#: page-deal-detail-viewer.php:259
+msgid "Expected decision"
+msgstr "Erwarteter Entscheid"
 
-#: page-deal-detail-viewer.php:250
+#: page-deal-detail-viewer.php:261
 msgid "In %d d"
 msgstr "In %d T."
 
-#: page-deal-detail-viewer.php:250
+#: page-deal-detail-viewer.php:261
 msgid "Overdue by %d d"
 msgstr "%d T. überfällig"
 
-#: page-deal-detail-viewer.php:260
-msgid "Closing date is past: update it or move the deal"
-msgstr "Das Abschlussdatum ist überschritten: Aktualisieren Sie es oder verschieben Sie den Deal"
+#: page-deal-detail-viewer.php:271
+msgid "Expected decision date is past: update it or move the deal"
+msgstr "Das erwartete Entscheidungsdatum ist überschritten: aktualisieren Sie es oder verschieben Sie den Deal"
 
-#: page-deal-detail-viewer.php:298
+#: page-deal-detail-viewer.php:306
+msgid "Close date"
+msgstr "Abschlussdatum"
+
+#: page-deal-detail-viewer.php:312
+msgid "Optional"
+msgstr "Optional"
+
+#: page-deal-detail-viewer.php:312
+msgid "Optional — otherwise: %s"
+msgstr "Optional — sonst: %s"
+
+#: page-deal-detail-viewer.php:332
 msgid "Stage"
 msgstr "Phase"
 
-#: page-deal-detail-viewer.php:311
+#: page-deal-detail-viewer.php:345
 msgid "Select current stage"
 msgstr "Aktuelle Phase auswählen"
 
-#: page-deal-detail-viewer.php:361
+#: page-deal-detail-viewer.php:395
 msgid "Automation"
 msgstr "Automatisierung"
 
-#: page-deal-detail-viewer.php:374
+#: page-deal-detail-viewer.php:408
 msgid "Enroll in Sequence"
 msgstr "In Sequenz aufnehmen"
 
-#: page-deal-detail-viewer.php:377
+#: page-deal-detail-viewer.php:411
 msgid "Deal owner"
 msgstr "Verantwortlicher für den Deal"
 
-#: page-deal-detail-viewer.php:383
+#: page-deal-detail-viewer.php:417
 msgid "Click to edit"
 msgstr "Zum Bearbeiten klicken"
 
-#: page-deal-detail-viewer.php:393
+#: page-deal-detail-viewer.php:427
 msgid "Last contacted"
 msgstr "Letzter Kontakt"
 
-#: page-deal-detail-viewer.php:401
+#: page-deal-detail-viewer.php:435
 msgid "Record source"
 msgstr "Quelle des Datensatzes"
 
-#: page-deal-detail-viewer.php:423
+#: page-deal-detail-viewer.php:457
 msgid "Overview"
 msgstr "Übersicht"
 
-#: page-deal-detail-viewer.php:430
+#: page-deal-detail-viewer.php:464
 msgid "Articles"
 msgstr "Artikel"
 
-#: page-deal-detail-viewer.php:441
+#: page-deal-detail-viewer.php:475
 msgid "Details"
 msgstr "Details"
 
-#: page-deal-detail-viewer.php:444
+#: page-deal-detail-viewer.php:478
 msgid "Create date"
 msgstr "Erstellungsdatum"
 
-#: page-deal-detail-viewer.php:448
+#: page-deal-detail-viewer.php:482
 msgid "Offer number"
 msgstr "Offertnummer"
 
-#: page-deal-detail-viewer.php:452
+#: page-deal-detail-viewer.php:486
 msgid "Project number"
 msgstr "Projektnummer"
 
-#: page-deal-detail-viewer.php:464
+#: page-deal-detail-viewer.php:498
 msgid "Companies"
 msgstr "Unternehmen"
-
-#: page-deal-detail-viewer.php:491
-msgid "View project details"
-msgstr "Projektdetails anzeigen"
 
 #: page-deal-detail-viewer.php:52
 msgid "Deal details"
 msgstr "Deal-Details"
+
+#: page-deal-detail-viewer.php:525
+msgid "View project details"
+msgstr "Projektdetails anzeigen"
 
 #: page-deal-detail-viewer.php:57
 msgid "Deal data are missing or not found for ID : %s"
