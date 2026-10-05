@@ -1387,6 +1387,14 @@ msgstr "Website"
 msgid "Remove association"
 msgstr "Zuordnung entfernen"
 
+#: templates/ispag-template-contact-card-new.php:68
+msgid "Main contact"
+msgstr "Hauptkontakt"
+
+#: templates/ispag-template-contact-card-new.php:70
+msgid "Set as main contact"
+msgstr "Als Hauptkontakt festlegen"
+
 #: templates/ispag-template-contact-card.php:76
 msgid "Show all contacts"
 msgstr "Alle Kontakte anzeigen"

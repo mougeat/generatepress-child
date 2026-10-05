@@ -64,6 +64,11 @@ foreach ($contacts as $contact) :
             </div>
             <strong>
                 <a href="<?php echo esc_url($contact_deal_url); ?>"><?php echo esc_html($display_name); ?></a>
+                <?php if ($deal_id && $displayed_count === 1) : // le premier de la liste est le contact principal ?>
+                    <span class="ispag-main-contact-badge" title="<?php esc_attr_e('Main contact', 'ispag-crm'); ?>">★ <?php _e('Main contact', 'ispag-crm'); ?></span>
+                <?php elseif ($can_edit_assoc) : ?>
+                    <span class="ispag-proj-assoc-primary" data-id="<?php echo absint($contact_id); ?>" data-deal-id="<?php echo absint($deal_id); ?>" title="<?php esc_attr_e('Set as main contact', 'ispag-crm'); ?>">☆</span>
+                <?php endif; ?>
             </strong>
             <?php if ($can_edit_assoc) : ?>
             <span
