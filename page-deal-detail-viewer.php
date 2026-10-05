@@ -229,8 +229,19 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
 
         // --- Bandeau « chiffres clés » (logique partagée avec les fiches company et contact) ---
         $today_ts     = strtotime( 'today' );
-        $closing_ts   = ! empty( $deal->closing_date ) ? strtotime( $deal->closing_date ) : 0;
+        // Date de décision : celle saisie si elle existe, sinon la date de clôture, sinon offre + 30 j (jamais bloquant)
+        if ( class_exists( 'ISPAG_Crm_Decision_Date' ) ) {
+            global $wpdb;
+            if ( ! isset( $deal->expected_decision_date ) ) {
+                $deal->expected_decision_date = $wpdb->get_var( $wpdb->prepare( 'SELECT `expected_decision_date` FROM ' . ISPAG_Crm_Deal_Constants::TABLE_NAME . ' WHERE id = %d', (int) $deal->id ) ) ?: null;
+            }
+            $decision = ISPAG_Crm_Decision_Date::effective( $deal );
+        } else {
+            $decision = [ 'date' => ! empty( $deal->closing_date ) ? $deal->closing_date : '', 'source' => ! empty( $deal->closing_date ) ? 'closing' : '' ];
+        }
+        $closing_ts   = $decision['date'] ? strtotime( $decision['date'] ) : 0;
         $closing_days = $closing_ts ? (int) round( ( $closing_ts - $today_ts ) / DAY_IN_SECONDS ) : null;
+        $decision_src = [ 'expected' => '', 'closing' => __( 'closing date', 'ispag-crm' ), 'created' => __( 'offer date + 30 days', 'ispag-crm' ) ][ $decision['source'] ] ?? '';
         $amount       = (float) $deal->total_excl_vat;
         $is_open_deal = ( $stage_probability > 0 && $stage_probability < 100 ) && (int) $deal->project_db_status === 0;
         $next_task    = ISPAG_Entity_Summary::next_task( $activity_detail ?? [] );
@@ -245,9 +256,9 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
             ],
             [
                 'icon'  => 'calendar-alt',
-                'label' => __( 'Close date', 'ispag-crm' ),
+                'label' => __( 'Expected decision', 'ispag-crm' ),
                 'value' => $closing_ts ? date_i18n( 'd.m.Y', $closing_ts ) : '—',
-                'sub'   => $closing_days === null ? '' : ( $closing_days < 0 ? sprintf( __( 'Overdue by %d d', 'ispag-crm' ), -$closing_days ) : ( $closing_days === 0 ? __( 'Today', 'ispag-crm' ) : sprintf( __( 'In %d d', 'ispag-crm' ), $closing_days ) ) ),
+                'sub'   => $closing_days === null ? '' : ( $decision_src ? '(' . $decision_src . ') ' : '' ) . ( $closing_days < 0 ? sprintf( __( 'Overdue by %d d', 'ispag-crm' ), -$closing_days ) : ( $closing_days === 0 ? __( 'Today', 'ispag-crm' ) : sprintf( __( 'In %d d', 'ispag-crm' ), $closing_days ) ) ),
                 'level' => ( $closing_days !== null && $closing_days < 0 ) ? 'danger' : ( ( $closing_days !== null && $closing_days <= 7 ) ? 'warn' : '' ),
             ],
             ISPAG_Entity_Summary::last_contact_tile( $deal->last_activity_date ),
@@ -257,7 +268,7 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
         $summary_alerts = [];
         if ( $is_open_deal ) {
             if ( $closing_days !== null && $closing_days < 0 ) {
-                $summary_alerts[] = [ 'level' => 'danger', 'text' => __( 'Closing date is past: update it or move the deal', 'ispag-crm' ) ];
+                $summary_alerts[] = [ 'level' => 'danger', 'text' => __( 'Expected decision date is past: update it or move the deal', 'ispag-crm' ) ];
             }
             $summary_alerts = array_merge( $summary_alerts, ISPAG_Entity_Summary::common_alerts( $deal->last_activity_date, $next_task ) );
             if ( $contacts_count === 0 ) {
@@ -292,8 +303,31 @@ get_header();
                                 <?php echo number_format( (float)$deal->total_excl_vat, 2, '.', '\'' ); ?> CHF
                             </p>
                             <p>
-                                <?php echo __('Close date', 'ispag-crm'); ?> <?php echo date_i18n( 'd.m.Y', strtotime( $deal->closing_date ) ); ?> 
+                                <?php echo __('Close date', 'ispag-crm'); ?> <?php echo ! empty( $deal->closing_date ) ? date_i18n( 'd.m.Y', strtotime( $deal->closing_date ) ) : '—'; ?> 
                             </p>
+                            <?php if ( class_exists( 'ISPAG_Crm_Decision_Date' ) ) : ?>
+                            <p class="ispag-decision-date" data-deal-id="<?php echo (int) $deal->id; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( ISPAG_Crm_Decision_Date::NONCE ) ); ?>" data-ajax="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>">
+                                <label for="ispag-decision-date-input"><?php esc_html_e( 'Expected decision', 'ispag-crm' ); ?></label>
+                                <input type="date" id="ispag-decision-date-input" value="<?php echo ( $decision['source'] === 'expected' ) ? esc_attr( $decision['date'] ) : ''; ?>" <?php disabled( ! current_user_can( 'manage_order' ) ); ?>>
+                                <small class="ispag-decision-hint" style="display:block;color:#6b7280"><?php echo $decision['source'] === 'expected' ? '' : esc_html( $decision_src ? sprintf( __( 'Optional — otherwise: %s', 'ispag-crm' ), $decision_src ) : __( 'Optional', 'ispag-crm' ) ); ?></small>
+                            </p>
+                            <script>
+                            (function () {
+                                var box = document.querySelector('.ispag-decision-date'); if (!box) return;
+                                var input = box.querySelector('input'), hint = box.querySelector('.ispag-decision-hint');
+                                input.addEventListener('change', function () {
+                                    var fd = new FormData(); fd.append('action', <?php echo wp_json_encode( ISPAG_Crm_Decision_Date::ACTION ); ?>); fd.append('nonce', box.dataset.nonce); fd.append('deal_id', box.dataset.dealId); fd.append('date', input.value);
+                                    input.disabled = true;
+                                    fetch(box.dataset.ajax, { method: 'POST', body: fd, credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (res) {
+                                        input.disabled = false;
+                                        if (!res.success) { alert((res.data && res.data.message) || 'Error'); return; }
+                                        hint.textContent = input.value ? '✓' : '';
+                                        location.reload();
+                                    }).catch(function () { input.disabled = false; });
+                                });
+                            })();
+                            </script>
+                            <?php endif; ?>
                             <p>
                                 <?php echo __('Stage', 'ispag-crm'); ?> 
 

@@ -411,8 +411,13 @@ $next_task      = ISPAG_Entity_Summary::next_task( $activity_detail ?? [] );
 $deals_totals   = ISPAG_Entity_Summary::deals_totals( $transactions_list_full );
 $prio_labels    = [ 'A' => __( 'A - High', 'ispag-crm' ), 'B' => __( 'B - Medium', 'ispag-crm' ), 'C' => __( 'C - Low', 'ispag-crm' ) ];
 $prio_key       = strtoupper( trim( (string) ( $contact->priority_level ?? '' ) ) );
+$follow_ctx     = class_exists( 'ISPAG_Crm_Follow_Up_Settings' ) ? [
+    'priority'     => $prio_key,
+    'role'         => ISPAG_Crm_Follow_Up_Settings::contact_role( (int) $contact->ID ),
+    'company_type' => ISPAG_Crm_Follow_Up_Settings::company_type( (int) ( ( is_array( $contact->companies ?? null ) && ! empty( $contact->companies ) ) ? ( $contact->companies[0]->Id ?? 0 ) : 0 ) ),
+] : $prio_key;
 $summary_tiles  = [
-    ISPAG_Entity_Summary::last_contact_tile( $contact->last_contact_date ?? null, $prio_key ),
+    ISPAG_Entity_Summary::last_contact_tile( $contact->last_contact_date ?? null, $follow_ctx ),
     ISPAG_Entity_Summary::next_task_tile( $next_task ),
     ISPAG_Entity_Summary::open_deals_tile( $deals_totals ),
     [
@@ -423,7 +428,7 @@ $summary_tiles  = [
         'level' => '',
     ],
 ];
-$summary_alerts = ( $is_ignored == '1' ) ? [] : ISPAG_Entity_Summary::common_alerts( $contact->last_contact_date ?? null, $next_task, $prio_key );
+$summary_alerts = ( $is_ignored == '1' ) ? [] : ISPAG_Entity_Summary::common_alerts( $contact->last_contact_date ?? null, $next_task, $follow_ctx );
 if ( $is_ignored != '1' && empty( $contact->email ) ) {
     $summary_alerts[] = [ 'level' => 'warn', 'text' => __( 'No email address', 'ispag-crm' ) ];
 }
@@ -788,12 +793,7 @@ get_header();
                             
 
                         </div>
-                        <?php if ( isset( $revenue_stats ) ) : ?>
-                            <div class="ispag-card ispag-revenue-dashboard">
-                                <h5><?php _e( 'Revenue Perspectives', 'ispag-crm' ); ?></h5>
-                                <?php echo $revenue_stats->render_perspective_cards( $user_id, 'contact' ); ?>
-                            </div>
-                        <?php endif; ?>
+                        <?php /* Bloc « Perspectives de chiffre d'affaires » retiré de la fiche contact : doublon du bandeau du haut */ ?>
 
                         <div 
                             id="gemini-ai-summary-<?php echo absint($user_id); ?>" 

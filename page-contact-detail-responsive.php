@@ -426,11 +426,7 @@ extract( $template_args );
                                 <div><strong><?php _e( 'City', 'ispag-crm' ); ?> :</strong> <?php echo esc_html($company_city); ?></div>
                             </div>
                         </div>
-                        <?php if ( isset( $revenue_stats ) ) : ?>
-                            <div class="ispag-card">
-                                <?php echo $revenue_stats->render_perspective_cards( $user_id, 'contact' ); ?>
-                            </div>
-                        <?php endif; ?>
+                        <?php /* Bloc « Perspectives de chiffre d'affaires » retiré de la fiche contact : doublon du bandeau du haut */ ?>
                     </div>
 
                     <div id="ispag-tab-deal" class="ispag-tab-pane">

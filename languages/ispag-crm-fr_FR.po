@@ -45,45 +45,45 @@ msgstr "Barre latérale CRM"
 msgid "Widget area dedicated to the CRM."
 msgstr "Zone de widgets dédiée au CRM."
 
-#: inc/class-ispag-entity-summary.php:111
-msgid "No contact for over %d days"
-msgstr "Aucun contact depuis plus de %d jours"
-
-#: inc/class-ispag-entity-summary.php:114
-msgid "No follow-up task planned"
-msgstr "Aucune tâche de suivi planifiée"
-
-#: inc/class-ispag-entity-summary.php:46
-msgid "No due date"
-msgstr "Sans échéance"
-
-#: inc/class-ispag-entity-summary.php:76
-msgid "Never"
-msgstr "Jamais"
-
-#: inc/class-ispag-entity-summary.php:77
-msgid "%d days ago"
-msgstr "il y a %d jours"
-
-#: inc/class-ispag-entity-summary.php:77
-msgid "No activity logged"
-msgstr "Aucune activité enregistrée"
-
-#: inc/class-ispag-entity-summary.php:86
+#: inc/class-ispag-entity-summary.php:101
 msgid "Next task"
 msgstr "Prochaine tâche"
 
-#: inc/class-ispag-entity-summary.php:87
+#: inc/class-ispag-entity-summary.php:102
 msgid "None planned"
 msgstr "Aucune prévue"
 
-#: inc/class-ispag-entity-summary.php:88
+#: inc/class-ispag-entity-summary.php:103
 msgid "Plan the next step"
 msgstr "Planifier la prochaine étape"
 
-#: inc/class-ispag-entity-summary.php:98
+#: inc/class-ispag-entity-summary.php:113
 msgid "Open deals"
 msgstr "Transactions ouvertes"
+
+#: inc/class-ispag-entity-summary.php:127
+msgid "No contact for over %d days"
+msgstr "Aucun contact depuis plus de %d jours"
+
+#: inc/class-ispag-entity-summary.php:130
+msgid "No follow-up task planned"
+msgstr "Aucune tâche de suivi planifiée"
+
+#: inc/class-ispag-entity-summary.php:52
+msgid "No due date"
+msgstr "Sans échéance"
+
+#: inc/class-ispag-entity-summary.php:83
+msgid "Never"
+msgstr "Jamais"
+
+#: inc/class-ispag-entity-summary.php:84
+msgid "%d days ago"
+msgstr "il y a %d jours"
+
+#: inc/class-ispag-entity-summary.php:84
+msgid "No activity logged"
+msgstr "Aucune activité enregistrée"
 
 #: inc/js-strings.php:13
 msgid "Apply changes to "
@@ -331,11 +331,11 @@ msgstr "Statut de lead"
 msgid "Street adress"
 msgstr "Adresse (rue)"
 
-#: page-contact-detail-responsive.php:442
+#: page-contact-detail-responsive.php:438
 msgid "Loading AI summary..."
 msgstr "Chargement du résumé IA..."
 
-#: page-contact-detail-responsive.php:452
+#: page-contact-detail-responsive.php:448
 msgid "Add"
 msgstr "Ajouter"
 
@@ -363,67 +363,67 @@ msgstr "B - Moyenne"
 msgid "C - Low"
 msgstr "C - Basse"
 
-#: page-contact-detail.php:422
+#: page-contact-detail.php:427
 msgid "Owner: %s"
 msgstr "Responsable : %s"
 
-#: page-contact-detail.php:428
+#: page-contact-detail.php:433
 msgid "No email address"
 msgstr "Aucune adresse e-mail"
 
-#: page-contact-detail.php:485
+#: page-contact-detail.php:490
 msgid "Edit avatar"
 msgstr "Modifier l'avatar"
 
-#: page-contact-detail.php:512
+#: page-contact-detail.php:517
 msgid "First name"
 msgstr "Prénom"
 
-#: page-contact-detail.php:523
+#: page-contact-detail.php:528
 msgid "Last name"
 msgstr "Nom"
 
-#: page-contact-detail.php:579
+#: page-contact-detail.php:584
 msgid "Prepare meeting"
 msgstr "Préparer la réunion"
 
-#: page-contact-detail.php:589
+#: page-contact-detail.php:594
 msgid "Ignore health reminder"
 msgstr "Ignorer le rappel de suivi"
 
-#: page-contact-detail.php:613
+#: page-contact-detail.php:618
 msgid "Role"
 msgstr "Rôle"
 
-#: page-contact-detail.php:625
+#: page-contact-detail.php:630
 msgid "Priority level"
 msgstr "Niveau de priorité"
 
-#: page-contact-detail.php:659
+#: page-contact-detail.php:664
 msgid "Lifecycle phase"
 msgstr "Phase du cycle de vie"
 
-#: page-contact-detail.php:673
+#: page-contact-detail.php:678
 msgid "Birthday"
 msgstr "Date de naissance"
 
-#: page-contact-detail.php:689
+#: page-contact-detail.php:694
 msgid "Not provided"
 msgstr "Non renseigné"
 
-#: page-contact-detail.php:696
+#: page-contact-detail.php:701
 msgid "Linkedin page"
 msgstr "Page LinkedIn"
 
-#: page-contact-detail.php:709
+#: page-contact-detail.php:714
 msgid "Contact owner"
 msgstr "Responsable du contact"
 
-#: page-contact-detail.php:753
+#: page-contact-detail.php:758
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
-#: page-contact-detail.php:774
+#: page-contact-detail.php:779
 msgid "Postal code"
 msgstr "Code postal"
 
@@ -447,97 +447,117 @@ msgstr "- Priorité incohérente :"
 msgid "- Owner mismatch:"
 msgstr "- Responsable incohérent :"
 
-#: page-deal-detail-viewer.php:241
+#: page-deal-detail-viewer.php:244
+msgid "closing date"
+msgstr "date de clôture"
+
+#: page-deal-detail-viewer.php:244
+msgid "offer date + 30 days"
+msgstr "date de l'offre + 30 jours"
+
+#: page-deal-detail-viewer.php:252
 msgid "Amount"
 msgstr "Montant"
 
-#: page-deal-detail-viewer.php:243
+#: page-deal-detail-viewer.php:254
 msgid "Weighted %s CHF (%s%%)"
 msgstr "Pondéré %s CHF (%s %%)"
 
-#: page-deal-detail-viewer.php:248
-msgid "Close date"
-msgstr "Date de clôture"
+#: page-deal-detail-viewer.php:259
+msgid "Expected decision"
+msgstr "Décision attendue"
 
-#: page-deal-detail-viewer.php:250
+#: page-deal-detail-viewer.php:261
 msgid "In %d d"
 msgstr "Dans %d j"
 
-#: page-deal-detail-viewer.php:250
+#: page-deal-detail-viewer.php:261
 msgid "Overdue by %d d"
 msgstr "En retard de %d j"
 
-#: page-deal-detail-viewer.php:260
-msgid "Closing date is past: update it or move the deal"
-msgstr "La date de clôture est dépassée : mettez-la à jour ou déplacez la transaction"
+#: page-deal-detail-viewer.php:271
+msgid "Expected decision date is past: update it or move the deal"
+msgstr "La date de décision attendue est dépassée : mettez-la à jour ou déplacez le deal"
 
-#: page-deal-detail-viewer.php:298
+#: page-deal-detail-viewer.php:306
+msgid "Close date"
+msgstr "Date de clôture"
+
+#: page-deal-detail-viewer.php:312
+msgid "Optional"
+msgstr "Facultatif"
+
+#: page-deal-detail-viewer.php:312
+msgid "Optional — otherwise: %s"
+msgstr "Facultatif — sinon : %s"
+
+#: page-deal-detail-viewer.php:332
 msgid "Stage"
 msgstr "Étape"
 
-#: page-deal-detail-viewer.php:311
+#: page-deal-detail-viewer.php:345
 msgid "Select current stage"
 msgstr "Sélectionner l'étape actuelle"
 
-#: page-deal-detail-viewer.php:361
+#: page-deal-detail-viewer.php:395
 msgid "Automation"
 msgstr "Automatisation"
 
-#: page-deal-detail-viewer.php:374
+#: page-deal-detail-viewer.php:408
 msgid "Enroll in Sequence"
 msgstr "Inscrire dans une séquence"
 
-#: page-deal-detail-viewer.php:377
+#: page-deal-detail-viewer.php:411
 msgid "Deal owner"
 msgstr "Responsable de la transaction"
 
-#: page-deal-detail-viewer.php:383
+#: page-deal-detail-viewer.php:417
 msgid "Click to edit"
 msgstr "Cliquez pour modifier"
 
-#: page-deal-detail-viewer.php:393
+#: page-deal-detail-viewer.php:427
 msgid "Last contacted"
 msgstr "Dernier contact"
 
-#: page-deal-detail-viewer.php:401
+#: page-deal-detail-viewer.php:435
 msgid "Record source"
 msgstr "Source de l'enregistrement"
 
-#: page-deal-detail-viewer.php:423
+#: page-deal-detail-viewer.php:457
 msgid "Overview"
 msgstr "Vue d'ensemble"
 
-#: page-deal-detail-viewer.php:430
+#: page-deal-detail-viewer.php:464
 msgid "Articles"
 msgstr "Articles"
 
-#: page-deal-detail-viewer.php:441
+#: page-deal-detail-viewer.php:475
 msgid "Details"
 msgstr "Détails"
 
-#: page-deal-detail-viewer.php:444
+#: page-deal-detail-viewer.php:478
 msgid "Create date"
 msgstr "Date de création"
 
-#: page-deal-detail-viewer.php:448
+#: page-deal-detail-viewer.php:482
 msgid "Offer number"
 msgstr "Numéro d'offre"
 
-#: page-deal-detail-viewer.php:452
+#: page-deal-detail-viewer.php:486
 msgid "Project number"
 msgstr "Numéro de projet"
 
-#: page-deal-detail-viewer.php:464
+#: page-deal-detail-viewer.php:498
 msgid "Companies"
 msgstr "Entreprises"
-
-#: page-deal-detail-viewer.php:491
-msgid "View project details"
-msgstr "Voir les détails du projet"
 
 #: page-deal-detail-viewer.php:52
 msgid "Deal details"
 msgstr "Détails de la transaction"
+
+#: page-deal-detail-viewer.php:525
+msgid "View project details"
+msgstr "Voir les détails du projet"
 
 #: page-deal-detail-viewer.php:57
 msgid "Deal data are missing or not found for ID : %s"

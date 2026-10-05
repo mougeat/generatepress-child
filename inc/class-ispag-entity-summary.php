@@ -11,17 +11,23 @@ class ISPAG_Entity_Summary {
     const CONTACT_WARN_DAYS   = 14;   // valeurs de secours si le CRM n'est pas actif ; sinon : Réglages → Relances CRM
     const CONTACT_DANGER_DAYS = 90;
 
-    /** Délai (jours) au-delà duquel l'alerte devient rouge ; $priority = A/B/C pour un contact, null pour une entreprise / un deal. */
-    public static function danger_days( $priority = null ) {
+    /**
+     * Délai (jours) au-delà duquel l'alerte devient rouge ; 0 = aucune relance (rôle ou type d'entreprise réglé « sans relance »).
+     * $ctx : null = entreprise / deal ; 'A'/'B'/'C' = priorité d'un contact ; ou ['priority' => …, 'role' => …, 'company_type' => …].
+     */
+    public static function danger_days( $ctx = null ) {
         if ( class_exists( 'ISPAG_Crm_Follow_Up_Settings' ) ) {
-            return $priority === null ? ISPAG_Crm_Follow_Up_Settings::days_for_entity() : ISPAG_Crm_Follow_Up_Settings::days_for_priority( $priority );
+            if ( $ctx === null ) return ISPAG_Crm_Follow_Up_Settings::days_for_entity();
+            if ( is_array( $ctx ) ) return ISPAG_Crm_Follow_Up_Settings::days_for_contact( $ctx['priority'] ?? '', (string) ( $ctx['role'] ?? '' ), (string) ( $ctx['company_type'] ?? '' ) );
+            return ISPAG_Crm_Follow_Up_Settings::days_for_priority( $ctx );
         }
         return self::CONTACT_DANGER_DAYS;
     }
 
     /** Orange à partir des deux tiers du délai. */
-    public static function warn_days( $priority = null ) {
-        return max( 1, (int) round( self::danger_days( $priority ) * 2 / 3 ) );
+    public static function warn_days( $ctx = null ) {
+        $d = self::danger_days( $ctx );
+        return $d > 0 ? max( 1, (int) round( $d * 2 / 3 ) ) : 0;
     }
 
     /** Nombre de jours entiers entre une date passée et aujourd'hui (null si pas de date). */
@@ -70,6 +76,15 @@ class ISPAG_Entity_Summary {
         $days   = self::days_since( $datetime );
         $danger = self::danger_days( $priority );
         $warn   = self::warn_days( $priority );
+        if ( $danger === 0 ) {   // pas de relance pour ce rôle : on affiche la date sans alerte
+            return [
+                'icon'  => 'backup',
+                'label' => __( 'Last contacted', 'ispag-crm' ),
+                'value' => $datetime ? date_i18n( 'd.m.Y', strtotime( $datetime ) ) : __( 'Never', 'ispag-crm' ),
+                'sub'   => $days === null ? __( 'No activity logged', 'ispag-crm' ) : sprintf( __( '%d days ago', 'ispag-crm' ), $days ),
+                'level' => '',
+            ];
+        }
         return [
             'icon'  => 'backup',
             'label' => __( 'Last contacted', 'ispag-crm' ),
@@ -107,6 +122,7 @@ class ISPAG_Entity_Summary {
         $alerts = [];
         $days   = self::days_since( $datetime );
         $danger = self::danger_days( $priority );
+        if ( $danger === 0 ) return $alerts;   // rôle / type d'entreprise sans relance : aucune alerte de suivi
         if ( $days === null || $days > $danger ) {
             $alerts[] = [ 'level' => 'danger', 'text' => sprintf( __( 'No contact for over %d days', 'ispag-crm' ), $danger ) ];
         }
