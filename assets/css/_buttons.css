@@ -347,3 +347,17 @@
 .ispag-dropdown-menu .ispag-action-btn .dashicons,
 .ispag-dropdown-menu .ispag-action-btn .ispag-icon-svg { width: 28px; height: 28px; min-width: 28px; font-size: 16px; line-height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
 .ispag-dropdown-menu .ispag-in-overflow, .ispag-dropdown-menu a > .ispag-action-btn { padding: 6px 12px; }
+
+/* Icônes d'action unifiées : même tuile grise + pictogramme « trait », barre ET menu « Plus » */
+.ispag-action-btn .ispag-icon-svg, .ispag-dropdown-item .ispag-icon-svg {
+    width: 32px; height: 32px; min-width: 32px; box-sizing: border-box;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ispag-grey); border: 2px solid var(--ispag-grey); border-radius: var(--ispag-btn-border-radius);
+    margin: 0 0 5px; padding: 0; transition: all .2s ease;
+}
+.ispag-action-btn .ispag-icon-svg svg, .ispag-dropdown-item .ispag-icon-svg svg { width: 16px; height: 16px; display: block; }
+.ispag-action-btn:hover .ispag-icon-svg, .ispag-dropdown-item:hover .ispag-icon-svg { color: var(--ispag-color-primary); border-color: var(--ispag-color-primary); background: transparent; }
+.ispag-dropdown-item .ispag-icon-svg, .ispag-dropdown-menu .ispag-action-btn .ispag-icon-svg { width: 28px; height: 28px; min-width: 28px; margin: 0 10px 0 0; }
+.ispag-dropdown-menu .ispag-action-btn .ispag-icon-svg { margin: 0; }
+.ispag-dropdown-item { gap: 0; }
+.ispag-dropdown-item.ispag-item-danger .ispag-icon-svg { color: var(--ispag-danger-text); border-color: currentColor; }

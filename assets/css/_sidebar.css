@@ -236,3 +236,38 @@
 }
 #ispag-company-sidebar-modal #company-form-error a { color: inherit; text-decoration: underline; }
 #ispag-company-sidebar-modal .ispag-modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; box-sizing: border-box; }
+
+/* ==========================================================================
+   PANNEAUX « AJOUTER UN CONTACT / UNE ENTREPRISE EXISTANT(E) » : boutons au style du site
+   ========================================================================== */
+#ispag-add-contact-sidebar .ispag-modal-footer,
+#ispag-add-company-sidebar .ispag-modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; box-sizing: border-box; }
+#ispag-add-contact-sidebar .ispag-modal-footer .ispag-btn,
+#ispag-add-company-sidebar .ispag-modal-footer .ispag-btn,
+#ispag-add-contact-sidebar .ispag-search-wrapper .ispag-btn,
+#ispag-add-company-sidebar #company-search-btn {
+    width: auto; min-height: 36px; padding: 8px 18px; margin: 0; font-size: 0.9em; line-height: 1.2;
+    border-radius: var(--ispag-btn-border-radius); border: 1px solid var(--ispag-red);
+    background-color: var(--ispag-red); color: var(--ispag-white); cursor: pointer; box-shadow: none;
+}
+#ispag-add-contact-sidebar .ispag-modal-footer .ispag-btn:hover,
+#ispag-add-company-sidebar .ispag-modal-footer .ispag-btn:hover,
+#ispag-add-contact-sidebar .ispag-search-wrapper .ispag-btn:hover,
+#ispag-add-company-sidebar #company-search-btn:hover { background-color: var(--ispag-color-primary-hover, #7a0000); border-color: var(--ispag-color-primary-hover, #7a0000); color: var(--ispag-white); }
+/* Annuler = bouton gris contour */
+#ispag-add-contact-sidebar .ispag-modal-footer .ispag-modal-cancel,
+#ispag-add-company-sidebar .ispag-modal-footer .ispag-modal-cancel { background-color: transparent; border-color: var(--ispag-btn-grey); color: var(--ispag-btn-grey); }
+#ispag-add-contact-sidebar .ispag-modal-footer .ispag-modal-cancel:hover,
+#ispag-add-company-sidebar .ispag-modal-footer .ispag-modal-cancel:hover { background-color: var(--ispag-btn-grey); border-color: var(--ispag-btn-grey); color: var(--ispag-white); }
+/* Recherche : champ + bouton loupe sur une ligne */
+#ispag-add-contact-sidebar .ispag-search-wrapper { display: flex; gap: 8px; align-items: stretch; }
+#ispag-add-contact-sidebar .ispag-search-wrapper input { flex: 1; min-width: 0; }
+#ispag-add-contact-sidebar .ispag-search-wrapper .ispag-btn .dashicons,
+#ispag-add-company-sidebar #company-search-btn .dashicons { color: inherit; }
+/* Croix de fermeture */
+#ispag-add-contact-sidebar .ispag-close-croix,
+#ispag-add-company-sidebar .ispag-close-croix { background: transparent; border: 1px solid var(--ispag-red); color: var(--ispag-red); }
+@media screen and (max-width: 1024px) {
+    #ispag-add-contact-sidebar .ispag-modal-footer .ispag-btn,
+    #ispag-add-company-sidebar .ispag-modal-footer .ispag-btn { flex: 1 1 0; }
+}
