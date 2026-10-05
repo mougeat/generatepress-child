@@ -119,6 +119,8 @@ function theme_enqueue_styles() {
     wp_enqueue_script( 'ispag-crm-popover', get_stylesheet_directory_uri() . '/assets/js/popover.js', array( 'jquery', 'intl-tel-input-js' ), ispag_theme_asset_ver('/assets/js/popover.js'), true );
     // Tous les champs téléphone : drapeau + indicatif, puis mise en forme internationale
     wp_enqueue_script( 'ispag-phone-fields', get_stylesheet_directory_uri() . '/assets/js/ispag-phone-fields.js', array( 'jquery', 'intl-tel-input-js' ), ispag_theme_asset_ver('/assets/js/ispag-phone-fields.js'), true );
+    // Barre d'actions des fiches : boutons qui dépassent → menu « Plus » (qui s'ouvre)
+    wp_enqueue_script( 'ispag-actions-overflow', get_stylesheet_directory_uri() . '/assets/js/ispag-actions-overflow.js', array(), ispag_theme_asset_ver('/assets/js/ispag-actions-overflow.js'), true );
     wp_enqueue_script( 'ispag-crm-deal-select', get_stylesheet_directory_uri() . '/assets/js/ispag-crm-deal-list-select.js', array( 'jquery' ), ispag_theme_asset_ver('/assets/js/ispag-crm-deal-list-select.js'), true );
 
     // Tableau des tâches : regroupement, filtres, report rapide (uniquement sur cette page)
