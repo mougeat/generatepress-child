@@ -45,45 +45,45 @@ msgstr "CRM-Seitenleiste"
 msgid "Widget area dedicated to the CRM."
 msgstr "Widget-Bereich für das CRM."
 
-#: inc/class-ispag-entity-summary.php:111
-msgid "No contact for over %d days"
-msgstr "Seit mehr als %d Tagen kein Kontakt"
-
-#: inc/class-ispag-entity-summary.php:114
-msgid "No follow-up task planned"
-msgstr "Keine Nachfassaufgabe geplant"
-
-#: inc/class-ispag-entity-summary.php:46
-msgid "No due date"
-msgstr "Ohne Fälligkeit"
-
-#: inc/class-ispag-entity-summary.php:76
-msgid "Never"
-msgstr "Nie"
-
-#: inc/class-ispag-entity-summary.php:77
-msgid "%d days ago"
-msgstr "vor %d Tagen"
-
-#: inc/class-ispag-entity-summary.php:77
-msgid "No activity logged"
-msgstr "Keine Aktivität erfasst"
-
-#: inc/class-ispag-entity-summary.php:86
+#: inc/class-ispag-entity-summary.php:101
 msgid "Next task"
 msgstr "Nächste Aufgabe"
 
-#: inc/class-ispag-entity-summary.php:87
+#: inc/class-ispag-entity-summary.php:102
 msgid "None planned"
 msgstr "Keine geplant"
 
-#: inc/class-ispag-entity-summary.php:88
+#: inc/class-ispag-entity-summary.php:103
 msgid "Plan the next step"
 msgstr "Nächsten Schritt planen"
 
-#: inc/class-ispag-entity-summary.php:98
+#: inc/class-ispag-entity-summary.php:113
 msgid "Open deals"
 msgstr "Offene Deals"
+
+#: inc/class-ispag-entity-summary.php:127
+msgid "No contact for over %d days"
+msgstr "Seit mehr als %d Tagen kein Kontakt"
+
+#: inc/class-ispag-entity-summary.php:130
+msgid "No follow-up task planned"
+msgstr "Keine Nachfassaufgabe geplant"
+
+#: inc/class-ispag-entity-summary.php:52
+msgid "No due date"
+msgstr "Ohne Fälligkeit"
+
+#: inc/class-ispag-entity-summary.php:83
+msgid "Never"
+msgstr "Nie"
+
+#: inc/class-ispag-entity-summary.php:84
+msgid "%d days ago"
+msgstr "vor %d Tagen"
+
+#: inc/class-ispag-entity-summary.php:84
+msgid "No activity logged"
+msgstr "Keine Aktivität erfasst"
 
 #: inc/js-strings.php:13
 msgid "Apply changes to "
@@ -363,87 +363,87 @@ msgstr "B - Mittel"
 msgid "C - Low"
 msgstr "C - Tief"
 
-#: page-contact-detail.php:422
+#: page-contact-detail.php:427
 msgid "Owner: %s"
 msgstr "Verantwortlicher: %s"
 
-#: page-contact-detail.php:428
+#: page-contact-detail.php:433
 msgid "No email address"
 msgstr "Keine E-Mail-Adresse"
 
-#: page-contact-detail.php:485
+#: page-contact-detail.php:490
 msgid "Edit avatar"
 msgstr "Avatar bearbeiten"
 
-#: page-contact-detail.php:512
+#: page-contact-detail.php:517
 msgid "First name"
 msgstr "Vorname"
 
-#: page-contact-detail.php:523
+#: page-contact-detail.php:528
 msgid "Last name"
 msgstr "Nachname"
 
-#: page-contact-detail.php:579
+#: page-contact-detail.php:584
 msgid "Prepare meeting"
 msgstr "Besprechung vorbereiten"
 
-#: page-contact-detail.php:589
+#: page-contact-detail.php:594
 msgid "Ignore health reminder"
 msgstr "Nachfass-Erinnerung ignorieren"
 
-#: page-contact-detail.php:613
+#: page-contact-detail.php:618
 msgid "Role"
 msgstr "Rolle"
 
-#: page-contact-detail.php:625
+#: page-contact-detail.php:630
 msgid "Priority level"
 msgstr "Prioritätsstufe"
 
-#: page-contact-detail.php:659
+#: page-contact-detail.php:664
 msgid "Lifecycle phase"
 msgstr "Phase des Lebenszyklus"
 
-#: page-contact-detail.php:673
+#: page-contact-detail.php:678
 msgid "Birthday"
 msgstr "Geburtstag"
 
-#: page-contact-detail.php:689
+#: page-contact-detail.php:694
 msgid "Not provided"
 msgstr "Nicht angegeben"
 
-#: page-contact-detail.php:696
+#: page-contact-detail.php:701
 msgid "Linkedin page"
 msgstr "LinkedIn-Seite"
 
-#: page-contact-detail.php:709
+#: page-contact-detail.php:714
 msgid "Contact owner"
 msgstr "Verantwortlicher für den Kontakt"
 
-#: page-contact-detail.php:753
+#: page-contact-detail.php:758
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
-#: page-contact-detail.php:774
+#: page-contact-detail.php:779
 msgid "Postal code"
 msgstr "Postleitzahl"
 
-#: page-contact-detail.php:813
+#: page-contact-detail.php:818
 msgid "Transaction information"
 msgstr "Deal-Informationen"
 
-#: page-contact-detail.php:900
+#: page-contact-detail.php:905
 msgid "Warning"
 msgstr "Warnung"
 
-#: page-contact-detail.php:901
+#: page-contact-detail.php:906
 msgid "Warning: Consistency issues detected!"
 msgstr "Achtung: Konsistenzprobleme erkannt!"
 
-#: page-contact-detail.php:910
+#: page-contact-detail.php:915
 msgid "- Priority mismatch:"
 msgstr "- Abweichende Priorität:"
 
-#: page-contact-detail.php:916
+#: page-contact-detail.php:921
 msgid "- Owner mismatch:"
 msgstr "- Abweichender Verantwortlicher:"
 
