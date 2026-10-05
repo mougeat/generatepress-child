@@ -515,7 +515,7 @@ get_header();
                             // echo $notes_list_full; ?>
                         <!-- </div>
                     </div> -->
-                    <div id="ispag-tab-activity" class="ispag-tab-pane" data-deal-id="<?php echo esc_attr($hubspot_deal_id); ?>">
+                    <div id="ispag-tab-activity" class="ispag-tab-pane" data-deal-id="<?php echo esc_attr($hubspot_deal_id); ?>" data-deal-ref="<?php echo esc_attr( (string) ( $deal->deal_group_ref ?? '' ) ); ?>">
 
                         <?php
                         echo ispag_get_template( 'ispag-activity-squeleton', [] );
