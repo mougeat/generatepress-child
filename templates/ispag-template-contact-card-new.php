@@ -14,18 +14,20 @@ $deal_group_ref  = $datas['deal_group_ref'] ?? '';
 if (!defined('NB_TRANSACTIONS_RIGHT')) {
     define('NB_TRANSACTIONS_RIGHT', 5);
 }
+// Contacts d'un projet : tous affichés (sinon impossible de retirer ceux au-delà de la limite)
+$contact_display_limit = $deal_id ? 50 : NB_TRANSACTIONS_RIGHT;
+$can_edit_assoc = $deal_id && current_user_can('manage_order');
 
 $total_contacts = count($contacts);
 ?>
 
 <h5>
     <?php _e('Contacts', 'ispag-crm'); ?> (<?php echo $total_contacts; ?>)
-    <span id="open-add-contact-modal" class="add_relation-btn"
-        data-company-id="<?php echo absint($company_id_ref); ?>"
-        data-deal-group-ref="<?php echo esc_attr($deal_group_ref); ?>"
-        data-deal-id="<?php echo absint($deal_id); ?>">
+    <?php if ($can_edit_assoc) : ?>
+    <span class="add_relation-btn ispag-proj-assoc-add" data-type="contact" data-deal-id="<?php echo absint($deal_id); ?>">
         + <?php _e('Add', 'ispag-crm'); ?>
     </span>
+    <?php endif; ?>
 </h5>
 
 <?php
@@ -42,7 +44,7 @@ foreach ($contacts as $contact) :
     }
 
     $displayed_count++;
-    if ($displayed_count > NB_TRANSACTIONS_RIGHT) {
+    if ($displayed_count > $contact_display_limit) {
         break; // On stoppe l'affichage au-delà de 5
     }
 
@@ -63,15 +65,17 @@ foreach ($contacts as $contact) :
             <strong>
                 <a href="<?php echo esc_url($contact_deal_url); ?>"><?php echo esc_html($display_name); ?></a>
             </strong>
+            <?php if ($can_edit_assoc) : ?>
             <span
-                class="ispag-remove-association"
-                data-action="remove-contact-from-company"
-                data-contact-id="<?php echo absint($contact_id); ?>"
-                data-company-id="<?php echo absint($company_id_ref); ?>"
-                title="<?php esc_attr_e('Remove association', 'ispag-crm'); ?>"
+                class="ispag-proj-assoc-remove"
+                data-type="contact"
+                data-id="<?php echo absint($contact_id); ?>"
+                data-deal-id="<?php echo absint($deal_id); ?>"
+                title="<?php esc_attr_e('Remove from this project', 'ispag-crm'); ?>"
                 style="color: #e74c3c; cursor: pointer;">
                 <span class="dashicons dashicons-trash"></span>
             </span>
+            <?php endif; ?>
         </div>
         <p style="margin: 5px 0 0;"><?php _e('Function', 'ispag-crm'); ?>: <?php echo esc_html($contact->lead_function ?? ''); ?></p>
         <p style="margin: 5px 0 0;"><?php _e('Last Contact', 'ispag-crm'); ?>: <?php echo !empty($contact->last_contact_date) ? date_i18n(get_option('date_format'), strtotime($contact->last_contact_date)) : '-'; ?></p>
@@ -82,7 +86,7 @@ foreach ($contacts as $contact) :
 endforeach;
 
 // Affichage du bouton "Voir tout" si le nombre total dépasse la limite
-if ($total_contacts > NB_TRANSACTIONS_RIGHT) :
+if (!$deal_id && $total_contacts > NB_TRANSACTIONS_RIGHT) :
     $company_url = home_url('/listes-des-contacts/?filter_company=' . $company_id_ref . '/');
     ?>
     <a href="<?php echo esc_url($company_url); ?>" class="ispag-button-link"><?php _e('Show all contacts', 'ispag-crm'); ?></a>
