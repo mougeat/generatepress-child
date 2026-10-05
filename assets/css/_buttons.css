@@ -101,7 +101,9 @@
     padding: 5px 0;
     /*border-bottom: 1px solid #eee; /* Séparateur visuel */
     margin-bottom: 15px; 
-    width: 150px;
+    width: 100%;
+    flex-wrap: nowrap;
+    min-width: 0;
 }
 
 .ispag-action-btn {
@@ -332,3 +334,16 @@
     border-radius: var(--ispag-btn-border-radius);
 
 }
+
+/* Barre d'actions : boutons qui ne tiennent pas dans la colonne → menu « Plus » (voir ispag-actions-overflow.js) */
+.ispag-actions-bar, .ispag-quick-actions { overflow: visible; }
+.ispag-dropdown-menu .ispag-in-overflow,
+.ispag-dropdown-menu a > .ispag-action-btn { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px;
+    width: 100%; min-width: 0; max-width: none; padding: 10px 15px; border: 0; background: none; text-align: left; font-size: 13px; color: var(--ispag-dark); }
+.ispag-dropdown-menu a.ispag-in-overflow { display: block; padding: 0; width: 100%; text-decoration: none; }
+.ispag-dropdown-menu .ispag-in-overflow:hover, .ispag-dropdown-menu .ispag-action-btn:hover { background-color: var(--ispag-icon-bg); }
+.ispag-dropdown-menu .ispag-action-btn .dashicons { margin: 0; }
+.ispag-dropdown-menu { z-index: 100001; }
+.ispag-dropdown-menu .ispag-action-btn .dashicons,
+.ispag-dropdown-menu .ispag-action-btn .ispag-icon-svg { width: 28px; height: 28px; min-width: 28px; font-size: 16px; line-height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.ispag-dropdown-menu .ispag-in-overflow, .ispag-dropdown-menu a > .ispag-action-btn { padding: 6px 12px; }
