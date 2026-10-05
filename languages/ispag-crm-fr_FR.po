@@ -9,39 +9,39 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Domain: ispag-crm\n"
 
-#: functions.php:135
+#: functions.php:137
 msgid "The company name is required."
 msgstr "Le nom de l'entreprise est obligatoire."
 
-#: functions.php:136
+#: functions.php:138
 msgid "Creating..."
 msgstr "Création en cours..."
 
-#: functions.php:137
+#: functions.php:139
 msgid "An error occurred. Please try again."
 msgstr "Une erreur s'est produite. Veuillez réessayer."
 
-#: functions.php:138
+#: functions.php:140
 msgid "Open the existing company"
 msgstr "Ouvrir l'entreprise existante"
 
-#: functions.php:215
+#: functions.php:217
 msgid "Security violation."
 msgstr "Violation de sécurité."
 
-#: functions.php:260
+#: functions.php:262
 msgid "Your quote request at ISPAG"
 msgstr "Votre demande de devis chez ISPAG"
 
-#: functions.php:261
+#: functions.php:263
 msgid "Hello, we have received your request for the project: "
 msgstr "Bonjour, nous avons bien reçu votre demande pour le projet : "
 
-#: functions.php:357
+#: functions.php:359
 msgid "CRM Sidebar"
 msgstr "Barre latérale CRM"
 
-#: functions.php:359
+#: functions.php:361
 msgid "Widget area dedicated to the CRM."
 msgstr "Zone de widgets dédiée au CRM."
 
@@ -1367,21 +1367,25 @@ msgstr "ex : Directeur technique"
 msgid "Start"
 msgstr "Démarrer"
 
-#: templates/ispag-template-company-card-new.php:62
-msgid "Remove association"
-msgstr "Supprimer l'association"
+#: templates/ispag-template-company-card-new.php:103
+msgid "No associated company."
+msgstr "Aucune entreprise associée."
 
-#: templates/ispag-template-company-card-new.php:77
+#: templates/ispag-template-company-card-new.php:65
+msgid "Remove from this project"
+msgstr "Retirer de ce projet"
+
+#: templates/ispag-template-company-card-new.php:81
 msgid "Address"
 msgstr "Adresse"
 
-#: templates/ispag-template-company-card-new.php:81
+#: templates/ispag-template-company-card-new.php:85
 msgid "Website"
 msgstr "Site web"
 
-#: templates/ispag-template-company-card-new.php:99
-msgid "No associated company."
-msgstr "Aucune entreprise associée."
+#: templates/ispag-template-company-card.php:72
+msgid "Remove association"
+msgstr "Supprimer l'association"
 
 #: templates/ispag-template-contact-card.php:76
 msgid "Show all contacts"

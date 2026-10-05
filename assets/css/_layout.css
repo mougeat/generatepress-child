@@ -524,6 +524,7 @@
 /* -------------------------------------------------------------------------- */
 /* Titres avec boutons d'action (+ Add) */
 .ispag-company-card h5,
+.ispag-contact-card h5,
 .ispag-transactions-card h5,
 .ispag-tickets-card h5 {
     display: flex;

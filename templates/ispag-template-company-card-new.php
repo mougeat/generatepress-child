@@ -11,12 +11,15 @@ $user_id                         = $datas['user_id']                         ?? 
 $deal_id                         = $datas['deal_id']                         ?? '';
 ?>
 
+<?php $can_edit_assoc = $deal_id && current_user_can('manage_order'); ?>
 <!-- <div class="ispag-card ispag-company-card" data-deal-id="<?php echo esc_attr($deal_id); ?>"> -->
     <h5>
         <?php _e( 'Company', 'ispag-crm' ); ?> (<?php echo count($associated_companies_list_full); ?>) 
-        <span id="open-add-company-modal" class="add_relation-btn" data-contact-id="<?php echo absint($user_id); ?>">
+        <?php if ($can_edit_assoc) : ?>
+        <span class="add_relation-btn ispag-proj-assoc-add" data-type="company" data-deal-id="<?php echo absint($deal_id); ?>">
             + <?php _e( 'Add', 'ispag-crm' ); ?>
         </span>
+        <?php endif; ?>
     </h5>
 
     <?php 
@@ -53,17 +56,18 @@ $deal_id                         = $datas['deal_id']                         ?? 
                     <strong>
                         <a href="<?php echo esc_url($company_app_url); ?>"><?php echo esc_html($company_name); ?></a>
                     </strong>
+                    <?php if ($can_edit_assoc) : ?>
                     <span 
-                        class="ispag-remove-association" 
-                        data-action="remove-contact-from-company"
-                        data-contact-id="<?php echo absint($user_id); ?>"
-                        data-company-id="<?php echo absint($company->Id); ?>"
+                        class="ispag-proj-assoc-remove" 
+                        data-type="company"
+                        data-id="<?php echo absint($company->Id); ?>"
                         data-deal-id="<?php echo absint($deal_id); ?>"
-                        title="<?php esc_attr_e( 'Remove association', 'ispag-crm' ); ?>"
+                        title="<?php esc_attr_e( 'Remove from this project', 'ispag-crm' ); ?>"
                         style="color: #e74c3c; cursor: pointer;"
                     >
                         <span class="dashicons dashicons-trash"></span>
                     </span>
+                    <?php endif; ?>
                 </div>
                 
                 <?php
