@@ -189,6 +189,13 @@
 /* --- TABLETTE (écrans entre 783px et 1024px) --- */
 @media screen and (min-width: 783px) and (max-width: 1024px) {
     /* 1. Conserver un affichage en tableau mais avec des ajustements */
+    .ispag-dashboard-wrapper { padding: 0 16px; }
+    .ispag-dashboard-wrapper,
+    .ispag-dashboard-wrapper *,
+    .ispag-dashboard-wrapper *::before,
+    .ispag-dashboard-wrapper *::after { box-sizing: border-box; }
+    .ispag-task-table { min-width: 0 !important; width: 100% !important; table-layout: fixed; }   /* le min-width: 1000px d'écran large faisait dépasser le tableau de sa carte */
+    .ispag-task-table td, .ispag-task-table th { overflow-wrap: anywhere; }
     .ispag-table {
         display: table;
         width: 100%;
@@ -209,7 +216,7 @@
 
     .ispag-table tbody td {
         display: table-cell;
-        padding: 12px;
+        padding: 12px 8px;
         border-bottom: 1px solid #e0e0e0;
         vertical-align: middle;
     }

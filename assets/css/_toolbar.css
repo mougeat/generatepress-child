@@ -12,7 +12,21 @@
     color: #666;
     user-select: none;
     /* width: 90%; */
+    flex-wrap: wrap;   /* tablette / mobile : les champs passent à la ligne au lieu de s'écraser */
 }
+
+/* Champ de recherche : jamais écrasé par les filtres (iPad, mobile) */
+.ispag-toolbar input[type="text"],
+.ispag-toolbar input[type="search"],
+.ispag-toolbar input.ispag-search-field {
+    flex: 1 1 260px;
+    min-width: min(220px, 100%);
+    width: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+.ispag-toolbar .ispag-kanban-filter-wrapper { flex: 1 1 150px; min-width: min(140px, 100%); margin-right: 0; }
+.ispag-toolbar .ispag-kanban-filter-wrapper select { width: 100%; max-width: 100%; box-sizing: border-box; }
 
 .ispag-toolbar span, .ispag-toolbar .dashicons {
     cursor: pointer;
