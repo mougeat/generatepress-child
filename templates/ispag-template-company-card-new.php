@@ -90,7 +90,7 @@ $deal_id                         = $datas['deal_id']                         ?? 
                 <?php endif; ?>
                 
                 <?php if (!empty($company->phone)) : ?>
-                    <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm' ); ?>: <a href="tel:<?php echo esc_attr( $company->phone ); ?>" class="contact_link ispag-phone-display"><?php echo esc_html($company->phone); ?></a></p>
+                    <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm' ); ?>: <a href="<?php echo esc_attr( ispag_phone_href( $company->phone ) ); ?>" class="contact_link ispag-phone-display"><?php echo esc_html( ispag_format_phone( $company->phone ) ); ?></a></p>
                 <?php endif; ?>
                 
                 <?php if (!empty($company->email)) : ?>

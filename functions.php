@@ -389,3 +389,12 @@ add_action( 'wp_footer', function () {
     </script>
     <?php
 }, 5 );
+
+
+// Les cartes contact / entreprise utilisent ces fonctions (définies dans le plugin CRM) : repli neutre si le plugin est désactivé
+if ( ! function_exists( 'ispag_format_phone' ) ) {
+    function ispag_format_phone( $raw ) { return trim( (string) $raw ); }
+}
+if ( ! function_exists( 'ispag_phone_href' ) ) {
+    function ispag_phone_href( $raw ) { return 'tel:' . preg_replace( '/[^+\d]/', '', (string) $raw ); }
+}
