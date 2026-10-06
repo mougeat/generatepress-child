@@ -77,7 +77,7 @@ $initials                           = $datas['initials']    ?? '';
                 </div>
                 <p style="margin: 5px 0 0;"><?php _e( 'City', 'ispag-crm' ); ?>: <?php echo $company->city; ?></p>
                 <p style="margin: 5px 0 0;"><?php _e( 'Last Contact', 'ispag-crm'); ?>: <?php echo (!empty($company->last_contact_date) ? date_i18n(get_option('date_format'), strtotime($company->last_contact_date)) : '—'); ?></p>
-                <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm' ); ?>: <a href="tel:<?php echo esc_html( $company->phone ); ?>" class="contact_link ispag-phone-display"><?php echo $company->phone; ?></a></p>
+                <p style="margin: 5px 0 0;"><?php _e( 'Phone number', 'ispag-crm' ); ?>: <a href="<?php echo esc_attr( ispag_phone_href( $company->phone ) ); ?>" class="contact_link ispag-phone-display"><?php echo esc_html( ispag_format_phone( $company->phone ) ); ?></a></p>
                 <p style="margin: 5px 0 0;"><?php _e( 'Email', 'ispag-crm' ); ?>: <a href="mailto:<?php echo esc_html( $company->email ); ?>" class="contact_link"><?php echo $company->email; ?></a></p>
                 
             </div>
