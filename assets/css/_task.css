@@ -173,7 +173,7 @@
 .ispag-task-chips .ispag-chip.is-active .chip-count { background: rgba(255, 255, 255, 0.3); }
 .ispag-task-chips .chip-danger:not(.is-active) { color: var(--ispag-danger-color); border-color: #f3c0c5; }
 
-.ispag-dash-header .ispag-action-btn { display: inline-flex; align-items: center; gap: 4px; width: auto; }
+.ispag-dash-header .ispag-action-btn { display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 4px; width: auto; min-width: 0; max-width: none; padding: 8px 14px; white-space: nowrap; overflow: visible; font-size: 14px; }
 .ispag-search-container input[type="search"] { -webkit-appearance: none; appearance: none; }
 
 /* En-têtes de section */

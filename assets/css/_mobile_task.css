@@ -2,11 +2,31 @@
 
 /* --- MOBILE (écrans ≤ 782px) --- */
 @media screen and (max-width: 782px) {
+    /* 0. Rien ne doit dépasser de l'écran : tout en border-box, marges réduites */
+    .ispag-dashboard-wrapper,
+    .ispag-dashboard-wrapper *,
+    .ispag-dashboard-wrapper *::before,
+    .ispag-dashboard-wrapper *::after { box-sizing: border-box; }
+    .ispag-dashboard-wrapper { margin: 16px auto; padding: 0 12px; max-width: 100%; overflow-x: hidden; }
+    .ispag-dashboard-wrapper .table-responsive { overflow: visible; }
+    .ispag-task-table { min-width: 0 !important; width: 100% !important; }   /* le min-width: 1000px du tableau écran large ferait déborder les cartes */
+    .ispag-task-filters { flex-direction: column; align-items: stretch; }
+    .ispag-task-filters .ispag-kanban-filter-wrapper { margin-right: 0; display: block; }
+    .ispag-task-filters select { width: 100%; max-width: 100%; }
+    .ispag-dash-header .ispag-action-btn { width: 100%; }
+    .ispag-table tbody td, .ispag-table tbody tr { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+    .ispag-table tbody tr.group-row { padding: 0; margin: 14px 0 4px; background: transparent; border: 0; box-shadow: none; }
+    .ispag-table tbody tr.group-row td { padding: 6px 4px; border: 0; background: transparent; }
+    .ispag-table tbody tr.group-row td::before { display: none; }
+
     /* 1. Supprimer les comportements par défaut du tableau */
     .ispag-card {
         width: 100%;
         overflow-x: hidden;
-        padding: 0 10px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        box-shadow: none;
         box-sizing: border-box;
     }
 
@@ -102,14 +122,16 @@
         gap: 8px;
     }
 
+    .ispag-table tbody td.col-actions { align-items: center; }
     .ispag-table tbody td.col-actions .btn-group {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 8px;
     }
 
     .ispag-table tbody td.col-actions .icon-btn {
-        width: 100%;
+        width: auto;
+        min-width: 44px;
         padding: 8px;
         text-align: center;
         background: #f5f5f5;
