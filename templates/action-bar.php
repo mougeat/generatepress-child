@@ -40,7 +40,10 @@ $project_num    = $actions['project_num']    ?? '';
 $closing_date   = $actions['closing_date']   ?? '';
 $total_excl_vat = $actions['total_excl_vat'] ?? 0;
 $user_id        = $actions['user_id']        ?? 0;
-$show_delete    = $actions['show_delete']    ?? true;
+// Suppression : uniquement sur les fiches contact / entreprise (delete_entity + delete_id) et pour les administrateurs
+$delete_entity  = $actions['delete_entity'] ?? '';
+$delete_id      = absint( $actions['delete_id'] ?? 0 );
+$show_delete    = $delete_entity && $delete_id && current_user_can( 'manage_options' );
 
 $deal_date = $closing_date ? date_i18n( 'd.m.Y', strtotime( $closing_date ) ) : '';
 $deal_total = number_format( (float) $total_excl_vat, 2, '.', '\'' ) . ' CHF';
@@ -208,8 +211,8 @@ $deal_total = number_format( (float) $total_excl_vat, 2, '.', '\'' ) . ' CHF';
         <div class="ispag-dropdown-divider"></div>
         <button class="ispag-dropdown-item ispag-item-danger"
             data-action="delete"
-            data-user-id="<?php echo absint( $user_id ); ?>"
-            data-contact-ids="<?php echo absint( $user_id ); ?>"
+            data-entity="<?php echo esc_attr( $delete_entity === 'company' ? 'company' : 'contact' ); ?>"
+            data-id="<?php echo $delete_id; ?>"
         >
             <?php echo ispag_action_icon( 'delete' ); ?>
             <?php esc_html_e( 'Delete', 'ispag-crm' ); ?>

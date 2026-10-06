@@ -560,6 +560,8 @@ get_header();
                             $actions['company_ids']       = $company_ids;
                             $actions['company_names']     = $company_names;
                             $actions['contact_ids']       = $user_id;
+                            $actions['delete_entity']     = 'contact';
+                            $actions['delete_id']         = $user_id;
                             $actions['contact_names']     = $contact_name;
                             $actions['contact_emails']    = $contact_emails;
                             $actions['contact_phones']    = $contact_phones;

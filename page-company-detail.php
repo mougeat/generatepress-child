@@ -381,6 +381,8 @@ get_header();
                     <div class="ispag-actions-bar">
                         <?php
                         $actions['company_ids'] = $company_id;
+                        $actions['delete_entity'] = 'company';
+                        $actions['delete_id'] = $company_id;
                         $actions['company_names'] = $company_name;
                         $actions['user_id'] = get_current_user_id();
                         $actions['contact_ids'] = $contact_ids;
