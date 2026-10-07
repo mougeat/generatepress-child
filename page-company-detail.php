@@ -378,6 +378,8 @@ get_header();
                         </div>
                     </div>
 
+                    <?php if ( class_exists( 'ISPAG_Crm_Supplier_Tab' ) ) { echo ISPAG_Crm_Supplier_Tab::supplier_switch( $company ); } ?>
+
                     <div class="ispag-actions-bar">
                         <?php
                         $actions['company_ids'] = $company_id;
