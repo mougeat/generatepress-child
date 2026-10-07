@@ -206,9 +206,11 @@ if(class_exists('ISPAG_Projet_Repository')){
                             
                             <p><?php _e('version', 'creation-reservoir'); ?> <?php echo esc_attr($project->version); ?></p>
                             
+                            <?php if ($can_view_prices): // le montant est un prix de vente ?>
                             <p>
                                 <?php echo __('Amount', 'ispag-crm'); ?> :  <span class="ispag-skeleton-wrapper ispag-skeleton-line ispag-w-40" id="ispag_project_amount" data-deal-id="<?php echo esc_attr($deal_id); ?>"></span>
                             </p>
+                            <?php endif; ?>
                             </div>
                             <p>
                                 <?php echo __('Creation date', 'ispag-crm'); ?> :  <?php echo esc_html(date_i18n(get_option('date_format'), strtotime($project->date_creation))); ?>
@@ -255,7 +257,7 @@ if(class_exists('ISPAG_Projet_Repository')){
                                     else { ?><span class="ispag-skeleton-wrapper ispag-skeleton-line ispag-w-80" id="ispag_project_next_step"></span><?php }
                                 ?></span>
                             </p>
-                            <?php if ($can_manage_order): ?>
+                            <?php if ($can_view_prices): ?>
                                 <p>
                                     <button id="ispag-force-show-prices" class="button button-primary">
                                         👁️ <?php _e('Force price display', 'ispag-crm'); ?>
@@ -327,7 +329,7 @@ if(class_exists('ISPAG_Projet_Repository')){
 
                         <?php
                         //Affichage des statistiques du projet
-                        if (current_user_can('manage_order')){
+                        if ($can_manage_order && $can_view_prices){   // statistiques et avertissement de coefficient : prix de vente
                             ?>
                             <div id="ispag-bloc-stat-projet" class="fields-prices prices-visible">
                                 <div id="ispag_project_stat" class="ispag-stats-container ispag-skeleton-wrapper">
