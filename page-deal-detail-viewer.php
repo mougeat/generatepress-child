@@ -223,9 +223,13 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
         $all_stages         = $stage_repo->get_all_stages();
         $current_stage_key  = $deal->stage_key ?? '';
         $stage_probability  = 0;
+        $stage_obj          = null;
         foreach ( $all_stages as $st ) {
-            if ( $st->stage_key === $current_stage_key ) { $stage_probability = (float) $st->probability; break; }
+            if ( $st->stage_key === $current_stage_key ) { $stage_probability = (float) $st->probability; $stage_obj = $st; break; }
         }
+        // Offre terminée / perdue : d'après l'étape du Kanban (et non le statut stocké, qui peut être resté à « perdu » alors que l'offre est en négociation)
+        $stage_closed = $stage_obj && ( ! empty( $stage_obj->is_closed ) || in_array( $stage_obj->stage_key, [ 'closed_won', 'closed_lost', 'open_won' ], true ) || (float) $stage_obj->probability >= 100 );
+        $stage_lost   = $stage_obj && $stage_obj->stage_key === 'closed_lost';
 
         // --- Bandeau « chiffres clés » (logique partagée avec les fiches company et contact) ---
         $today_ts     = strtotime( 'today' );
@@ -243,7 +247,7 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
         $closing_days = $closing_ts ? (int) round( ( $closing_ts - $today_ts ) / DAY_IN_SECONDS ) : null;
         $decision_src = [ 'expected' => '', 'closing' => __( 'closing date', 'ispag-crm' ), 'created' => __( 'offer date + 30 days', 'ispag-crm' ) ][ $decision['source'] ] ?? '';
         $amount       = (float) $deal->total_excl_vat;
-        $is_open_deal = ( $stage_probability > 0 && $stage_probability < 100 ) && (int) $deal->project_db_status === 0;
+        $is_open_deal = $stage_obj ? ! $stage_closed : ( (int) $deal->project_db_status === 0 );
         $next_task    = ISPAG_Entity_Summary::next_task( $activity_detail ?? [] );
 
         $summary_tiles = [
@@ -267,7 +271,7 @@ if ( ! empty( $deal_id ) && class_exists( 'ISPAG_Crm_Deal_Model' ) && class_exis
 
         // Offre terminée (gagnée / perdue) : plus de retard ni de relance à signaler → la tuile de décision devient « Gagné » (vert) ou « Perdu » (neutre)
         if ( ! $is_open_deal ) {
-            $is_lost = (int) $deal->project_db_status === 2;
+            $is_lost = $stage_obj ? $stage_lost : ( (int) $deal->project_db_status === 2 );
             $summary_tiles[1]['label'] = __( 'Decision', 'ispag-crm' );
             $summary_tiles[1]['sub']   = $is_lost ? __( 'Lost', 'ispag-crm' ) : __( 'Won', 'ispag-crm' );
             $summary_tiles[1]['level'] = $is_lost ? '' : 'success';
