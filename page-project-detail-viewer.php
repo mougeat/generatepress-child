@@ -284,14 +284,16 @@ if(class_exists('ISPAG_Projet_Repository')){
 
                     <?php if ($can_manage_order): ?>
                         <a href="<?= esc_url(home_url( '/liste-des-achats/?search=' . $deal_id . '' )) ?>" target="_blank" class="ispag-btn ispag-btn-secondary-outlined"><span class="dashicons dashicons-cart"></span> <?= esc_html(__('To purchase', 'ispag-crm')) ?></a>
-                        <br>
-                        <?php // Projet « publiable » (résumé anonymisé et photos pour des publications LinkedIn / blog) ?>
-                        <div style="margin-top:10px;"><?php if (class_exists('ISPAG_Publishable_Projects')) echo ISPAG_Publishable_Projects::render_toggle($deal_id); ?></div>
                     <?php endif; ?>
                     <?php
                     // echo $article_renderer->render_project_action_button($deal_id, $project->isQotation);
                     ?>
                 </div> 
+
+                <?php // Projet « publiable » (résumé anonymisé et photos pour des publications LinkedIn / blog) : carte séparée, sous les boutons d'action ?>
+                <?php if ($can_manage_order && class_exists('ISPAG_Publishable_Projects')): ?>
+                    <div class="ispag-card" style="padding:10px 16px;"><?php echo ISPAG_Publishable_Projects::render_toggle($deal_id); ?></div>
+                <?php endif; ?>
 
                 <div class="ispag-card ispag-bulk-actions"  data-deal-id="<?php echo esc_attr($deal_id); ?>">
 
