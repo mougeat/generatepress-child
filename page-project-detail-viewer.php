@@ -291,7 +291,7 @@ if(class_exists('ISPAG_Projet_Repository')){
                 </div> 
 
                 <?php // Projet « publiable » (résumé anonymisé et photos pour des publications LinkedIn / blog) : carte séparée, sous les boutons d'action ?>
-                <?php if ($can_manage_order && class_exists('ISPAG_Publishable_Projects')): ?>
+                <?php if (class_exists('ISPAG_Publishable_Projects') && current_user_can('export_publishable_projects')): ?>
                     <div class="ispag-card" style="padding:10px 16px;"><?php echo ISPAG_Publishable_Projects::render_toggle($deal_id); ?></div>
                 <?php endif; ?>
 
