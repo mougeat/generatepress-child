@@ -282,7 +282,7 @@ if(class_exists('ISPAG_Projet_Repository')){
 
                 <div class="ispag-card ispag-project-btn-card"  data-deal-id="<?php echo esc_attr($deal_id); ?>">
 
-                    <?php if ($can_manage_order): ?>
+                    <?php if (class_exists('ISPAG_Capabilities') ? ISPAG_Capabilities::can_manage_project_actions() : $can_manage_order): // jamais pour un ingénieur / client ?>
                         <a href="<?= esc_url(home_url( '/liste-des-achats/?search=' . $deal_id . '' )) ?>" target="_blank" class="ispag-btn ispag-btn-secondary-outlined"><span class="dashicons dashicons-cart"></span> <?= esc_html(__('To purchase', 'ispag-crm')) ?></a>
                     <?php endif; ?>
                     <?php
